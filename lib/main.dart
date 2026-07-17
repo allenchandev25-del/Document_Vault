@@ -12,6 +12,8 @@ void main() {
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
+
   @override
   State<MainApp> createState() => _MainAppState();
 }
@@ -158,21 +160,38 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       homeScreen = DashboardScreen(onLock: _onLock);
     }
 
-    return MaterialApp(
-      title: 'Secure Document Vault',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        primaryColor: Colors.white,
-        scaffoldBackgroundColor: const Color(0xFF000000),
-        colorScheme: const ColorScheme.dark(
-          primary: Colors.white,
-          secondary: Colors.white70,
-          surface: Color(0xFF0F0F0F),
-        ),
-      ),
-      home: homeScreen,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: MainApp.themeNotifier,
+      builder: (_, ThemeMode currentMode, __) {
+        return MaterialApp(
+          title: 'Secure Document Vault',
+          debugShowCheckedModeBanner: false,
+          themeMode: currentMode,
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.light,
+            primaryColor: Colors.black,
+            scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+            colorScheme: const ColorScheme.light(
+              primary: Colors.black,
+              secondary: Colors.black54,
+              surface: Color(0xFFF5F5F5),
+            ),
+          ),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            primaryColor: Colors.white,
+            scaffoldBackgroundColor: const Color(0xFF000000),
+            colorScheme: const ColorScheme.dark(
+              primary: Colors.white,
+              secondary: Colors.white70,
+              surface: Color(0xFF0F0F0F),
+            ),
+          ),
+          home: homeScreen,
+        );
+      },
     );
   }
 }

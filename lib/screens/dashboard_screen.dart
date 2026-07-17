@@ -58,6 +58,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
+        withData: true,
       );
 
       if (result == null || result.files.isEmpty) return;
@@ -68,7 +69,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
 
       for (final platformFile in result.files) {
-        if (platformFile.path != null) {
+        if (platformFile.bytes != null) {
+          await _vaultService.encryptAndAddBytes(platformFile.bytes!, platformFile.name);
+        } else if (platformFile.path != null) {
           final file = File(platformFile.path!);
           await _vaultService.encryptAndAddFile(file);
         }
@@ -78,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Secured ${result.files.length} file(s)'),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
@@ -292,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       trailing: _biometricSupported
                           ? Switch(
                               value: _vaultService.isBiometricEnabled,
-                              activeColor: Colors.white,
+                              activeThumbColor: Colors.white,
                               inactiveTrackColor: Colors.white10,
                               activeTrackColor: Colors.white30,
                               onChanged: (val) async {
@@ -467,7 +470,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               }
 
               final success = await _vaultService.changePasscode(currentPin, newPin);
-              if (mounted) {
+              if (context.mounted) {
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('PIN successfully changed'), backgroundColor: Colors.green),

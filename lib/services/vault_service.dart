@@ -251,6 +251,67 @@ class VaultService {
     return item;
   }
 
+  Future<VaultItem> encryptAndAddBytes(Uint8List fileBytes, String originalName) async {
+    if (_sessionKey == null) throw Exception('Vault is locked');
+
+    final ext = p.extension(originalName).toLowerCase();
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final encryptedFileName = '$id.enc';
+    final encryptedFilePath = p.join(_vaultDir.path, encryptedFileName);
+
+    // Generate random IV
+    final iv = enc.IV.fromSecureRandom(16);
+    final encrypter = enc.Encrypter(enc.AES(_sessionKey!, mode: enc.AESMode.cbc));
+
+    final encrypted = encrypter.encryptBytes(fileBytes, iv: iv);
+
+    // We store the 16 bytes of IV followed by the encrypted payload
+    final File encryptedFile = File(encryptedFilePath);
+    final combinedBytes = Uint8List(iv.bytes.length + encrypted.bytes.length);
+    combinedBytes.setRange(0, iv.bytes.length, iv.bytes);
+    combinedBytes.setRange(iv.bytes.length, combinedBytes.length, encrypted.bytes);
+
+    await encryptedFile.writeAsBytes(combinedBytes);
+
+    final category = getCategoryForExtension(ext);
+    final item = VaultItem(
+      id: id,
+      originalName: originalName,
+      fileExtension: ext,
+      sizeBytes: fileBytes.length,
+      addedDate: DateTime.now(),
+      category: category,
+      encryptedFileName: encryptedFileName,
+    );
+
+    _items.add(item);
+    await _saveDatabase();
+
+    return item;
+  }
+
+  Future<void> wipeVault() async {
+    // Delete files
+    for (var item in _items) {
+      final path = p.join(_vaultDir.path, item.encryptedFileName);
+      final file = File(path);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+    // Delete database & config files
+    if (await _dbFile.exists()) await _dbFile.delete();
+    if (await _configFile.exists()) await _configFile.delete();
+    if (await _biometricFile.exists()) await _biometricFile.delete();
+
+    // Clear session state
+    _items.clear();
+    _sessionKey = null;
+    _passcodeHash = null;
+    _hasPasscode = false;
+    _isBiometricEnabled = false;
+  }
+
   Future<File> decryptFile(VaultItem item, String targetPath) async {
     if (_sessionKey == null) throw Exception('Vault is locked');
 
