@@ -9,6 +9,7 @@ import 'file_viewer_screen.dart';
 import '../main.dart';
 import '../widgets/animated_background.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   final VoidCallback onLock;
@@ -132,7 +133,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
 
       final ext = item.fileExtension.toLowerCase();
-      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.heic', '.heif', '.txt'].contains(ext)) {
+      final isFlutterSupportedImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'].contains(ext);
+      final isText = ext == '.txt';
+
+      if (isFlutterSupportedImage || isText) {
         if (mounted) {
           Navigator.push(
             context,
@@ -140,7 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               builder: (context) => FileViewerScreen(
                 filePath: tempPath,
                 itemName: item.originalName,
-                isImage: ext != '.txt',
+                isImage: !isText,
               ),
             ),
           );
@@ -168,38 +172,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       _vaultService.isPickingFile = true;
       String? targetPath;
+      String message = '';
 
       if (Platform.isAndroid) {
-        final String? selectedDir = await FilePicker.platform.getDirectoryPath(
-          dialogTitle: 'Select Export Directory',
-        );
-        if (selectedDir != null) {
-          targetPath = p.join(selectedDir, item.originalName);
+        // Try saving directly to public Downloads folder
+        final String downloadPath = p.join('/storage/emulated/0/Download', item.originalName);
+        try {
+          if (mounted) {
+            setState(() {
+              _isProcessing = true;
+              _processingMessage = 'Exporting...';
+            });
+          }
+          await _vaultService.decryptFile(item, downloadPath);
+          targetPath = downloadPath;
+          message = 'Saved to device Downloads folder';
+        } catch (e) {
+          // Fallback to app's external files directory (unrestricted permission)
+          final extDir = await getExternalStorageDirectory();
+          if (extDir != null) {
+            final String fallbackPath = p.join(extDir.path, item.originalName);
+            await _vaultService.decryptFile(item, fallbackPath);
+            targetPath = fallbackPath;
+            message = 'Saved to app external files folder';
+          } else {
+            rethrow;
+          }
         }
       } else {
+        // Desktop / iOS standard flow
         targetPath = await FilePicker.platform.saveFile(
           dialogTitle: 'Export File To...',
           fileName: item.originalName,
         );
+        if (targetPath != null) {
+          if (mounted) {
+            setState(() {
+              _isProcessing = true;
+              _processingMessage = 'Exporting...';
+            });
+          }
+          await _vaultService.decryptFile(item, targetPath);
+          message = 'File exported successfully';
+        }
       }
 
       if (targetPath == null) {
         _vaultService.isPickingFile = false;
+        if (mounted) {
+          setState(() {
+            _isProcessing = false;
+          });
+        }
         return;
       }
-
-      setState(() {
-        _isProcessing = true;
-        _processingMessage = 'Exporting...';
-      });
-
-      await _vaultService.decryptFile(item, targetPath);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Exported to ${targetPath.split(Platform.pathSeparator).last}'),
-            backgroundColor: Colors.white,
+            content: Text(message),
+            backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+            action: SnackBarAction(
+              label: 'VIEW PATH',
+              textColor: Colors.blueAccent,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Export Path', style: TextStyle(fontSize: 14)),
+                    content: SelectableText(targetPath!, style: const TextStyle(fontSize: 12)),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
             behavior: SnackBarBehavior.floating,
           ),
         );
