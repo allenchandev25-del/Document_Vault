@@ -115,10 +115,10 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.blueAccent.withOpacity(0.1),
+                  color: Colors.blueAccent.withValues(alpha: 0.1),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blueAccent.withOpacity(0.2),
+                      color: Colors.blueAccent.withValues(alpha: 0.2),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -173,7 +173,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                       boxShadow: filled
                           ? [
                               BoxShadow(
-                                color: Colors.blueAccent.withOpacity(0.5),
+                                color: Colors.blueAccent.withValues(alpha: 0.5),
                                 blurRadius: 10,
                                 spreadRadius: 1,
                               )
@@ -254,7 +254,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
       height: 72,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.03),
+        color: Colors.white.withValues(alpha: 0.03),
         border: Border.all(color: Colors.white10),
       ),
       child: Material(
@@ -283,7 +283,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
       height: 72,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.01),
+        color: Colors.white.withValues(alpha: 0.01),
       ),
       child: Material(
         color: Colors.transparent,
