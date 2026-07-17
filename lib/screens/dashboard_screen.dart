@@ -6,6 +6,7 @@ import 'package:open_filex/open_filex.dart';
 import '../models/vault_item.dart';
 import '../services/vault_service.dart';
 import 'file_viewer_screen.dart';
+import '../main.dart';
 
 class DashboardScreen extends StatefulWidget {
   final VoidCallback onLock;
@@ -254,14 +255,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _showSettingsSheet() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF000000),
-      shape: const RoundedRectangleBorder(
-        side: BorderSide(color: Colors.white12, width: 1),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: Border(
+        top: BorderSide(color: Theme.of(context).dividerColor, width: 1),
       ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            final txtColor = isDark ? Colors.white : Colors.black;
+            final subColor = isDark ? Colors.white38 : Colors.black45;
+
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -269,35 +273,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'SETTINGS',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
+                        color: txtColor,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
+                    // Theme Toggle Mode
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        'Light Theme Mode',
+                        style: TextStyle(color: txtColor, fontSize: 14),
+                      ),
+                      subtitle: Text(
+                        'Switch between light and dark minimalist themes',
+                        style: TextStyle(color: subColor, fontSize: 11),
+                      ),
+                      trailing: Switch(
+                        value: MainApp.themeNotifier.value == ThemeMode.light,
+                        activeThumbColor: isDark ? Colors.white : Colors.black,
+                        activeTrackColor: isDark ? Colors.white30 : Colors.black12,
+                        onChanged: (val) {
+                          setModalState(() {
+                            MainApp.themeNotifier.value =
+                                val ? ThemeMode.light : ThemeMode.dark;
+                          });
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    Divider(color: Theme.of(context).dividerColor),
                     // Fingerprint Toggle
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text(
+                      title: Text(
                         'Fingerprint Unlock',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style: TextStyle(color: txtColor, fontSize: 14),
                       ),
                       subtitle: Text(
                         _biometricSupported
                             ? 'Unlock your vault using biometrics'
                             : 'Biometrics not supported on this device',
-                        style: const TextStyle(color: Colors.white38, fontSize: 11),
+                        style: TextStyle(color: subColor, fontSize: 11),
                       ),
                       trailing: _biometricSupported
                           ? Switch(
                               value: _vaultService.isBiometricEnabled,
-                              activeThumbColor: Colors.white,
-                              inactiveTrackColor: Colors.white10,
-                              activeTrackColor: Colors.white30,
+                              activeThumbColor: isDark ? Colors.white : Colors.black,
+                              activeTrackColor: isDark ? Colors.white30 : Colors.black12,
                               onChanged: (val) async {
                                 final pin = await _promptForCurrentPin();
                                 if (pin != null) {
@@ -309,22 +337,76 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             )
                           : null,
                     ),
-                    const Divider(color: Colors.white10),
+                    Divider(color: Theme.of(context).dividerColor),
                     // Change Passcode
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text(
+                      title: Text(
                         'Change Security PIN',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style: TextStyle(color: txtColor, fontSize: 14),
                       ),
-                      subtitle: const Text(
+                      subtitle: Text(
                         'Modify your 4-digit vault passcode',
-                        style: TextStyle(color: Colors.white38, fontSize: 11),
+                        style: TextStyle(color: subColor, fontSize: 11),
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+                      trailing: Icon(Icons.arrow_forward_ios, color: subColor, size: 14),
                       onTap: () {
                         Navigator.pop(context);
                         _showChangePinDialog();
+                      },
+                    ),
+                    Divider(color: Theme.of(context).dividerColor),
+                    // Wipe Vault
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        'Reset & Wipe Vault',
+                        style: TextStyle(color: Colors.redAccent, fontSize: 14),
+                      ),
+                      subtitle: Text(
+                        'Erase all encrypted documents and reset PIN',
+                        style: TextStyle(color: subColor, fontSize: 11),
+                      ),
+                      trailing: const Icon(Icons.delete_forever, color: Colors.redAccent, size: 18),
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: isDark ? Colors.white12 : Colors.black12),
+                              borderRadius: const BorderRadius.all(Radius.circular(8)),
+                            ),
+                            title: Text('Reset Vault', style: TextStyle(color: txtColor, fontSize: 16, letterSpacing: 0.5)),
+                            content: const Text(
+                              'Are you absolutely sure? This will permanently delete all secure documents and reset your login passcode. This cannot be undone.',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: Text('CANCEL', style: TextStyle(color: subColor, fontSize: 12)),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text('RESET VAULT', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true) {
+                          setState(() {
+                            _isProcessing = true;
+                            _processingMessage = 'Resetting...';
+                          });
+                          await _vaultService.wipeVault();
+                          setState(() {
+                            _isProcessing = false;
+                          });
+                          widget.onLock();
+                        }
                       },
                     ),
                     const SizedBox(height: 16),
