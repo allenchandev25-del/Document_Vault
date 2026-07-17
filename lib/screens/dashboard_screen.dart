@@ -8,6 +8,7 @@ import '../services/vault_service.dart';
 import 'file_viewer_screen.dart';
 import '../main.dart';
 import '../widgets/animated_background.dart';
+import 'package:path/path.dart' as p;
 
 class DashboardScreen extends StatefulWidget {
   final VoidCallback onLock;
@@ -166,10 +167,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _exportFile(VaultItem item) async {
     try {
       _vaultService.isPickingFile = true;
-      final String? targetPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Export File To...',
-        fileName: item.originalName,
-      );
+      String? targetPath;
+
+      if (Platform.isAndroid) {
+        final String? selectedDir = await FilePicker.platform.getDirectoryPath(
+          dialogTitle: 'Select Export Directory',
+        );
+        if (selectedDir != null) {
+          targetPath = p.join(selectedDir, item.originalName);
+        }
+      } else {
+        targetPath = await FilePicker.platform.saveFile(
+          dialogTitle: 'Export File To...',
+          fileName: item.originalName,
+        );
+      }
 
       if (targetPath == null) {
         _vaultService.isPickingFile = false;
