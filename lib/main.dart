@@ -162,7 +162,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
 
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: MainApp.themeNotifier,
-      builder: (_, ThemeMode currentMode, _2) {
+      builder: (_, ThemeMode currentMode, __) {
         return MaterialApp(
           title: 'Secure Document Vault',
           debugShowCheckedModeBanner: false,
