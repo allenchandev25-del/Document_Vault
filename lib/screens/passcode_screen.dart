@@ -133,112 +133,121 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
         children: [
           const MinimalAnimatedBackground(),
           SafeArea(
-            child: Column(
-              children: [
-                const Spacer(flex: 2),
-                // Minimal Header
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: primaryTxt,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  !hasPasscode
-                      ? 'Define a 4-digit code to encrypt data'
-                      : 'Files are AES-256 encrypted',
-                  style: TextStyle(
-                    color: subTxt,
-                    fontSize: 12,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const Spacer(flex: 1),
-                // Simple Dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (index) {
-                    final filled = index < _pin.length;
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      height: 10,
-                      width: 10,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: filled ? primaryTxt : Colors.transparent,
-                        border: Border.all(
-                          color: filled ? primaryTxt : (isDark ? Colors.white24 : Colors.black26),
-                          width: 1.5,
+            child: Center(
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 16),
+                      // Minimal Header
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: primaryTxt,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 1.5,
                         ),
                       ),
-                    );
-                  }),
-                ),
-                const SizedBox(height: 16),
-                // Flat Error message
-                SizedBox(
-                  height: 20,
-                  child: Text(
-                    _errorMessage,
-                    style: const TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 12,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-                const Spacer(flex: 2),
-                // Keypad
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 48.0),
-                  child: Column(
-                    children: [
+                      const SizedBox(height: 8),
+                      Text(
+                        !hasPasscode
+                            ? 'Define a 4-digit code to encrypt data'
+                            : 'Files are AES-256 encrypted',
+                        style: TextStyle(
+                          color: subTxt,
+                          fontSize: 12,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      // Simple Dots
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildKey('1'),
-                          _buildKey('2'),
-                          _buildKey('3'),
-                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(4, (index) {
+                          final filled = index < _pin.length;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            height: 10,
+                            width: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: filled ? primaryTxt : Colors.transparent,
+                              border: Border.all(
+                                color: filled ? primaryTxt : (isDark ? Colors.white24 : Colors.black26),
+                                width: 1.5,
+                              ),
+                            ),
+                          );
+                        }),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildKey('4'),
-                          _buildKey('5'),
-                          _buildKey('6'),
-                        ],
+                      // Flat Error message
+                      SizedBox(
+                        height: 20,
+                        child: Text(
+                          _errorMessage,
+                          style: const TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 12,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildKey('7'),
-                          _buildKey('8'),
-                          _buildKey('9'),
-                        ],
+                      // Keypad
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 48.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildKey('1'),
+                                _buildKey('2'),
+                                _buildKey('3'),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildKey('4'),
+                                _buildKey('5'),
+                                _buildKey('6'),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildKey('7'),
+                                _buildKey('8'),
+                                _buildKey('9'),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _canCheckBiometrics
+                                    ? _buildIconButton(Icons.fingerprint, _triggerBiometrics, color: Colors.blueAccent)
+                                    : _buildIconButton(Icons.clear, _onClear),
+                                _buildKey('0'),
+                                _buildIconButton(Icons.backspace_outlined, _onBackspace),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _canCheckBiometrics
-                              ? _buildIconButton(Icons.fingerprint, _triggerBiometrics, color: Colors.blueAccent)
-                              : _buildIconButton(Icons.clear, _onClear),
-                          _buildKey('0'),
-                          _buildIconButton(Icons.backspace_outlined, _onBackspace),
-                        ],
-                      ),
                     ],
                   ),
                 ),
-                const Spacer(flex: 2),
-              ],
+              ),
             ),
           ),
         ],
