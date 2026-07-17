@@ -291,14 +291,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             final subColor = isDark ? Colors.white38 : Colors.black45;
 
             return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'SETTINGS',
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'SETTINGS',
                       style: TextStyle(
                         color: txtColor,
                         fontSize: 13,
