@@ -22,14 +22,15 @@ subprojects {
 }
 
 subprojects {
-    plugins.withId("com.android.application") {
-        configure<BaseExtension> {
-            compileSdkVersion(36)
-        }
+    fun configureProject() {
+        val android = extensions.findByName("android") as? BaseExtension
+        android?.compileSdkVersion(36)
     }
-    plugins.withId("com.android.library") {
-        configure<BaseExtension> {
-            compileSdkVersion(36)
+    if (state.executed) {
+        configureProject()
+    } else {
+        afterEvaluate {
+            configureProject()
         }
     }
 }
