@@ -7,6 +7,7 @@ import '../models/vault_item.dart';
 import '../services/vault_service.dart';
 import 'file_viewer_screen.dart';
 import '../main.dart';
+import '../widgets/animated_background.dart';
 
 class DashboardScreen extends StatefulWidget {
   final VoidCallback onLock;
@@ -306,30 +307,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Theme Toggle Mode
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        'Light Theme Mode',
-                        style: TextStyle(color: txtColor, fontSize: 14),
-                      ),
-                      subtitle: Text(
-                        'Switch between light and dark minimalist themes',
-                        style: TextStyle(color: subColor, fontSize: 11),
-                      ),
-                      trailing: Switch(
-                        value: MainApp.themeNotifier.value == ThemeMode.light,
-                        activeThumbColor: isDark ? Colors.white : Colors.black,
-                        activeTrackColor: isDark ? Colors.white30 : Colors.black12,
-                        onChanged: (val) {
-                          setModalState(() {
-                            MainApp.themeNotifier.value =
-                                val ? ThemeMode.light : ThemeMode.dark;
-                          });
-                          setState(() {});
-                        },
+                    const SizedBox(height: 16),
+                    // Theme Choice Chips
+                    Text(
+                      'THEME MODE',
+                      style: TextStyle(
+                        color: subColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0,
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ThemeMode.system,
+                        ThemeMode.dark,
+                        ThemeMode.light,
+                      ].map((mode) {
+                        final isSelected = MainApp.themeNotifier.value == mode;
+                        String modeName = '';
+                        if (mode == ThemeMode.system) modeName = 'SYSTEM';
+                        if (mode == ThemeMode.dark) modeName = 'DARK';
+                        if (mode == ThemeMode.light) modeName = 'LIGHT';
+
+                        return ChoiceChip(
+                          label: Text(
+                            modeName,
+                            style: const TextStyle(fontSize: 9, letterSpacing: 0.5),
+                          ),
+                          selected: isSelected,
+                          selectedColor: isDark ? Colors.white : Colors.black,
+                          backgroundColor: Colors.transparent,
+                          checkmarkColor: isDark ? Colors.black : Colors.white,
+                          labelStyle: TextStyle(
+                            color: isSelected
+                                ? (isDark ? Colors.black : Colors.white)
+                                : (isDark ? Colors.white60 : Colors.black54),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            side: BorderSide(
+                              color: isSelected
+                                  ? Colors.transparent
+                                  : (isDark ? Colors.white12 : Colors.black12),
+                            ),
+                          ),
+                          onSelected: (selected) {
+                            if (selected) {
+                              setModalState(() {
+                                MainApp.themeNotifier.value = mode;
+                              });
+                              setState(() {});
+                            }
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 8),
                     Divider(color: Theme.of(context).dividerColor),
                     // Fingerprint Toggle
                     ListTile(
@@ -610,29 +646,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
       totalBytes += item.sizeBytes;
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTxt = Theme.of(context).primaryColor;
+    final subTxt = isDark ? Colors.white38 : Colors.black45;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF000000), // Pure Black Minimalist
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF000000),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'VAULT',
           style: TextStyle(
             fontWeight: FontWeight.w400,
             letterSpacing: 2.0,
             fontSize: 15,
-            color: Colors.white,
+            color: primaryTxt,
           ),
         ),
         actions: [
           IconButton(
             tooltip: 'Settings',
-            icon: const Icon(Icons.settings_outlined, color: Colors.white70, size: 20),
+            icon: Icon(Icons.settings_outlined, color: primaryTxt.withValues(alpha: 0.7), size: 20),
             onPressed: _showSettingsSheet,
           ),
           IconButton(
             tooltip: 'Lock',
-            icon: const Icon(Icons.lock_outline, color: Colors.white70, size: 20),
+            icon: Icon(Icons.lock_outline, color: primaryTxt.withValues(alpha: 0.7), size: 20),
             onPressed: () {
               _vaultService.lock();
               widget.onLock();
@@ -642,11 +682,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: Colors.white10, height: 1.0),
+          child: Container(color: Theme.of(context).dividerColor, height: 1.0),
         ),
       ),
       body: Stack(
         children: [
+          const MinimalAnimatedBackground(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -659,8 +700,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Text(
                         'STORAGE: ${VaultService.formatBytes(totalBytes)}',
-                        style: const TextStyle(
-                          color: Colors.white38,
+                        style: TextStyle(
+                          color: subTxt,
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 1.0,
@@ -668,8 +709,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       Text(
                         '${_vaultService.items.length} FILES',
-                        style: const TextStyle(
-                          color: Colors.white38,
+                        style: TextStyle(
+                          color: subTxt,
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 1.0,

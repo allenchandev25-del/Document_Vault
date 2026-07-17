@@ -12,7 +12,7 @@ void main() {
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -176,10 +176,12 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
             brightness: Brightness.light,
             primaryColor: Colors.black,
             scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+            cardColor: const Color(0xFFF9F9F9),
+            dividerColor: const Color(0xFFE5E5E5),
             colorScheme: const ColorScheme.light(
               primary: Colors.black,
               secondary: Colors.black54,
-              surface: Color(0xFFF5F5F5),
+              surface: Color(0xFFF9F9F9),
             ),
           ),
           darkTheme: ThemeData(
@@ -187,6 +189,8 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
             brightness: Brightness.dark,
             primaryColor: Colors.white,
             scaffoldBackgroundColor: const Color(0xFF000000),
+            cardColor: const Color(0xFF0F0F0F),
+            dividerColor: const Color(0xFF222222),
             colorScheme: const ColorScheme.dark(
               primary: Colors.white,
               secondary: Colors.white70,
