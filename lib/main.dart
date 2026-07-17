@@ -41,6 +41,10 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Automatically lock the vault when the app goes into the background
     if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      if (_vaultService.isPickingFile) {
+        // Skip locking when picking/exporting files via system picker
+        return;
+      }
       _vaultService.lock();
       _vaultService.cleanTempFolder(); // Secure clean up of any open temp decrypted files
       setState(() {

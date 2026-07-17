@@ -20,6 +20,7 @@ class VaultService {
   bool _isBiometricEnabled = false;
   String? _passcodeHash;
   enc.Key? _sessionKey;
+  bool isPickingFile = false;
   
   late Directory _vaultDir;
   late Directory _tempDir;

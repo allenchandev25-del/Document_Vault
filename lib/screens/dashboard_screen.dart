@@ -58,17 +58,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _importFile() async {
     try {
+      _vaultService.isPickingFile = true;
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         withData: true,
       );
 
-      if (result == null || result.files.isEmpty) return;
+      if (result == null || result.files.isEmpty) {
+        _vaultService.isPickingFile = false;
+        return;
+      }
 
-      setState(() {
-        _isProcessing = true;
-        _processingMessage = 'Securing...';
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = true;
+          _processingMessage = 'Securing...';
+        });
+      }
 
       for (final platformFile in result.files) {
         if (platformFile.bytes != null) {
@@ -100,6 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       );
     } finally {
+      _vaultService.isPickingFile = false;
       if (mounted) {
         setState(() {
           _isProcessing = false;
@@ -157,12 +164,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _exportFile(VaultItem item) async {
     try {
+      _vaultService.isPickingFile = true;
       final String? targetPath = await FilePicker.platform.saveFile(
         dialogTitle: 'Export File To...',
         fileName: item.originalName,
       );
 
-      if (targetPath == null) return;
+      if (targetPath == null) {
+        _vaultService.isPickingFile = false;
+        return;
+      }
 
       setState(() {
         _isProcessing = true;
@@ -191,6 +202,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       }
     } finally {
+      _vaultService.isPickingFile = false;
       if (mounted) {
         setState(() {
           _isProcessing = false;
