@@ -91,7 +91,7 @@ class VaultService {
     await _loadDatabase();
   }
 
-  bool verifyPasscode(String pin) {
+  Future<bool> verifyPasscode(String pin) async {
     if (!_hasPasscode || _passcodeHash == null) return false;
     
     final bytes = utf8.encode(pin);
@@ -100,14 +100,14 @@ class VaultService {
 
     if (inputHash == _passcodeHash) {
       _sessionKey = enc.Key(Uint8List.fromList(digest.bytes));
-      _loadDatabase();
+      await _loadDatabase();
       return true;
     }
     return false;
   }
 
   Future<bool> changePasscode(String oldPin, String newPin) async {
-    if (!verifyPasscode(oldPin)) return false;
+    if (!await verifyPasscode(oldPin)) return false;
 
     // Set new passcode
     await setPasscode(newPin);
@@ -198,7 +198,8 @@ class VaultService {
       _items = jsonList
           .map((item) => VaultItem.fromJson(item as Map<String, dynamic>))
           .toList();
-    } catch (e) {
+    } catch (e, stack) {
+      print('DB LOAD ERROR: $e\n$stack');
       _items = [];
     }
   }

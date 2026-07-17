@@ -75,7 +75,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
     });
   }
 
-  void _processPin() {
+  Future<void> _processPin() async {
     final hasPasscode = _vaultService.hasPasscode;
 
     if (!hasPasscode) {
@@ -100,7 +100,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
         }
       }
     } else {
-      final success = _vaultService.verifyPasscode(_pin);
+      final success = await _vaultService.verifyPasscode(_pin);
       if (success) {
         widget.onSuccess();
       } else {

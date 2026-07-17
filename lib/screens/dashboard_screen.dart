@@ -79,6 +79,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       }
 
+      debugPrint('IMPORT SUCCESS: Secured ${result.files.length} file(s). Total vault items: ${_vaultService.items.length}');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -89,6 +90,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       );
     } catch (e) {
+      debugPrint('IMPORT ERROR: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -98,9 +100,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       );
     } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
     }
   }
 
@@ -112,9 +116,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     try {
       final tempPath = await _vaultService.decryptToTemp(item);
-      setState(() {
-        _isProcessing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
 
       final ext = item.fileExtension.toLowerCase();
       if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.heic', '.heif', '.txt'].contains(ext)) {
@@ -134,10 +140,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         await OpenFilex.open(tempPath);
       }
     } catch (e) {
-      setState(() {
-        _isProcessing = false;
-      });
       if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to open file: $e'),
@@ -185,9 +191,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       }
     } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
     }
   }
 
@@ -247,9 +255,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       }
     } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
     }
   }
 
@@ -452,8 +462,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: const Text('CANCEL', style: TextStyle(color: Colors.white54, fontSize: 11)),
           ),
           TextButton(
-            onPressed: () {
-              if (_vaultService.verifyPasscode(pin)) {
+            onPressed: () async {
+              if (await _vaultService.verifyPasscode(pin)) {
                 Navigator.pop(context, pin);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
