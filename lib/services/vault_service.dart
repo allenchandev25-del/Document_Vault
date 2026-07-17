@@ -373,6 +373,8 @@ class VaultService {
       case '.gif':
       case '.webp':
       case '.bmp':
+      case '.heic':
+      case '.heif':
         return 'Images';
       case '.pdf':
         return 'PDFs';

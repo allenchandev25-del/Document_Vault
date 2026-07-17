@@ -26,6 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isProcessing = false;
   String _processingMessage = '';
   bool _biometricSupported = false;
+  bool _isGridView = false;
 
   final List<String> _categories = [
     'All',
@@ -116,7 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
 
       final ext = item.fileExtension.toLowerCase();
-      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.txt'].contains(ext)) {
+      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.heic', '.heif', '.txt'].contains(ext)) {
         if (mounted) {
           Navigator.push(
             context,
@@ -656,44 +657,91 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
               
-              // Search Field
+              // Search Field & View Toggler Row
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (val) {
-                    setState(() {
-                      _searchQuery = val;
-                    });
-                  },
-                  style: const TextStyle(color: Colors.white, fontSize: 13),
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    hintStyle: const TextStyle(color: Colors.white24, fontSize: 12),
-                    prefixIcon: const Icon(Icons.search, color: Colors.white38, size: 16),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, color: Colors.white38, size: 14),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _searchQuery = '';
-                              });
-                            },
-                          )
-                        : null,
-                    filled: true,
-                    fillColor: const Color(0xFF0F0F0F),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      borderSide: const BorderSide(color: Colors.white10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (val) {
+                          setState(() {
+                            _searchQuery = val;
+                          });
+                        },
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                          fontSize: 13,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          hintStyle: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white24 : Colors.black38,
+                            fontSize: 12,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.black45,
+                            size: 16,
+                          ),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.black45,
+                                    size: 14,
+                                  ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() {
+                                      _searchQuery = '';
+                                    });
+                                  },
+                                )
+                              : null,
+                          filled: true,
+                          fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF0F0F0F) : const Color(0xFFF5F5F5),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white10 : Colors.black12,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white24 : Colors.black26,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                        ),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      borderSide: const BorderSide(color: Colors.white24),
+                    const SizedBox(width: 8),
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white10 : Colors.black12,
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          _isGridView ? Icons.view_list_outlined : Icons.grid_view_outlined,
+                          size: 18,
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black87,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isGridView = !_isGridView;
+                          });
+                        },
+                      ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                  ),
+                  ],
                 ),
               ),
 
@@ -707,6 +755,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   itemBuilder: (context, index) {
                     final cat = _categories[index];
                     final isSelected = _selectedCategory == cat;
+                    final isDark = Theme.of(context).brightness == Brightness.dark;
                     return Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: ChoiceChip(
@@ -724,16 +773,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             _selectedCategory = cat;
                           });
                         },
-                        selectedColor: Colors.white,
+                        selectedColor: isDark ? Colors.white : Colors.black,
                         backgroundColor: Colors.transparent,
-                        checkmarkColor: Colors.black,
+                        checkmarkColor: isDark ? Colors.black : Colors.white,
                         labelStyle: TextStyle(
-                          color: isSelected ? Colors.black : Colors.white60,
+                          color: isSelected
+                              ? (isDark ? Colors.black : Colors.white)
+                              : (isDark ? Colors.white60 : Colors.black54),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                           side: BorderSide(
-                            color: isSelected ? Colors.transparent : Colors.white12,
+                            color: isSelected
+                                ? Colors.transparent
+                                : (isDark ? Colors.white12 : Colors.black12),
                           ),
                         ),
                       ),
@@ -744,11 +797,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               const SizedBox(height: 12),
 
-              // Files List
+              // Files List or Grid
               Expanded(
                 child: filteredItems.isEmpty
                     ? _buildEmptyState()
-                    : _buildFilesList(filteredItems),
+                    : (_isGridView
+                        ? _buildFilesGrid(filteredItems)
+                        : _buildFilesList(filteredItems)),
               ),
             ],
           ),
@@ -761,12 +816,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -785,8 +842,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+        foregroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
         mini: true,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onPressed: _importFile,
@@ -797,14 +854,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildEmptyState() {
     final hasItemsAtAll = _vaultService.items.isNotEmpty;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             hasItemsAtAll ? 'NO MATCHES' : 'EMPTY VAULT',
-            style: const TextStyle(
-              color: Colors.white38,
+            style: TextStyle(
+              color: isDark ? Colors.white30 : Colors.black38,
               fontSize: 12,
               fontWeight: FontWeight.bold,
               letterSpacing: 2.0,
@@ -813,8 +871,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 6),
           Text(
             hasItemsAtAll ? 'Refine search terms' : 'Add documents to secure them',
-            style: const TextStyle(
-              color: Colors.white24,
+            style: TextStyle(
+              color: isDark ? Colors.white24 : Colors.black26,
               fontSize: 11,
               letterSpacing: 0.5,
             ),
@@ -825,6 +883,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildFilesList(List<VaultItem> itemsList) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? Colors.white12 : Colors.black12;
+    final txtColor = isDark ? Colors.white : Colors.black;
+    final subColor = isDark ? Colors.white38 : Colors.black45;
+
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: itemsList.length,
@@ -836,7 +899,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return Container(
           margin: const EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white12, width: 1),
+            border: Border.all(color: borderColor, width: 1),
             borderRadius: BorderRadius.circular(4),
           ),
           child: ListTile(
@@ -844,8 +907,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onTap: () => _openFile(item),
             title: Text(
               item.originalName,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: txtColor,
                 fontWeight: FontWeight.w400,
                 fontSize: 13,
               ),
@@ -854,8 +917,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             subtitle: Text(
               '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
-              style: const TextStyle(
-                color: Colors.white38,
+              style: TextStyle(
+                color: subColor,
                 fontSize: 10,
               ),
             ),
@@ -863,12 +926,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.download_outlined, color: Colors.white54, size: 18),
+                  icon: Icon(Icons.download_outlined, color: subColor, size: 18),
                   tooltip: 'Export',
                   onPressed: () => _exportFile(item),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, color: Colors.white38, size: 18),
+                  icon: Icon(Icons.delete_outline, color: subColor, size: 18),
                   tooltip: 'Delete',
                   onPressed: () => _deleteFile(item),
                 ),
@@ -878,5 +941,134 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       },
     );
+  }
+
+  Widget _buildFilesGrid(List<VaultItem> itemsList) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? Colors.white10 : Colors.black12;
+    final cardColor = isDark ? const Color(0xFF0F0F0F) : const Color(0xFFF9F9F9);
+    final titleColor = isDark ? Colors.white : Colors.black;
+    final subColor = isDark ? Colors.white38 : Colors.black45;
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.9,
+      ),
+      itemCount: itemsList.length,
+      itemBuilder: (context, index) {
+        final item = itemsList[index];
+        final sizeStr = VaultService.formatBytes(item.sizeBytes);
+
+        return GestureDetector(
+          onTap: () => _openFile(item),
+          child: Container(
+            decoration: BoxDecoration(
+              color: cardColor,
+              border: Border.all(color: borderColor, width: 1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(flex: 2),
+                Icon(
+                  _getIconForCategory(item.category),
+                  color: _getColorForCategory(item.category),
+                  size: 28,
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    item.originalName,
+                    style: TextStyle(
+                      color: titleColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  sizeStr,
+                  style: TextStyle(
+                    color: subColor,
+                    fontSize: 9,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const Spacer(flex: 2),
+                Container(
+                  height: 1,
+                  color: borderColor,
+                ),
+                SizedBox(
+                  height: 32,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(Icons.download_outlined, color: subColor, size: 14),
+                          onPressed: () => _exportFile(item),
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        color: borderColor,
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 14),
+                          onPressed: () => _deleteFile(item),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  IconData _getIconForCategory(String category) {
+    switch (category) {
+      case 'Images':
+        return Icons.image_outlined;
+      case 'PDFs':
+        return Icons.picture_as_pdf_outlined;
+      case 'Documents':
+        return Icons.description_outlined;
+      case 'Audio/Video':
+        return Icons.video_library_outlined;
+      default:
+        return Icons.insert_drive_file_outlined;
+    }
+  }
+
+  Color _getColorForCategory(String category) {
+    switch (category) {
+      case 'Images':
+        return const Color(0xFF10B981);
+      case 'PDFs':
+        return Colors.redAccent;
+      case 'Documents':
+        return Colors.blueAccent;
+      case 'Audio/Video':
+        return Colors.orangeAccent;
+      default:
+        return Colors.purpleAccent;
+    }
   }
 }
