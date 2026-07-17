@@ -24,6 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String _searchQuery = '';
   bool _isProcessing = false;
   String _processingMessage = '';
+  bool _biometricSupported = false;
 
   final List<String> _categories = [
     'All',
@@ -33,6 +34,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Audio/Video',
     'Others'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometricHardware();
+  }
+
+  Future<void> _checkBiometricHardware() async {
+    final supported = await _vaultService.canUseBiometrics();
+    setState(() {
+      _biometricSupported = supported;
+    });
+  }
 
   @override
   void dispose() {
@@ -50,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       setState(() {
         _isProcessing = true;
-        _processingMessage = 'Encrypting and securing files...';
+        _processingMessage = 'Securing...';
       });
 
       for (final platformFile in result.files) {
@@ -63,8 +77,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Successfully secured ${result.files.length} file(s)'),
-          backgroundColor: Colors.green,
+          content: Text('Secured ${result.files.length} file(s)'),
+          backgroundColor: Colors.white,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
         ),
       );
     } catch (e) {
@@ -73,6 +89,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         SnackBar(
           content: Text('Failed to import: $e'),
           backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
         ),
       );
     } finally {
@@ -85,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _openFile(VaultItem item) async {
     setState(() {
       _isProcessing = true;
-      _processingMessage = 'Decrypting file...';
+      _processingMessage = 'Decrypting...';
     });
 
     try {
@@ -94,7 +111,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _isProcessing = false;
       });
 
-      // If it's a common viewable type like Image, view inside the app!
       final ext = item.fileExtension.toLowerCase();
       if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.txt'].contains(ext)) {
         if (mounted) {
@@ -110,7 +126,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         }
       } else {
-        // Open with default system viewer
         await OpenFilex.open(tempPath);
       }
     } catch (e) {
@@ -122,6 +137,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           SnackBar(
             content: Text('Failed to open file: $e'),
             backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -131,7 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _exportFile(VaultItem item) async {
     try {
       final String? targetPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Export Decrypted File To...',
+        dialogTitle: 'Export File To...',
         fileName: item.originalName,
       );
 
@@ -139,7 +155,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       setState(() {
         _isProcessing = true;
-        _processingMessage = 'Decrypting & exporting file...';
+        _processingMessage = 'Exporting...';
       });
 
       await _vaultService.decryptFile(item, targetPath);
@@ -147,8 +163,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Successfully exported to $targetPath'),
-            backgroundColor: Colors.green,
+            content: Text('Exported to ${targetPath.split(Platform.pathSeparator).last}'),
+            backgroundColor: Colors.white,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -156,8 +173,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to export: $e'),
+            content: Text('Export failed: $e'),
             backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -172,24 +190,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E293B),
-        title: const Text('Delete File', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF121212),
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(color: Colors.white12),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        title: const Text('Delete File', style: TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 0.5)),
         content: Text(
-          'Are you sure you want to permanently delete "${item.originalName}" from the vault? This cannot be undone.',
-          style: const TextStyle(color: Colors.white70),
+          'Permanently delete "${item.originalName}"?',
+          style: const TextStyle(color: Colors.white70, fontSize: 13),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text('CANCEL', style: TextStyle(color: Colors.white54, fontSize: 12)),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-            ),
+          TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: const Text('DELETE', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
           ),
         ],
       ),
@@ -199,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     setState(() {
       _isProcessing = true;
-      _processingMessage = 'Deleting file...';
+      _processingMessage = 'Deleting...';
     });
 
     try {
@@ -208,7 +226,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('File deleted'),
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.white24,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -216,8 +235,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete: $e'),
+            content: Text('Delete failed: $e'),
             backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -228,39 +248,247 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  IconData _getIconForCategory(String category) {
-    switch (category) {
-      case 'Images':
-        return Icons.image_outlined;
-      case 'PDFs':
-        return Icons.picture_as_pdf_outlined;
-      case 'Documents':
-        return Icons.description_outlined;
-      case 'Audio/Video':
-        return Icons.video_library_outlined;
-      default:
-        return Icons.insert_drive_file_outlined;
-    }
+  void _showSettingsSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF000000),
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.white12, width: 1),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'SETTINGS',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    // Fingerprint Toggle
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        'Fingerprint Unlock',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                      subtitle: Text(
+                        _biometricSupported
+                            ? 'Unlock your vault using biometrics'
+                            : 'Biometrics not supported on this device',
+                        style: const TextStyle(color: Colors.white38, fontSize: 11),
+                      ),
+                      trailing: _biometricSupported
+                          ? Switch(
+                              value: _vaultService.isBiometricEnabled,
+                              activeColor: Colors.white,
+                              inactiveTrackColor: Colors.white10,
+                              activeTrackColor: Colors.white30,
+                              onChanged: (val) async {
+                                final pin = await _promptForCurrentPin();
+                                if (pin != null) {
+                                  await _vaultService.setBiometricEnabled(val, pin);
+                                  setModalState(() {});
+                                  setState(() {});
+                                }
+                              },
+                            )
+                          : null,
+                    ),
+                    const Divider(color: Colors.white10),
+                    // Change Passcode
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        'Change Security PIN',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                      subtitle: const Text(
+                        'Modify your 4-digit vault passcode',
+                        style: TextStyle(color: Colors.white38, fontSize: 11),
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _showChangePinDialog();
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
-  Color _getColorForCategory(String category) {
-    switch (category) {
-      case 'Images':
-        return const Color(0xFF10B981);
-      case 'PDFs':
-        return Colors.redAccent;
-      case 'Documents':
-        return Colors.blueAccent;
-      case 'Audio/Video':
-        return Colors.orangeAccent;
-      default:
-        return Colors.purpleAccent;
-    }
+  Future<String?> _promptForCurrentPin() async {
+    String pin = '';
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF121212),
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(color: Colors.white12),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        title: const Text('Confirm PIN', style: TextStyle(color: Colors.white, fontSize: 14, letterSpacing: 1.0)),
+        content: TextField(
+          obscureText: true,
+          maxLength: 4,
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white, letterSpacing: 4.0),
+          decoration: const InputDecoration(
+            hintText: 'Enter current PIN',
+            hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
+            counterText: '',
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          ),
+          onChanged: (val) => pin = val,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('CANCEL', style: TextStyle(color: Colors.white54, fontSize: 11)),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_vaultService.verifyPasscode(pin)) {
+                Navigator.pop(context, pin);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Incorrect PIN'), backgroundColor: Colors.redAccent),
+                );
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('CONFIRM', style: TextStyle(color: Colors.white, fontSize: 11)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChangePinDialog() {
+    String currentPin = '';
+    String newPin = '';
+    String confirmPin = '';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF121212),
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(color: Colors.white12),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        title: const Text('Change Security PIN', style: TextStyle(color: Colors.white, fontSize: 14, letterSpacing: 1.0)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              obscureText: true,
+              maxLength: 4,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(color: Colors.white, fontSize: 13),
+              decoration: const InputDecoration(
+                hintText: 'Current PIN',
+                hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
+                counterText: '',
+                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+              ),
+              onChanged: (val) => currentPin = val,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              obscureText: true,
+              maxLength: 4,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(color: Colors.white, fontSize: 13),
+              decoration: const InputDecoration(
+                hintText: 'New 4-digit PIN',
+                hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
+                counterText: '',
+                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+              ),
+              onChanged: (val) => newPin = val,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              obscureText: true,
+              maxLength: 4,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(color: Colors.white, fontSize: 13),
+              decoration: const InputDecoration(
+                hintText: 'Confirm New PIN',
+                hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
+                counterText: '',
+                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+              ),
+              onChanged: (val) => confirmPin = val,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('CANCEL', style: TextStyle(color: Colors.white54, fontSize: 11)),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (newPin != confirmPin) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('New PINs do not match'), backgroundColor: Colors.redAccent),
+                );
+                return;
+              }
+              if (newPin.length != 4) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('PIN must be 4 digits'), backgroundColor: Colors.redAccent),
+                );
+                return;
+              }
+
+              final success = await _vaultService.changePasscode(currentPin, newPin);
+              if (mounted) {
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('PIN successfully changed'), backgroundColor: Colors.green),
+                  );
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Current PIN incorrect'), backgroundColor: Colors.redAccent),
+                  );
+                }
+              }
+            },
+            child: const Text('SAVE', style: TextStyle(color: Colors.white, fontSize: 11)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Filtered items
     final filteredItems = _vaultService.items.where((item) {
       final matchesCategory =
           _selectedCategory == 'All' || item.category == _selectedCategory;
@@ -269,61 +497,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return matchesCategory && matchesSearch;
     }).toList();
 
-    // Stats calculations
     int totalBytes = 0;
-    final Map<String, int> categorySizes = {};
     for (var item in _vaultService.items) {
       totalBytes += item.sizeBytes;
-      categorySizes[item.category] =
-          (categorySizes[item.category] ?? 0) + item.sizeBytes;
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Slate 900
+      backgroundColor: const Color(0xFF000000), // Pure Black Minimalist
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E293B), // Slate 800
+        backgroundColor: const Color(0xFF000000),
         elevation: 0,
-        title: Row(
-          children: [
-            const Icon(Icons.shield_outlined, color: Colors.blueAccent, size: 28),
-            const SizedBox(width: 10),
-            const Text(
-              'Document Vault',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.greenAccent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.lock, color: Colors.greenAccent, size: 12),
-                  SizedBox(width: 4),
-                  Text(
-                    'AES-256',
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        title: const Text(
+          'VAULT',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            letterSpacing: 2.0,
+            fontSize: 15,
+            color: Colors.white,
+          ),
         ),
         actions: [
           IconButton(
-            tooltip: 'Lock Vault',
-            icon: const Icon(Icons.lock_outline, color: Colors.white70),
+            tooltip: 'Settings',
+            icon: const Icon(Icons.settings_outlined, color: Colors.white70, size: 20),
+            onPressed: _showSettingsSheet,
+          ),
+          IconButton(
+            tooltip: 'Lock',
+            icon: const Icon(Icons.lock_outline, color: Colors.white70, size: 20),
             onPressed: () {
               _vaultService.lock();
               widget.onLock();
@@ -331,45 +532,134 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(width: 8),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: Colors.white10, height: 1.0),
+        ),
       ),
       body: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Stats Dashboard Panel
-              _buildStatsPanel(totalBytes, categorySizes),
-              
-              // Search and Filters
-              _buildSearchAndFilters(),
-
-              // Items Header
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Secured Files (${filteredItems.length})',
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    if (_vaultService.items.isNotEmpty)
+              // Minimal Storage Summary Row
+              if (_vaultService.items.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        'Total: ${VaultService.formatBytes(totalBytes)}',
+                        'STORAGE: ${VaultService.formatBytes(totalBytes)}',
                         style: const TextStyle(
                           color: Colors.white38,
-                          fontSize: 13,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1.0,
                         ),
                       ),
-                  ],
+                      Text(
+                        '${_vaultService.items.length} FILES',
+                        style: const TextStyle(
+                          color: Colors.white38,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              
+              // Search Field
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (val) {
+                    setState(() {
+                      _searchQuery = val;
+                    });
+                  },
+                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    hintStyle: const TextStyle(color: Colors.white24, fontSize: 12),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white38, size: 16),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, color: Colors.white38, size: 14),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {
+                                _searchQuery = '';
+                              });
+                            },
+                          )
+                        : null,
+                    filled: true,
+                    fillColor: const Color(0xFF0F0F0F),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(color: Colors.white10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(color: Colors.white24),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  ),
                 ),
               ),
 
-              // Files List or Empty State
+              // Categories Row
+              SizedBox(
+                height: 40,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _categories.length,
+                  itemBuilder: (context, index) {
+                    final cat = _categories[index];
+                    final isSelected = _selectedCategory == cat;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: ChoiceChip(
+                        label: Text(
+                          cat.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          setState(() {
+                            _selectedCategory = cat;
+                          });
+                        },
+                        selectedColor: Colors.white,
+                        backgroundColor: Colors.transparent,
+                        checkmarkColor: Colors.black,
+                        labelStyle: TextStyle(
+                          color: isSelected ? Colors.black : Colors.white60,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          side: BorderSide(
+                            color: isSelected ? Colors.transparent : Colors.white12,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Files List
               Expanded(
                 child: filteredItems.isEmpty
                     ? _buildEmptyState()
@@ -378,211 +668,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
 
-          // Modal HUD while processing
+          // Processing Overlay HUD
           if (_isProcessing)
             Container(
-              color: Colors.black54,
+              color: Colors.black87,
               child: Center(
-                child: Card(
-                  color: const Color(0xFF1E293B),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 24.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _processingMessage,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _processingMessage.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 10,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.add),
-        label: const Text('Add Document'),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        mini: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onPressed: _importFile,
+        child: const Icon(Icons.add),
       ),
-    );
-  }
-
-  Widget _buildStatsPanel(int totalBytes, Map<String, int> categorySizes) {
-    if (_vaultService.items.isEmpty) return const SizedBox.shrink();
-
-    return Container(
-      margin: const EdgeInsets.all(16.0),
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E293B), // Slate 800
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Vault Storage Distribution',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Progress bar representing breakdown
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
-              height: 10,
-              child: Row(
-                children: _categories
-                    .where((cat) => cat != 'All' && (categorySizes[cat] ?? 0) > 0)
-                    .map((cat) {
-                  final size = categorySizes[cat] ?? 0;
-                  final percentage = totalBytes > 0 ? size / totalBytes : 0.0;
-                  return Expanded(
-                    flex: (percentage * 100).round().clamp(1, 100),
-                    child: Container(
-                      color: _getColorForCategory(cat),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Legend
-          Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: _categories
-                .where((cat) => cat != 'All' && (categorySizes[cat] ?? 0) > 0)
-                .map((cat) {
-              final size = categorySizes[cat] ?? 0;
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: _getColorForCategory(cat),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '$cat (${VaultService.formatBytes(size)})',
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchAndFilters() {
-    return Column(
-      children: [
-        // Search text field
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: TextField(
-            controller: _searchController,
-            onChanged: (val) {
-              setState(() {
-                _searchQuery = val;
-              });
-            },
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Search files...',
-              hintStyle: const TextStyle(color: Colors.white38),
-              prefixIcon: const Icon(Icons.search, color: Colors.white38),
-              suffixIcon: _searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear, color: Colors.white38),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {
-                          _searchQuery = '';
-                        });
-                      },
-                    )
-                  : null,
-              filled: true,
-              fillColor: const Color(0xFF1E293B),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 0),
-            ),
-          ),
-        ),
-        // Categories list
-        SizedBox(
-          height: 48,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: _categories.length,
-            itemBuilder: (context, index) {
-              final cat = _categories[index];
-              final isSelected = _selectedCategory == cat;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0, top: 4.0, bottom: 4.0),
-                child: FilterChip(
-                  label: Text(cat),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedCategory = cat;
-                    });
-                  },
-                  backgroundColor: const Color(0xFF1E293B),
-                  selectedColor: Colors.blueAccent,
-                  checkmarkColor: Colors.white,
-                  labelStyle: TextStyle(
-                    color: isSelected ? Colors.white : Colors.white70,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: BorderSide(
-                      color: isSelected ? Colors.transparent : Colors.white10,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -592,32 +716,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            hasItemsAtAll ? Icons.search_off_outlined : Icons.folder_open_outlined,
-            size: 80,
-            color: Colors.white24,
-          ),
-          const SizedBox(height: 16),
           Text(
-            hasItemsAtAll
-                ? 'No matches found'
-                : 'Your Vault is Empty',
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            hasItemsAtAll
-                ? 'Try modifying your search criteria'
-                : 'Click "Add Document" to encrypt and store files safely.',
+            hasItemsAtAll ? 'NO MATCHES' : 'EMPTY VAULT',
             style: const TextStyle(
               color: Colors.white38,
-              fontSize: 14,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2.0,
             ),
-            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            hasItemsAtAll ? 'Refine search terms' : 'Add documents to secure them',
+            style: const TextStyle(
+              color: Colors.white24,
+              fontSize: 11,
+              letterSpacing: 0.5,
+            ),
           ),
         ],
       ),
@@ -630,57 +745,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
       itemCount: itemsList.length,
       itemBuilder: (context, index) {
         final item = itemsList[index];
-        final formattedDate =
-            DateFormat('MMM dd, yyyy • hh:mm a').format(item.addedDate);
+        final formattedDate = DateFormat('yyyy-MM-dd').format(item.addedDate);
         final sizeStr = VaultService.formatBytes(item.sizeBytes);
 
-        return Card(
-          color: const Color(0xFF1E293B),
-          margin: const EdgeInsets.only(bottom: 10),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: Colors.white.withValues(alpha: 0.03)),
+        return Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white12, width: 1),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
             onTap: () => _openFile(item),
-            leading: CircleAvatar(
-              backgroundColor: _getColorForCategory(item.category).withValues(alpha: 0.15),
-              child: Icon(
-                _getIconForCategory(item.category),
-                color: _getColorForCategory(item.category),
-              ),
-            ),
             title: Text(
               item.originalName,
               style: const TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                fontSize: 13,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                '$sizeStr • $formattedDate',
-                style: const TextStyle(
-                  color: Colors.white38,
-                  fontSize: 12,
-                ),
+            subtitle: Text(
+              '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
+              style: const TextStyle(
+                color: Colors.white38,
+                fontSize: 10,
               ),
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.download_outlined, color: Colors.blueAccent),
-                  tooltip: 'Export (Decrypt & Save)',
+                  icon: const Icon(Icons.download_outlined, color: Colors.white54, size: 18),
+                  tooltip: 'Export',
                   onPressed: () => _exportFile(item),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                  tooltip: 'Delete Permanently',
+                  icon: const Icon(Icons.delete_outline, color: Colors.white38, size: 18),
+                  tooltip: 'Delete',
                   onPressed: () => _deleteFile(item),
                 ),
               ],

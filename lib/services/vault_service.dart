@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:local_auth/local_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../models/vault_item.dart';
@@ -12,8 +13,11 @@ class VaultService {
   factory VaultService() => _instance;
   VaultService._internal();
 
+  final LocalAuthentication _localAuth = LocalAuthentication();
+
   bool _isInitialized = false;
   bool _hasPasscode = false;
+  bool _isBiometricEnabled = false;
   String? _passcodeHash;
   enc.Key? _sessionKey;
   
@@ -21,11 +25,13 @@ class VaultService {
   late Directory _tempDir;
   late File _dbFile;
   late File _configFile;
+  late File _biometricFile;
 
   List<VaultItem> _items = [];
 
   bool get isInitialized => _isInitialized;
   bool get hasPasscode => _hasPasscode;
+  bool get isBiometricEnabled => _isBiometricEnabled;
   bool get isUnlocked => _sessionKey != null;
   List<VaultItem> get items => _items;
 
@@ -46,6 +52,7 @@ class VaultService {
 
     _dbFile = File(p.join(_vaultDir.path, 'vault_db.json'));
     _configFile = File(p.join(_vaultDir.path, 'vault_config.json'));
+    _biometricFile = File(p.join(_vaultDir.path, 'vault_bio.json'));
 
     // Load configuration
     if (await _configFile.exists()) {
@@ -54,14 +61,16 @@ class VaultService {
         final config = jsonDecode(configStr) as Map<String, dynamic>;
         _passcodeHash = config['passcodeHash'] as String?;
         _hasPasscode = _passcodeHash != null && _passcodeHash!.isNotEmpty;
+        _isBiometricEnabled = config['isBiometricEnabled'] as bool? ?? false;
       } catch (e) {
         _hasPasscode = false;
+        _isBiometricEnabled = false;
       }
     } else {
       _hasPasscode = false;
+      _isBiometricEnabled = false;
     }
 
-    // Load database items if unlocked (but we are not unlocked yet)
     _isInitialized = true;
   }
 
@@ -70,7 +79,10 @@ class VaultService {
     final digest = sha256.convert(bytes);
     _passcodeHash = digest.toString();
 
-    final config = {'passcodeHash': _passcodeHash};
+    final config = {
+      'passcodeHash': _passcodeHash,
+      'isBiometricEnabled': _isBiometricEnabled,
+    };
     await _configFile.writeAsString(jsonEncode(config));
     _hasPasscode = true;
 
@@ -92,6 +104,81 @@ class VaultService {
       return true;
     }
     return false;
+  }
+
+  Future<bool> changePasscode(String oldPin, String newPin) async {
+    if (!verifyPasscode(oldPin)) return false;
+
+    // Set new passcode
+    await setPasscode(newPin);
+
+    // If biometrics was enabled, we need to update the stored PIN in the biometric file
+    if (_isBiometricEnabled) {
+      await setBiometricEnabled(true, newPin);
+    }
+    return true;
+  }
+
+  Future<bool> canUseBiometrics() async {
+    try {
+      final isSupported = await _localAuth.isDeviceSupported();
+      final canCheck = await _localAuth.canCheckBiometrics;
+      return isSupported && canCheck;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> authenticateWithBiometrics() async {
+    if (!_isBiometricEnabled) return false;
+    if (!await _biometricFile.exists()) return false;
+
+    try {
+      final authenticated = await _localAuth.authenticate(
+        localizedReason: 'Authenticate to unlock your secure Document Vault',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+
+      if (authenticated) {
+        final bioDataStr = await _biometricFile.readAsString();
+        final bioData = jsonDecode(bioDataStr) as Map<String, dynamic>;
+        final encryptedPin = bioData['encryptedPin'] as String;
+
+        // Decrypt/de-obfuscate the saved PIN
+        final pin = utf8.decode(base64Decode(encryptedPin));
+        
+        final bytes = utf8.encode(pin);
+        final digest = sha256.convert(bytes);
+        _sessionKey = enc.Key(Uint8List.fromList(digest.bytes));
+        await _loadDatabase();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> setBiometricEnabled(bool enabled, String currentPin) async {
+    _isBiometricEnabled = enabled;
+    
+    final config = {
+      'passcodeHash': _passcodeHash,
+      'isBiometricEnabled': _isBiometricEnabled,
+    };
+    await _configFile.writeAsString(jsonEncode(config));
+
+    if (enabled) {
+      final obfuscated = base64Encode(utf8.encode(currentPin));
+      await _biometricFile.writeAsString(jsonEncode({'encryptedPin': obfuscated}));
+    } else {
+      if (await _biometricFile.exists()) {
+        await _biometricFile.delete();
+      }
+    }
   }
 
   void lock() {

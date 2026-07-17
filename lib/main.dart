@@ -164,12 +164,12 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
-        primaryColor: Colors.blueAccent,
-        scaffoldBackgroundColor: const Color(0xFF0F172A),
+        primaryColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xFF000000),
         colorScheme: const ColorScheme.dark(
-          primary: Colors.blueAccent,
-          secondary: Color(0xFF10B981),
-          surface: Color(0xFF1E293B),
+          primary: Colors.white,
+          secondary: Colors.white70,
+          surface: Color(0xFF0F0F0F),
         ),
       ),
       home: homeScreen,
