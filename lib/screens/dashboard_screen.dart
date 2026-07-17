@@ -60,6 +60,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       }
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Successfully secured ${result.files.length} file(s)'),
@@ -67,6 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to import: $e'),
@@ -297,7 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.greenAccent.withOpacity(0.15),
+                color: Colors.greenAccent.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Row(
@@ -431,7 +433,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B), // Slate 800
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -637,12 +639,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           margin: const EdgeInsets.only(bottom: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: Colors.white.withOpacity(0.03)),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.03)),
           ),
           child: ListTile(
             onTap: () => _openFile(item),
             leading: CircleAvatar(
-              backgroundColor: _getColorForCategory(item.category).withOpacity(0.15),
+              backgroundColor: _getColorForCategory(item.category).withValues(alpha: 0.15),
               child: Icon(
                 _getIconForCategory(item.category),
                 color: _getColorForCategory(item.category),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'screens/passcode_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -19,6 +20,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   final VaultService _vaultService = VaultService();
   bool _isLoading = true;
   bool _unlocked = false;
+  String? _initError;
 
   @override
   void initState() {
@@ -46,11 +48,24 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   }
 
   Future<void> _initVault() async {
-    await _vaultService.init();
-    setState(() {
-      _isLoading = false;
-      _unlocked = _vaultService.isUnlocked;
-    });
+    try {
+      if (kIsWeb) {
+        throw UnsupportedError(
+            'Local file encryption and file system storage are not supported in the web browser sandbox. '
+            'Please run the app as a native Windows desktop app (flutter run -d windows) for secure local vault access.');
+      }
+      await _vaultService.init();
+      setState(() {
+        _isLoading = false;
+        _unlocked = _vaultService.isUnlocked;
+        _initError = null;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _initError = e.toString();
+      });
+    }
   }
 
   void _onUnlockSuccess() {
@@ -85,6 +100,58 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           ),
         ),
       );
+    } else if (_initError != null) {
+      homeScreen = Scaffold(
+        backgroundColor: const Color(0xFF0F172A),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.warning_amber_rounded, size: 80, color: Colors.amberAccent),
+                const SizedBox(height: 24),
+                const Text(
+                  'Initialization Error',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _initError!,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                if (!kIsWeb)
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _initError = null;
+                      });
+                      _initVault();
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      );
     } else if (!_unlocked) {
       homeScreen = PasscodeScreen(onSuccess: _onUnlockSuccess);
     } else {
@@ -103,7 +170,6 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           primary: Colors.blueAccent,
           secondary: Color(0xFF10B981),
           surface: Color(0xFF1E293B),
-          background: Color(0xFF0F172A),
         ),
       ),
       home: homeScreen,
