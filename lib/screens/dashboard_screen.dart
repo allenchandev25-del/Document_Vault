@@ -463,13 +463,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           TextButton(
             onPressed: () async {
-              if (await _vaultService.verifyPasscode(pin)) {
-                Navigator.pop(context, pin);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Incorrect PIN'), backgroundColor: Colors.redAccent),
-                );
-                Navigator.pop(context);
+              final isCorrect = await _vaultService.verifyPasscode(pin);
+              if (context.mounted) {
+                if (isCorrect) {
+                  Navigator.pop(context, pin);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Incorrect PIN'), backgroundColor: Colors.redAccent),
+                  );
+                  Navigator.pop(context);
+                }
               }
             },
             child: const Text('CONFIRM', style: TextStyle(color: Colors.white, fontSize: 11)),
