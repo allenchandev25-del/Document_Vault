@@ -68,7 +68,7 @@ class FileViewerScreen extends StatelessWidget {
                       child: SelectableText(
                         snapshot.data ?? '',
                         style: const TextStyle(
-                          color: Colors.white80,
+                          color: Colors.white70,
                           fontFamily: 'monospace',
                           fontSize: 14,
                           height: 1.5,

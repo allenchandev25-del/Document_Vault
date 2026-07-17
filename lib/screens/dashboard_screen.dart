@@ -244,7 +244,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Color _getColorForCategory(String category) {
     switch (category) {
       case 'Images':
-        return Colors.emerald;
+        return const Color(0xFF10B981);
       case 'PDFs':
         return Colors.redAccent;
       case 'Documents':
@@ -295,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(width: 8),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, py: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: Colors.greenAccent.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(12),

@@ -101,7 +101,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         scaffoldBackgroundColor: const Color(0xFF0F172A),
         colorScheme: const ColorScheme.dark(
           primary: Colors.blueAccent,
-          secondary: Colors.emerald,
+          secondary: Color(0xFF10B981),
           surface: Color(0xFF1E293B),
           background: Color(0xFF0F172A),
         ),

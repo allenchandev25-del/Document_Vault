@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:path_provider/path_provider.dart';
@@ -118,12 +119,6 @@ class VaultService {
   Future<void> _saveDatabase() async {
     final jsonList = _items.map((item) => item.toJson()).toList();
     await _dbFile.writeAsString(jsonEncode(jsonList));
-  }
-
-  enc.IV _getIV() {
-    // We use a simple static IV for the files. For extra security, one could store IV alongside the file.
-    // However, in a localized vault app, a single static IV or deterministic IV derived from filename is sufficient.
-    return enc.IV.fromSecureRandom(16);
   }
 
   Future<VaultItem> encryptAndAddFile(File sourceFile) async {
