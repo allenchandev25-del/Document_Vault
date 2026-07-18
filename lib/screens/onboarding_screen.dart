@@ -139,7 +139,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     decoration: BoxDecoration(
                       color: _currentPage == index
                           ? primaryTxt
-                          : primaryTxt.withOpacity(0.2),
+                          : primaryTxt.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                   ),
