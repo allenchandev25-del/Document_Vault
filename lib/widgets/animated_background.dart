@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class MinimalAnimatedBackground extends StatefulWidget {
@@ -18,26 +19,26 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
     super.initState();
     final random = math.Random();
     
-    // Curated premium vibrant palette: neon blue, indigo, magenta/pink, cyan
+    // Monochromatic & minimalist slate/silver palette (iOS Glass Style)
     final colors = [
-      const Color(0xFF00D2FF), // Cyan
-      const Color(0xFF0066FF), // Neon Blue
-      const Color(0xFF9D00FF), // Violet/Indigo
-      const Color(0xFFFF007F), // Vibrant Pink/Magenta
+      const Color(0xFF64748B), // Slate Grey
+      const Color(0xFF94A3B8), // Muted Silver/Grey
+      const Color(0xFFCBD5E1), // Light Slate
+      const Color(0xFF475569), // Dark Slate
     ];
 
-    _particles = List.generate(15, (index) {
+    _particles = List.generate(8, (index) {
       return Particle(
         color: colors[random.nextInt(colors.length)],
-        radius: random.nextDouble() * 150 + 100, // Large glowing blobs
-        speedX: (random.nextDouble() - 0.5) * 0.002, // Increased speed for visibility
-        speedY: (random.nextDouble() - 0.5) * 0.002,
+        radius: random.nextDouble() * 200 + 150, // Large blobs for smooth gradients
+        speedX: (random.nextDouble() - 0.5) * 0.0006, // Slow, elegant drift
+        speedY: (random.nextDouble() - 0.5) * 0.0006,
       );
     });
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 20),
     )..repeat();
   }
 
@@ -49,19 +50,37 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
         for (var p in _particles) {
           p.update();
         }
-        return CustomPaint(
-          painter: BokehPainter(
-            particles: _particles,
-            isDark: isDark,
-          ),
-          child: Container(),
+        return Stack(
+          children: [
+            // 1. Drifting shapes
+            Positioned.fill(
+              child: CustomPaint(
+                painter: BokehPainter(
+                  particles: _particles,
+                  isDark: isDark,
+                ),
+              ),
+            ),
+            // 2. iOS Frosted Glass blur overlay
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+                child: Container(
+                  color: isDark
+                      ? const Color(0xFF090D12).withValues(alpha: 0.45) // Subtle dark frost
+                      : const Color(0xFFFFFFFF).withValues(alpha: 0.35), // Clean light frost
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -88,13 +107,11 @@ class Particle {
     x += speedX;
     y += speedY;
 
-    // Bounce off walls smoothly
-    if (x < -0.2 || x > 1.2) x = x < 0 ? -0.2 : 1.2;
-    if (y < -0.2 || y > 1.2) y = y < 0 ? -0.2 : 1.2;
-    
-    // Gently wrap around or drift back
-    if (x <= -0.2 || x >= 1.2) x = math.Random().nextDouble();
-    if (y <= -0.2 || y >= 1.2) y = math.Random().nextDouble();
+    // Soft boundary reset to keep them floating in bounds
+    if (x < -0.3) x = 1.3;
+    if (x > 1.3) x = -0.3;
+    if (y < -0.3) y = 1.3;
+    if (y > 1.3) y = -0.3;
   }
 }
 
@@ -108,14 +125,11 @@ class BokehPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (var p in particles) {
       final center = Offset(p.x * size.width, p.y * size.height);
-      
-      // Radial gradient for smooth glow / bokeh effect
       final rect = Rect.fromCircle(center: center, radius: p.radius);
       
-      // Increased opacity values so they are clearly visible
       final gradient = RadialGradient(
         colors: [
-          p.color.withValues(alpha: isDark ? 0.20 : 0.12),
+          p.color.withValues(alpha: isDark ? 0.15 : 0.10),
           p.color.withValues(alpha: 0.0),
         ],
       );
