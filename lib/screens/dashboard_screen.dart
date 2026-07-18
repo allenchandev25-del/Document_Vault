@@ -882,7 +882,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.image, size: 32, color: primaryTxt.withOpacity(0.5)),
+                                  Icon(Icons.image, size: 32, color: primaryTxt.withValues(alpha: 0.5)),
                                   const SizedBox(height: 6),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
