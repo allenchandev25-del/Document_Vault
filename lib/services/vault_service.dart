@@ -201,7 +201,7 @@ class VaultService {
           .map((item) => VaultItem.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e, stack) {
-      print('DB LOAD ERROR: $e\n$stack');
+      debugPrint('DB LOAD ERROR: $e\n$stack');
       _items = [];
     }
   }
