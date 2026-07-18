@@ -142,15 +142,15 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 24.0),
                     padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
+                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.5),
-                        width: 1.0,
+                        color: isDark ? Colors.white10 : Colors.black12,
+                        width: 1,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
+                          color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.05),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
