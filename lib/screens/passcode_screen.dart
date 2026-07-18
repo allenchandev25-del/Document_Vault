@@ -142,7 +142,13 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 16),
-                      // Minimal Header
+                      Image.asset(
+                        'assets/logo.png',
+                        width: 48,
+                        height: 48,
+                        color: primaryTxt,
+                      ),
+                      const SizedBox(height: 16),
                       Text(
                         title,
                         style: TextStyle(

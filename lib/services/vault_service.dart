@@ -349,6 +349,30 @@ class VaultService {
     return tempFilePath;
   }
 
+  Future<Uint8List> decryptToBytes(VaultItem item) async {
+    if (_sessionKey == null) throw Exception('Vault is locked');
+
+    final encryptedFilePath = p.join(_vaultDir.path, item.encryptedFileName);
+    final encryptedFile = File(encryptedFilePath);
+    if (!await encryptedFile.exists()) {
+      throw Exception('Encrypted file not found on disk');
+    }
+
+    final combinedBytes = await encryptedFile.readAsBytes();
+    if (combinedBytes.length < 16) {
+      throw Exception('Encrypted file is corrupted');
+    }
+
+    final ivBytes = combinedBytes.sublist(0, 16);
+    final payloadBytes = combinedBytes.sublist(16);
+
+    final iv = enc.IV(ivBytes);
+    final encrypter = enc.Encrypter(enc.AES(_sessionKey!, mode: enc.AESMode.cbc));
+
+    final decryptedBytes = encrypter.decryptBytes(enc.Encrypted(payloadBytes), iv: iv);
+    return Uint8List.fromList(decryptedBytes);
+  }
+
   Future<void> cleanTempFolder() async {
     if (await _tempDir.exists()) {
       await _tempDir.delete(recursive: true);

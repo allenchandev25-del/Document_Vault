@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
@@ -878,20 +879,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
                             ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Stack(
+                                fit: StackFit.expand,
                                 children: [
-                                  Icon(Icons.image, size: 32, color: primaryTxt.withValues(alpha: 0.5)),
-                                  const SizedBox(height: 6),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                    child: Text(
-                                      item.originalName,
-                                      style: TextStyle(fontSize: 9, color: primaryTxt),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
+                                  VaultImagePreview(item: item),
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      color: Colors.black54,
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                                      child: Text(
+                                        item.originalName,
+                                        style: const TextStyle(fontSize: 9, color: Colors.white),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -1436,6 +1443,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
             onTap: () => _openFile(item),
+            leading: item.category == 'Images'
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: VaultImagePreview(item: item),
+                    ),
+                  )
+                : Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.white10 : Colors.black12,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Icon(
+                      _getIconForCategory(item.category),
+                      color: _getColorForCategory(item.category),
+                      size: 20,
+                    ),
+                  ),
             title: Text(
               item.originalName,
               style: TextStyle(
@@ -1506,11 +1535,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(flex: 2),
-                Icon(
-                  _getIconForCategory(item.category),
-                  color: _getColorForCategory(item.category),
-                  size: 28,
-                ),
+                item.category == 'Images'
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: SizedBox(
+                          width: 80,
+                          height: 60,
+                          child: VaultImagePreview(item: item),
+                        ),
+                      )
+                    : Icon(
+                        _getIconForCategory(item.category),
+                        color: _getColorForCategory(item.category),
+                        size: 28,
+                      ),
                 const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -1601,5 +1639,74 @@ class _DashboardScreenState extends State<DashboardScreen> {
       default:
         return Colors.purpleAccent;
     }
+  }
+}
+
+class VaultImagePreview extends StatefulWidget {
+  final VaultItem item;
+  final double width;
+  final double height;
+  final BoxFit fit;
+
+  const VaultImagePreview({
+    super.key,
+    required this.item,
+    this.width = double.infinity,
+    this.height = double.infinity,
+    this.fit = BoxFit.cover,
+  });
+
+  @override
+  State<VaultImagePreview> createState() => _VaultImagePreviewState();
+}
+
+class _VaultImagePreviewState extends State<VaultImagePreview> {
+  final VaultService _vaultService = VaultService();
+  Uint8List? _decryptedBytes;
+  bool _error = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreview();
+  }
+
+  Future<void> _loadPreview() async {
+    try {
+      final decrypted = await _vaultService.decryptToBytes(widget.item);
+      if (mounted) {
+        setState(() {
+          _decryptedBytes = decrypted;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = true;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_error) {
+      return const Center(child: Icon(Icons.broken_image, size: 20, color: Colors.redAccent));
+    }
+    if (_decryptedBytes == null) {
+      return const Center(
+        child: SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(strokeWidth: 1.5),
+        ),
+      );
+    }
+    return Image.memory(
+      _decryptedBytes!,
+      width: widget.width,
+      height: widget.height,
+      fit: widget.fit,
+    );
   }
 }

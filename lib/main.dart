@@ -13,7 +13,7 @@ void main() {
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
   @override
   State<MainApp> createState() => _MainAppState();
