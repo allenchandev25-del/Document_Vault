@@ -94,15 +94,15 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     Widget homeScreen;
 
     if (_isLoading) {
-      homeScreen = const Scaffold(
-        backgroundColor: Color(0xFF0F172A),
+      homeScreen = Scaffold(
+        backgroundColor: const Color(0xFF0F172A),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.shield, size: 64, color: Colors.blueAccent),
-              SizedBox(height: 16),
-              CircularProgressIndicator(
+              Image.asset('assets/logo.png', width: 64, height: 64),
+              const SizedBox(height: 16),
+              const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
               ),
             ],
