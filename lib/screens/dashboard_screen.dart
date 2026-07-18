@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
@@ -37,10 +38,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController _vaultQueryController = TextEditingController();
   String _vaultQuery = '';
   String _selectedVaultCategory = 'All';
-  bool _isGridView = false;
+  bool _isGridView = true; // Curvy grid view as default matches mockup
 
   // Photo Gallery State
-  String _selectedGalleryFilter = 'All Photos'; // 'All Photos' or 'Favorites'
+  String _selectedGalleryFilter = 'All Photos'; 
   final Set<String> _favoriteIds = {};
 
   // Settings / Bio State
@@ -296,7 +297,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF151E2E) : Colors.white,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
         title: const Text('Delete File', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         content: Text(
@@ -362,7 +363,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: const Color(0xFF121212),
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.white12),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
         title: const Text('Confirm PIN', style: TextStyle(color: Colors.white, fontSize: 14, letterSpacing: 1.0)),
         content: TextField(
@@ -415,7 +416,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF151E2E) : Colors.white,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
         title: const Text('Change Security PIN', style: TextStyle(fontSize: 14, letterSpacing: 1.0)),
         content: Column(
@@ -662,7 +663,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               backgroundColor: primaryTxt,
               foregroundColor: Theme.of(context).scaffoldBackgroundColor,
               mini: true,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               onPressed: _importFile,
               child: const Icon(Icons.add),
             )
@@ -711,45 +712,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         
-        // Search Filter
+        // Search Filter (Glassmorphic Bar)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: TextField(
-            controller: _vaultQueryController,
-            onChanged: (val) {
-              setState(() {
-                _vaultQuery = val;
-              });
-            },
-            style: TextStyle(fontSize: 13, color: primaryTxt),
-            decoration: InputDecoration(
-              hintText: 'Search secure files...',
-              prefixIcon: Icon(Icons.search, size: 16, color: subTxt),
-              suffixIcon: _vaultQuery.isNotEmpty
-                  ? IconButton(
-                      icon: Icon(Icons.clear, size: 14, color: subTxt),
-                      onPressed: () {
-                        _vaultQueryController.clear();
-                        setState(() {
-                          _vaultQuery = '';
-                        });
-                      },
-                    )
-                  : null,
-              filled: true,
-              fillColor: isDark ? const Color(0xFF151E2E) : const Color(0xFFF5F5F5),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          child: GlassContainer(
+            borderRadius: 24,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextField(
+              controller: _vaultQueryController,
+              onChanged: (val) {
+                setState(() {
+                  _vaultQuery = val;
+                });
+              },
+              style: TextStyle(fontSize: 13, color: primaryTxt),
+              decoration: InputDecoration(
+                hintText: 'Search secure files...',
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search, size: 16, color: subTxt),
+                suffixIcon: _vaultQuery.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.clear, size: 14, color: subTxt),
+                        onPressed: () {
+                          _vaultQueryController.clear();
+                          setState(() {
+                            _vaultQuery = '';
+                          });
+                        },
+                      )
+                    : null,
+              ),
             ),
           ),
         ),
 
-        // Categories selector
+        // Categories selector chips (translucent capsules)
         SizedBox(
-          height: 40,
+          height: 44,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             itemCount: _categories.length,
             itemBuilder: (context, index) {
               final cat = _categories[index];
@@ -772,17 +774,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     });
                   },
                   selectedColor: primaryTxt,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
                   checkmarkColor: isDark ? Colors.black : Colors.white,
                   labelStyle: TextStyle(
-                    color: isSelected
-                        ? (isDark ? Colors.black : Colors.white)
-                        : subTxt,
+                    color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(20),
                     side: BorderSide(
                       color: isSelected ? Colors.transparent : (isDark ? Colors.white10 : Colors.black12),
+                      width: 1,
                     ),
                   ),
                 ),
@@ -838,13 +839,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                   },
                   selectedColor: primaryTxt,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
                   checkmarkColor: isDark ? Colors.black : Colors.white,
                   labelStyle: TextStyle(
                     color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(20),
                     side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
                   ),
                 ),
@@ -861,8 +862,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                   ),
                   itemCount: photoItems.length,
                   itemBuilder: (context, index) {
@@ -873,14 +874,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         GestureDetector(
                           onTap: () => _openFile(item),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF151E2E) : const Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
-                            ),
+                          child: GlassContainer(
+                            borderRadius: 16,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(16),
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
@@ -890,11 +887,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     left: 0,
                                     right: 0,
                                     child: Container(
-                                      color: Colors.black54,
+                                      color: Colors.black45,
                                       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                                       child: Text(
                                         item.originalName,
-                                        style: const TextStyle(fontSize: 9, color: Colors.white),
+                                        style: const TextStyle(fontSize: 8, color: Colors.white),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -907,8 +904,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         Positioned(
-                          top: 4,
-                          right: 4,
+                          top: 8,
+                          right: 8,
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
@@ -955,20 +952,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
-                controller: _searchTabQueryController,
-                onChanged: (val) {
-                  setState(() {
-                    _searchTabQuery = val;
-                  });
-                },
-                style: TextStyle(fontSize: 13, color: primaryTxt),
-                decoration: InputDecoration(
-                  hintText: 'Enter search text...',
-                  prefixIcon: Icon(Icons.search, size: 16, color: subTxt),
-                  filled: true,
-                  fillColor: isDark ? const Color(0xFF151E2E) : const Color(0xFFF5F5F5),
-                  border: InputBorder.none,
+              GlassContainer(
+                borderRadius: 24,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  controller: _searchTabQueryController,
+                  onChanged: (val) {
+                    setState(() {
+                      _searchTabQuery = val;
+                    });
+                  },
+                  style: TextStyle(fontSize: 13, color: primaryTxt),
+                  decoration: InputDecoration(
+                    hintText: 'Enter search text...',
+                    border: InputBorder.none,
+                    prefixIcon: Icon(Icons.search, size: 16, color: subTxt),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -1001,13 +1000,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           }
                         },
                         selectedColor: primaryTxt,
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
                         checkmarkColor: isDark ? Colors.black : Colors.white,
                         labelStyle: TextStyle(
                           color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(20),
                           side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
                         ),
                       ),
@@ -1040,13 +1039,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
                       },
                       selectedColor: primaryTxt,
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
                       checkmarkColor: isDark ? Colors.black : Colors.white,
                       labelStyle: TextStyle(
                         color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(20),
                         side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
                       ),
                     ),
@@ -1068,14 +1067,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     final dateStr = DateFormat('yyyy-MM-dd').format(item.addedDate);
                     final sizeStr = VaultService.formatBytes(item.sizeBytes);
 
-                    return Card(
-                      color: isDark ? const Color(0xFF151E2E) : const Color(0xFFFBFBFB),
-                      elevation: 0,
-                      margin: const EdgeInsets.only(bottom: 8),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                    return GlassContainer(
+                      borderRadius: 16,
+                      margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.transparent,
@@ -1099,7 +1093,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // TAB 3: UPLOADS (UPLOAD CENTER)
   Widget _buildUploadsTab(bool isDark, Color primaryTxt, Color subTxt, int totalBytes) {
-    const double limitBytes = 100 * 1024 * 1024; // 100 MB Limit
+    const double limitBytes = 100 * 1024 * 1024; 
     final percent = (totalBytes / limitBytes).clamp(0.0, 1.0);
     final percentStr = (percent * 100).toStringAsFixed(1);
     final historyList = List<VaultItem>.from(_vaultService.items)
@@ -1110,14 +1104,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Storage Status Card
-          Container(
+          // Storage Status Card (Glass Container)
+          GlassContainer(
+            borderRadius: 24,
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF151E2E) : const Color(0xFFF9FAFD),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
-            ),
             child: Row(
               children: [
                 Stack(
@@ -1128,7 +1118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       height: 60,
                       child: CircularProgressIndicator(
                         value: percent,
-                        strokeWidth: 6,
+                        strokeWidth: 5,
                         backgroundColor: isDark ? Colors.white12 : Colors.black12,
                         valueColor: AlwaysStoppedAnimation<Color>(primaryTxt),
                       ),
@@ -1177,8 +1167,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryTxt,
                     foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),
               ),
@@ -1207,12 +1197,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       final sizeStr = VaultService.formatBytes(item.sizeBytes);
                       final timeStr = DateFormat('MM/dd HH:mm').format(item.addedDate);
 
-                      return Container(
+                      return GlassContainer(
+                        borderRadius: 16,
                         margin: const EdgeInsets.only(bottom: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
                         child: ListTile(
                           dense: true,
                           leading: const Icon(Icons.cloud_done_outlined, color: Colors.green, size: 16),
@@ -1236,155 +1223,159 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildSettingsTab(bool isDark, Color primaryTxt, Color subTxt) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'THEME MODE',
-            style: TextStyle(color: subTxt, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ThemeMode.system,
-              ThemeMode.dark,
-              ThemeMode.light,
-            ].map((mode) {
-              final isSelected = MainApp.themeNotifier.value == mode;
-              String modeName = '';
-              if (mode == ThemeMode.system) modeName = 'SYSTEM';
-              if (mode == ThemeMode.dark) modeName = 'DARK';
-              if (mode == ThemeMode.light) modeName = 'LIGHT';
-
-              return ChoiceChip(
-                label: Text(
-                  modeName,
-                  style: const TextStyle(fontSize: 9, letterSpacing: 0.5),
-                ),
-                selected: isSelected,
-                selectedColor: primaryTxt,
-                backgroundColor: Colors.transparent,
-                checkmarkColor: isDark ? Colors.black : Colors.white,
-                labelStyle: TextStyle(
-                  color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                  side: BorderSide(
-                    color: isSelected ? Colors.transparent : (isDark ? Colors.white12 : Colors.black12),
-                  ),
-                ),
-                onSelected: (selected) {
-                  if (selected) {
-                    setState(() {
-                      MainApp.themeNotifier.value = mode;
-                    });
-                  }
-                },
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16),
-          Divider(color: Theme.of(context).dividerColor),
-          
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Fingerprint Unlock', style: TextStyle(color: primaryTxt, fontSize: 14)),
-            subtitle: Text(
-              _biometricSupported ? 'Unlock your vault using biometrics' : 'Biometrics not supported on this device',
-              style: TextStyle(color: subTxt, fontSize: 11),
+      child: GlassContainer(
+        borderRadius: 24,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'THEME MODE',
+              style: TextStyle(color: subTxt, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0),
             ),
-            trailing: _biometricSupported
-                ? Switch(
-                    value: _vaultService.isBiometricEnabled,
-                    activeThumbColor: primaryTxt,
-                    onChanged: (val) async {
-                      final pin = await _promptForCurrentPin();
-                      if (pin != null) {
-                        await _vaultService.setBiometricEnabled(val, pin);
-                        setState(() {});
-                      }
-                    },
-                  )
-                : null,
-          ),
-          Divider(color: Theme.of(context).dividerColor),
-          
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Change Security PIN', style: TextStyle(color: primaryTxt, fontSize: 14)),
-            subtitle: Text('Modify your 4-digit vault passcode', style: TextStyle(color: subTxt, fontSize: 11)),
-            trailing: Icon(Icons.arrow_forward_ios, color: subTxt, size: 14),
-            onTap: _showChangePinDialog,
-          ),
-          Divider(color: Theme.of(context).dividerColor),
-          
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Reset & Wipe Vault', style: TextStyle(color: Colors.redAccent, fontSize: 14)),
-            subtitle: Text('Erase all encrypted documents and reset PIN', style: TextStyle(color: subTxt, fontSize: 11)),
-            trailing: const Icon(Icons.delete_forever, color: Colors.redAccent, size: 18),
-            onTap: () async {
-              final confirm = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  backgroundColor: isDark ? const Color(0xFF151E2E) : Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  title: Text('Reset Vault', style: TextStyle(color: primaryTxt, fontSize: 16, fontWeight: FontWeight.bold)),
-                  content: const Text(
-                    'Are you absolutely sure? This will permanently delete all secure documents and reset your login passcode. This cannot be undone.',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text('CANCEL', style: TextStyle(color: subTxt, fontSize: 12)),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text('RESET VAULT', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
-                    ),
-                  ],
-                ),
-              );
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ThemeMode.system,
+                ThemeMode.dark,
+                ThemeMode.light,
+              ].map((mode) {
+                final isSelected = MainApp.themeNotifier.value == mode;
+                String modeName = '';
+                if (mode == ThemeMode.system) modeName = 'SYSTEM';
+                if (mode == ThemeMode.dark) modeName = 'DARK';
+                if (mode == ThemeMode.light) modeName = 'LIGHT';
 
-              if (confirm == true) {
-                setState(() {
-                  _isProcessing = true;
-                  _processingMessage = 'Resetting...';
-                });
-                await _vaultService.wipeVault();
-                setState(() {
-                  _isProcessing = false;
-                });
-                widget.onLock();
-              }
-            },
-          ),
-          Divider(color: Theme.of(context).dividerColor),
-          const SizedBox(height: 24),
-          
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                _vaultService.lock();
-                widget.onLock();
+                return ChoiceChip(
+                  label: Text(
+                    modeName,
+                    style: const TextStyle(fontSize: 9, letterSpacing: 0.5),
+                  ),
+                  selected: isSelected,
+                  selectedColor: primaryTxt,
+                  backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+                  checkmarkColor: isDark ? Colors.black : Colors.white,
+                  labelStyle: TextStyle(
+                    color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: isSelected ? Colors.transparent : (isDark ? Colors.white12 : Colors.black12),
+                    ),
+                  ),
+                  onSelected: (selected) {
+                    if (selected) {
+                      setState(() {
+                        MainApp.themeNotifier.value = mode;
+                      });
+                    }
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+            Divider(color: Theme.of(context).dividerColor),
+            
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Fingerprint Unlock', style: TextStyle(color: primaryTxt, fontSize: 14)),
+              subtitle: Text(
+                _biometricSupported ? 'Unlock your vault using biometrics' : 'Biometrics not supported on this device',
+                style: TextStyle(color: subTxt, fontSize: 11),
+              ),
+              trailing: _biometricSupported
+                  ? Switch(
+                      value: _vaultService.isBiometricEnabled,
+                      activeThumbColor: primaryTxt,
+                      onChanged: (val) async {
+                        final pin = await _promptForCurrentPin();
+                        if (pin != null) {
+                          await _vaultService.setBiometricEnabled(val, pin);
+                          setState(() {});
+                        }
+                      },
+                    )
+                  : null,
+            ),
+            Divider(color: Theme.of(context).dividerColor),
+            
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Change Security PIN', style: TextStyle(color: primaryTxt, fontSize: 14)),
+              subtitle: Text('Modify your 4-digit vault passcode', style: TextStyle(color: subTxt, fontSize: 11)),
+              trailing: Icon(Icons.arrow_forward_ios, color: subTxt, size: 14),
+              onTap: _showChangePinDialog,
+            ),
+            Divider(color: Theme.of(context).dividerColor),
+            
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Reset & Wipe Vault', style: TextStyle(color: Colors.redAccent, fontSize: 14)),
+              subtitle: Text('Erase all encrypted documents and reset PIN', style: TextStyle(color: subTxt, fontSize: 11)),
+              trailing: const Icon(Icons.delete_forever, color: Colors.redAccent, size: 18),
+              onTap: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: isDark ? const Color(0xFF151E2E) : Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(24)),
+                    ),
+                    title: Text('Reset Vault', style: TextStyle(color: primaryTxt, fontSize: 16, fontWeight: FontWeight.bold)),
+                    content: const Text(
+                      'Are you absolutely sure? This will permanently delete all secure documents and reset your login passcode. This cannot be undone.',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text('CANCEL', style: TextStyle(color: subTxt, fontSize: 12)),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('RESET VAULT', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirm == true) {
+                  setState(() {
+                    _isProcessing = true;
+                    _processingMessage = 'Resetting...';
+                  });
+                  await _vaultService.wipeVault();
+                  setState(() {
+                    _isProcessing = false;
+                  });
+                  widget.onLock();
+                }
               },
-              icon: const Icon(Icons.lock_outline, size: 18),
-              label: const Text('LOCK VAULT NOW'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            ),
+            Divider(color: Theme.of(context).dividerColor),
+            const SizedBox(height: 24),
+            
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _vaultService.lock();
+                  widget.onLock();
+                },
+                icon: const Icon(Icons.lock_outline, size: 18),
+                label: const Text('LOCK VAULT NOW'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1422,7 +1413,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildFilesList(List<VaultItem> itemsList) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderColor = isDark ? Colors.white12 : Colors.black12;
     final txtColor = isDark ? Colors.white : Colors.black;
     final subColor = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
 
@@ -1434,91 +1424,83 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final formattedDate = DateFormat('yyyy-MM-dd').format(item.addedDate);
         final sizeStr = VaultService.formatBytes(item.sizeBytes);
 
-        return Column(
-          children: [
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-              onTap: () => _openFile(item),
-              leading: item.category == 'Images'
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: VaultImagePreview(item: item),
-                      ),
-                    )
-                  : Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.white10 : Colors.black12,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Icon(
-                        _getIconForCategory(item.category),
-                        color: _getColorForCategory(item.category),
-                        size: 20,
-                      ),
+        return GlassContainer(
+          borderRadius: 16,
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            onTap: () => _openFile(item),
+            leading: item.category == 'Images'
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: SizedBox(
+                      width: 44,
+                      height: 44,
+                      child: VaultImagePreview(item: item),
                     ),
-              title: Text(
-                item.originalName,
-                style: TextStyle(
-                  color: txtColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(
-                '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
-                style: TextStyle(
-                  color: subColor,
-                  fontSize: 10,
-                ),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.download_outlined, color: subColor, size: 18),
-                    tooltip: 'Export',
-                    onPressed: () => _exportFile(item),
+                  )
+                : Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.white10 : Colors.black12,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      _getIconForCategory(item.category),
+                      color: _getColorForCategory(item.category),
+                      size: 20,
+                    ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 18),
-                    tooltip: 'Delete',
-                    onPressed: () => _deleteFile(item),
-                  ),
-                ],
+            title: Text(
+              item.originalName,
+              style: TextStyle(
+                color: txtColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
+              style: TextStyle(
+                color: subColor,
+                fontSize: 10,
               ),
             ),
-            Divider(
-              color: borderColor,
-              height: 1,
-              indent: 56,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.download_outlined, color: subColor, size: 18),
+                  tooltip: 'Export',
+                  onPressed: () => _exportFile(item),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 18),
+                  tooltip: 'Delete',
+                  onPressed: () => _deleteFile(item),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
   }
 
   Widget _buildFilesGrid(List<VaultItem> itemsList) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderColor = isDark ? Colors.white10 : Colors.black12;
-    final cardColor = isDark ? const Color(0xFF151E2E) : const Color(0xFFF9F9F9);
-    final titleColor = isDark ? Colors.white : Colors.black;
-    final subColor = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
+    final titleColor = Theme.of(context).primaryColor;
+    final subColor = Theme.of(context).brightness == Brightness.dark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
 
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.9,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.88,
       ),
       itemCount: itemsList.length,
       itemBuilder: (context, index) {
@@ -1527,19 +1509,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         return GestureDetector(
           onTap: () => _openFile(item),
-          child: Container(
-            decoration: BoxDecoration(
-              color: cardColor,
-              border: Border.all(color: borderColor, width: 1),
-              borderRadius: BorderRadius.circular(4),
-            ),
+          child: GlassContainer(
+            borderRadius: 24,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(flex: 2),
                 item.category == 'Images'
                     ? ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(16),
                         child: SizedBox(
                           width: 80,
                           height: 60,
@@ -1559,7 +1537,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     style: TextStyle(
                       color: titleColor,
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,
@@ -1576,29 +1554,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 const Spacer(flex: 2),
-                Container(
-                  height: 1,
-                  color: borderColor,
-                ),
+                const Divider(height: 1),
                 SizedBox(
-                  height: 32,
+                  height: 36,
                   child: Row(
                     children: [
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(Icons.download_outlined, color: subColor, size: 14),
+                          icon: Icon(Icons.download_outlined, color: subColor, size: 16),
                           onPressed: () => _exportFile(item),
                         ),
                       ),
-                      Container(
-                        width: 1,
-                        color: borderColor,
-                      ),
+                      const VerticalDivider(width: 1),
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 14),
+                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 16),
                           onPressed: () => _deleteFile(item),
                         ),
                       ),
@@ -1641,6 +1613,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
       default:
         return Colors.purpleAccent;
     }
+  }
+}
+
+// PREMIUM GLASS CONTAINER WIDGET (Frosted Blur, Glass Borders, Drop Shadow)
+class GlassContainer extends StatelessWidget {
+  final Widget child;
+  final double borderRadius;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final double? width;
+  final double? height;
+
+  const GlassContainer({
+    super.key,
+    required this.child,
+    this.borderRadius = 24.0,
+    this.padding,
+    this.margin,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return Container(
+      width: width,
+      height: height,
+      margin: margin,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: Container(
+            padding: padding,
+            decoration: BoxDecoration(
+              color: isDark 
+                  ? Colors.white.withValues(alpha: 0.05) 
+                  : Colors.white.withValues(alpha: 0.7),
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(
+                color: isDark 
+                    ? Colors.white.withValues(alpha: 0.08) 
+                    : Colors.white.withValues(alpha: 0.4),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.03),
+                  blurRadius: 10,
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    );
   }
 }
 
