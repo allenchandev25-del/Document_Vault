@@ -288,7 +288,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
       height: 64,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.02),
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.06),
         border: Border.all(
           color: isDark ? Colors.white10 : Colors.black12,
           width: 1,
