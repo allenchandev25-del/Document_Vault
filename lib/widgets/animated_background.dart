@@ -16,10 +16,28 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
   @override
   void initState() {
     super.initState();
-    _particles = List.generate(15, (index) => Particle());
+    final random = math.Random();
+    
+    // Curated premium palette: cool blue, indigo, violet, teal
+    final colors = [
+      const Color(0xFF3B82F6), // Blue
+      const Color(0xFF6366F1), // Indigo
+      const Color(0xFF8B5CF6), // Violet
+      const Color(0xFF14B8A6), // Teal
+    ];
+
+    _particles = List.generate(12, (index) {
+      return Particle(
+        color: colors[random.nextInt(colors.length)],
+        radius: random.nextDouble() * 120 + 80, // Large glowing blobs
+        speedX: (random.nextDouble() - 0.5) * 0.0008,
+        speedY: (random.nextDouble() - 0.5) * 0.0008,
+      );
+    });
+
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 15),
     )..repeat();
   }
 
@@ -39,7 +57,7 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
           p.update();
         }
         return CustomPaint(
-          painter: ParticlePainter(
+          painter: BokehPainter(
             particles: _particles,
             isDark: isDark,
           ),
@@ -51,41 +69,60 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
 }
 
 class Particle {
+  final Color color;
+  final double radius;
+  final double speedX;
+  final double speedY;
+
   double x = math.Random().nextDouble();
   double y = math.Random().nextDouble();
-  double speedX = (math.Random().nextDouble() - 0.5) * 0.0006;
-  double speedY = (math.Random().nextDouble() - 0.5) * 0.0006;
-  double radius = math.Random().nextDouble() * 30 + 15;
+
+  Particle({
+    required this.color,
+    required this.radius,
+    required this.speedX,
+    required this.speedY,
+  });
 
   void update() {
     x += speedX;
     y += speedY;
 
-    if (x < 0 || x > 1) speedX = -speedX;
-    if (y < 0 || y > 1) speedY = -speedY;
+    // Bounce off walls smoothly
+    if (x < -0.2 || x > 1.2) x = x < 0 ? -0.2 : 1.2;
+    if (y < -0.2 || y > 1.2) y = y < 0 ? -0.2 : 1.2;
+    
+    // Gently wrap around or drift back
+    if (x <= -0.2 || x >= 1.2) x = math.Random().nextDouble();
+    if (y <= -0.2 || y >= 1.2) y = math.Random().nextDouble();
   }
 }
 
-class ParticlePainter extends CustomPainter {
+class BokehPainter extends CustomPainter {
   final List<Particle> particles;
   final bool isDark;
 
-  ParticlePainter({required this.particles, required this.isDark});
+  BokehPainter({required this.particles, required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill;
-
     for (var p in particles) {
-      paint.color = isDark
-          ? Colors.white.withValues(alpha: 0.02)
-          : Colors.black.withValues(alpha: 0.015);
-      canvas.drawCircle(
-        Offset(p.x * size.width, p.y * size.height),
-        p.radius,
-        paint,
+      final center = Offset(p.x * size.width, p.y * size.height);
+      
+      // Radial gradient for smooth glow / bokeh effect
+      final rect = Rect.fromCircle(center: center, radius: p.radius);
+      final gradient = RadialGradient(
+        colors: [
+          p.color.withValues(alpha: isDark ? 0.08 : 0.04),
+          p.color.withValues(alpha: 0.0),
+        ],
       );
+
+      final paint = Paint()
+        ..shader = gradient.createShader(rect)
+        ..style = PaintingStyle.fill;
+
+      canvas.drawCircle(center, p.radius, paint);
     }
   }
 
