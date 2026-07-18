@@ -23,6 +23,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   final VaultService _vaultService = VaultService();
   bool _isLoading = true;
   bool _unlocked = false;
+  bool _showOnboarding = true;
   String? _initError;
 
   @override
@@ -65,6 +66,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       setState(() {
         _isLoading = false;
         _unlocked = _vaultService.isUnlocked;
+        _showOnboarding = !_vaultService.hasPasscode;
         _initError = null;
       });
     } catch (e) {
@@ -159,6 +161,14 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           ),
         ),
       );
+    } else if (_showOnboarding) {
+      homeScreen = OnboardingScreen(
+        onGetStarted: () {
+          setState(() {
+            _showOnboarding = false;
+          });
+        },
+      );
     } else if (!_unlocked) {
       homeScreen = PasscodeScreen(onSuccess: _onUnlockSuccess);
     } else {
@@ -167,7 +177,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
 
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: MainApp.themeNotifier,
-      builder: (_, ThemeMode currentMode, __) {
+      builder: (context, currentMode, child) {
         return MaterialApp(
           title: 'Secure Document Vault',
           debugShowCheckedModeBanner: false,
@@ -175,27 +185,31 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           theme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
-            primaryColor: Colors.black,
+            primaryColor: const Color(0xFF11161A),
             scaffoldBackgroundColor: const Color(0xFFFFFFFF),
-            cardColor: const Color(0xFFF9F9F9),
+            cardColor: const Color(0xFFFFFFFF),
             dividerColor: const Color(0xFFE5E5E5),
+            fontFamily: 'Inter',
             colorScheme: const ColorScheme.light(
-              primary: Colors.black,
-              secondary: Colors.black54,
-              surface: Color(0xFFF9F9F9),
+              primary: Color(0xFF11161A),
+              secondary: Color(0xFF737A8C),
+              tertiary: Color(0xFFBBBECA),
+              surface: Color(0xFFFFFFFF),
             ),
           ),
           darkTheme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.dark,
-            primaryColor: Colors.white,
-            scaffoldBackgroundColor: const Color(0xFF000000),
-            cardColor: const Color(0xFF0F0F0F),
+            primaryColor: const Color(0xFFF9FAFD),
+            scaffoldBackgroundColor: const Color(0xFF090D12),
+            cardColor: const Color(0xFF151E2E),
             dividerColor: const Color(0xFF222222),
+            fontFamily: 'Inter',
             colorScheme: const ColorScheme.dark(
-              primary: Colors.white,
-              secondary: Colors.white70,
-              surface: Color(0xFF0F0F0F),
+              primary: Color(0xFFF9FAFD),
+              secondary: Color(0xFF969CB0),
+              tertiary: Color(0xFFBBBECA),
+              surface: Color(0xFF151E2E),
             ),
           ),
           home: homeScreen,
