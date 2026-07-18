@@ -1497,31 +1497,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final item = itemsList[index];
         final sizeStr = VaultService.formatBytes(item.sizeBytes);
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
         return GestureDetector(
           onTap: () => _openFile(item),
           child: GlassContainer(
             borderRadius: 24,
+            padding: EdgeInsets.zero,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Spacer(flex: 2),
-                item.category == 'Images'
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: SizedBox(
-                          width: 80,
-                          height: 60,
-                          child: VaultImagePreview(item: item),
-                        ),
-                      )
-                    : Icon(
-                        _getIconForCategory(item.category),
-                        color: _getColorForCategory(item.category),
-                        size: 28,
-                      ),
-                const SizedBox(height: 12),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    child: item.category == 'Images'
+                        ? VaultImagePreview(
+                            item: item,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                            child: Center(
+                              child: Icon(
+                                _getIconForCategory(item.category),
+                                color: _getColorForCategory(item.category),
+                                size: 32,
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Text(
                     item.originalName,
                     style: TextStyle(
@@ -1534,7 +1542,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   sizeStr,
                   style: TextStyle(
@@ -1542,8 +1550,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     fontSize: 9,
                     letterSpacing: 0.5,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                const Spacer(flex: 2),
+                const SizedBox(height: 8),
                 const Divider(height: 1),
                 SizedBox(
                   height: 36,
