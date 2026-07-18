@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import '../models/vault_item.dart';
 import '../services/vault_service.dart';
 import 'file_viewer_screen.dart';
 import '../main.dart';
 import '../widgets/animated_background.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   final VoidCallback onLock;
@@ -22,14 +22,30 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final VaultService _vaultService = VaultService();
-  final TextEditingController _searchController = TextEditingController();
+  
+  // Navigation State
+  int _currentTabIndex = 0;
 
-  String _selectedCategory = 'All';
-  String _searchQuery = '';
+  // Search Tab State
+  final TextEditingController _searchTabQueryController = TextEditingController();
+  String _searchTabQuery = '';
+  String _searchTabCategory = 'All';
+  String _searchTabSecurity = 'all';
+
+  // Vault Tab State
+  final TextEditingController _vaultQueryController = TextEditingController();
+  String _vaultQuery = '';
+  String _selectedVaultCategory = 'All';
+  bool _isGridView = false;
+
+  // Photo Gallery State
+  String _selectedGalleryFilter = 'All Photos'; // 'All Photos' or 'Favorites'
+  final Set<String> _favoriteIds = {};
+
+  // Settings / Bio State
   bool _isProcessing = false;
   String _processingMessage = '';
   bool _biometricSupported = false;
-  bool _isGridView = false;
 
   final List<String> _categories = [
     'All',
@@ -55,7 +71,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    _searchController.dispose();
+    _searchTabQueryController.dispose();
+    _vaultQueryController.dispose();
     super.dispose();
   }
 
@@ -88,7 +105,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       }
 
-      debugPrint('IMPORT SUCCESS: Secured ${result.files.length} file(s). Total vault items: ${_vaultService.items.length}');
+      debugPrint('IMPORT SUCCESS: Secured ${result.files.length} file(s).');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -175,7 +192,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       String message = '';
 
       if (Platform.isAndroid) {
-        // Try saving directly to public Downloads folder
         final String downloadPath = p.join('/storage/emulated/0/Download', item.originalName);
         try {
           if (mounted) {
@@ -188,7 +204,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           targetPath = downloadPath;
           message = 'Saved to device Downloads folder';
         } catch (e) {
-          // Fallback to app's external files directory (unrestricted permission)
           final extDir = await getExternalStorageDirectory();
           if (extDir != null) {
             final String fallbackPath = p.join(extDir.path, item.originalName);
@@ -200,7 +215,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         }
       } else {
-        // Desktop / iOS standard flow
         targetPath = await FilePicker.platform.saveFile(
           dialogTitle: 'Export File To...',
           fileName: item.originalName,
@@ -279,20 +293,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF151E2E) : Colors.white,
         shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.white12),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        title: const Text('Delete File', style: TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 0.5)),
+        title: const Text('Delete File', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         content: Text(
           'Permanently delete "${item.originalName}"?',
-          style: const TextStyle(color: Colors.white70, fontSize: 13),
+          style: const TextStyle(fontSize: 13),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('CANCEL', style: TextStyle(color: Colors.white54, fontSize: 12)),
+            child: const Text('CANCEL', style: TextStyle(color: Colors.grey, fontSize: 12)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -311,11 +324,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     try {
       await _vaultService.deleteFile(item);
+      _favoriteIds.remove(item.id);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('File deleted'),
-            backgroundColor: Colors.white24,
+            backgroundColor: Colors.grey,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -337,211 +351,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
       }
     }
-  }
-
-  void _showSettingsSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: Border(
-        top: BorderSide(color: Theme.of(context).dividerColor, width: 1),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            final isDark = Theme.of(context).brightness == Brightness.dark;
-            final txtColor = isDark ? Colors.white : Colors.black;
-            final subColor = isDark ? Colors.white38 : Colors.black45;
-
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'SETTINGS',
-                      style: TextStyle(
-                        color: txtColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const SizedBox(height: 16),
-                    // Theme Choice Chips
-                    Text(
-                      'THEME MODE',
-                      style: TextStyle(
-                        color: subColor,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ThemeMode.system,
-                        ThemeMode.dark,
-                        ThemeMode.light,
-                      ].map((mode) {
-                        final isSelected = MainApp.themeNotifier.value == mode;
-                        String modeName = '';
-                        if (mode == ThemeMode.system) modeName = 'SYSTEM';
-                        if (mode == ThemeMode.dark) modeName = 'DARK';
-                        if (mode == ThemeMode.light) modeName = 'LIGHT';
-
-                        return ChoiceChip(
-                          label: Text(
-                            modeName,
-                            style: const TextStyle(fontSize: 9, letterSpacing: 0.5),
-                          ),
-                          selected: isSelected,
-                          selectedColor: isDark ? Colors.white : Colors.black,
-                          backgroundColor: Colors.transparent,
-                          checkmarkColor: isDark ? Colors.black : Colors.white,
-                          labelStyle: TextStyle(
-                            color: isSelected
-                                ? (isDark ? Colors.black : Colors.white)
-                                : (isDark ? Colors.white60 : Colors.black54),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            side: BorderSide(
-                              color: isSelected
-                                  ? Colors.transparent
-                                  : (isDark ? Colors.white12 : Colors.black12),
-                            ),
-                          ),
-                          onSelected: (selected) {
-                            if (selected) {
-                              setModalState(() {
-                                MainApp.themeNotifier.value = mode;
-                              });
-                              setState(() {});
-                            }
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 8),
-                    Divider(color: Theme.of(context).dividerColor),
-                    // Fingerprint Toggle
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        'Fingerprint Unlock',
-                        style: TextStyle(color: txtColor, fontSize: 14),
-                      ),
-                      subtitle: Text(
-                        _biometricSupported
-                            ? 'Unlock your vault using biometrics'
-                            : 'Biometrics not supported on this device',
-                        style: TextStyle(color: subColor, fontSize: 11),
-                      ),
-                      trailing: _biometricSupported
-                          ? Switch(
-                              value: _vaultService.isBiometricEnabled,
-                              activeThumbColor: isDark ? Colors.white : Colors.black,
-                              activeTrackColor: isDark ? Colors.white30 : Colors.black12,
-                              onChanged: (val) async {
-                                final pin = await _promptForCurrentPin();
-                                if (pin != null) {
-                                  await _vaultService.setBiometricEnabled(val, pin);
-                                  setModalState(() {});
-                                  setState(() {});
-                                }
-                              },
-                            )
-                          : null,
-                    ),
-                    Divider(color: Theme.of(context).dividerColor),
-                    // Change Passcode
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        'Change Security PIN',
-                        style: TextStyle(color: txtColor, fontSize: 14),
-                      ),
-                      subtitle: Text(
-                        'Modify your 4-digit vault passcode',
-                        style: TextStyle(color: subColor, fontSize: 11),
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios, color: subColor, size: 14),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showChangePinDialog();
-                      },
-                    ),
-                    Divider(color: Theme.of(context).dividerColor),
-                    // Wipe Vault
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text(
-                        'Reset & Wipe Vault',
-                        style: TextStyle(color: Colors.redAccent, fontSize: 14),
-                      ),
-                      subtitle: Text(
-                        'Erase all encrypted documents and reset PIN',
-                        style: TextStyle(color: subColor, fontSize: 11),
-                      ),
-                      trailing: const Icon(Icons.delete_forever, color: Colors.redAccent, size: 18),
-                      onTap: () async {
-                        Navigator.pop(context);
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: isDark ? Colors.white12 : Colors.black12),
-                              borderRadius: const BorderRadius.all(Radius.circular(8)),
-                            ),
-                            title: Text('Reset Vault', style: TextStyle(color: txtColor, fontSize: 16, letterSpacing: 0.5)),
-                            content: const Text(
-                              'Are you absolutely sure? This will permanently delete all secure documents and reset your login passcode. This cannot be undone.',
-                              style: TextStyle(fontSize: 13),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: Text('CANCEL', style: TextStyle(color: subColor, fontSize: 12)),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: const Text('RESET VAULT', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        if (confirm == true) {
-                          setState(() {
-                            _isProcessing = true;
-                            _processingMessage = 'Resetting...';
-                          });
-                          await _vaultService.wipeVault();
-                          setState(() {
-                            _isProcessing = false;
-                          });
-                          widget.onLock();
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-        );
-      },
-    );
   }
 
   Future<String?> _promptForCurrentPin() async {
@@ -576,13 +385,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           TextButton(
             onPressed: () async {
-              if (await _vaultService.verifyPasscode(pin)) {
-                Navigator.pop(context, pin);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final navigator = Navigator.of(context);
+              final isCorrect = await _vaultService.verifyPasscode(pin);
+              if (isCorrect) {
+                navigator.pop(pin);
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(content: Text('Incorrect PIN'), backgroundColor: Colors.redAccent),
                 );
-                Navigator.pop(context);
+                navigator.pop();
               }
             },
             child: const Text('CONFIRM', style: TextStyle(color: Colors.white, fontSize: 11)),
@@ -600,12 +412,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF151E2E) : Colors.white,
         shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.white12),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        title: const Text('Change Security PIN', style: TextStyle(color: Colors.white, fontSize: 14, letterSpacing: 1.0)),
+        title: const Text('Change Security PIN', style: TextStyle(fontSize: 14, letterSpacing: 1.0)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -613,13 +424,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               obscureText: true,
               maxLength: 4,
               keyboardType: TextInputType.number,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(fontSize: 13),
               decoration: const InputDecoration(
                 hintText: 'Current PIN',
-                hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
                 counterText: '',
-                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
               ),
               onChanged: (val) => currentPin = val,
             ),
@@ -628,13 +436,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               obscureText: true,
               maxLength: 4,
               keyboardType: TextInputType.number,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(fontSize: 13),
               decoration: const InputDecoration(
                 hintText: 'New 4-digit PIN',
-                hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
                 counterText: '',
-                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
               ),
               onChanged: (val) => newPin = val,
             ),
@@ -643,13 +448,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               obscureText: true,
               maxLength: 4,
               keyboardType: TextInputType.number,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(fontSize: 13),
               decoration: const InputDecoration(
                 hintText: 'Confirm New PIN',
-                hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
                 counterText: '',
-                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
               ),
               onChanged: (val) => confirmPin = val,
             ),
@@ -658,7 +460,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('CANCEL', style: TextStyle(color: Colors.white54, fontSize: 11)),
+            child: const Text('CANCEL', style: TextStyle(color: Colors.grey, fontSize: 11)),
           ),
           TextButton(
             onPressed: () async {
@@ -689,7 +491,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 }
               }
             },
-            child: const Text('SAVE', style: TextStyle(color: Colors.white, fontSize: 11)),
+            child: const Text('SAVE', style: TextStyle(fontSize: 11)),
           ),
         ],
       ),
@@ -698,22 +500,63 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredItems = _vaultService.items.where((item) {
-      final matchesCategory =
-          _selectedCategory == 'All' || item.category == _selectedCategory;
-      final matchesSearch =
-          item.originalName.toLowerCase().contains(_searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    }).toList();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTxt = Theme.of(context).primaryColor;
+    final subTxt = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
 
     int totalBytes = 0;
     for (var item in _vaultService.items) {
       totalBytes += item.sizeBytes;
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryTxt = Theme.of(context).primaryColor;
-    final subTxt = isDark ? Colors.white38 : Colors.black45;
+    Widget currentBody;
+    String appBarTitle = 'VAULT';
+    List<Widget> appBarActions = [];
+
+    switch (_currentTabIndex) {
+      case 0:
+        appBarTitle = 'MAIN VAULT';
+        currentBody = _buildMainVaultTab(totalBytes, subTxt, primaryTxt, isDark);
+        appBarActions = [
+          IconButton(
+            tooltip: 'View Mode',
+            icon: Icon(_isGridView ? Icons.view_list_outlined : Icons.grid_view_outlined, color: primaryTxt, size: 20),
+            onPressed: () {
+              setState(() {
+                _isGridView = !_isGridView;
+              });
+            },
+          ),
+          IconButton(
+            tooltip: 'Lock',
+            icon: Icon(Icons.lock_outline, color: primaryTxt, size: 20),
+            onPressed: () {
+              _vaultService.lock();
+              widget.onLock();
+            },
+          ),
+          const SizedBox(width: 8),
+        ];
+        break;
+      case 1:
+        appBarTitle = 'PHOTO GALLERY';
+        currentBody = _buildPhotosTab(isDark, primaryTxt, subTxt);
+        break;
+      case 2:
+        appBarTitle = 'ADVANCED SEARCH';
+        currentBody = _buildSearchTab(isDark, primaryTxt, subTxt);
+        break;
+      case 3:
+        appBarTitle = 'UPLOAD CENTER';
+        currentBody = _buildUploadsTab(isDark, primaryTxt, subTxt, totalBytes);
+        break;
+      case 4:
+        appBarTitle = 'SECURITY SETTINGS';
+        currentBody = _buildSettingsTab(isDark, primaryTxt, subTxt);
+        break;
+      default:
+        currentBody = Container();
+    }
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -721,30 +564,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: Text(
-          'VAULT',
+          appBarTitle,
           style: TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.bold,
             letterSpacing: 2.0,
             fontSize: 15,
             color: primaryTxt,
           ),
         ),
-        actions: [
-          IconButton(
-            tooltip: 'Settings',
-            icon: Icon(Icons.settings_outlined, color: primaryTxt.withValues(alpha: 0.7), size: 20),
-            onPressed: _showSettingsSheet,
-          ),
-          IconButton(
-            tooltip: 'Lock',
-            icon: Icon(Icons.lock_outline, color: primaryTxt.withValues(alpha: 0.7), size: 20),
-            onPressed: () {
-              _vaultService.lock();
-              widget.onLock();
-            },
-          ),
-          const SizedBox(width: 8),
-        ],
+        actions: appBarActions,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(color: Theme.of(context).dividerColor, height: 1.0),
@@ -753,190 +581,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Stack(
         children: [
           const MinimalAnimatedBackground(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Minimal Storage Summary Row
-              if (_vaultService.items.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'STORAGE: ${VaultService.formatBytes(totalBytes)}',
-                        style: TextStyle(
-                          color: subTxt,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                      Text(
-                        '${_vaultService.items.length} FILES',
-                        style: TextStyle(
-                          color: subTxt,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              
-              // Search Field & View Toggler Row
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: (val) {
-                          setState(() {
-                            _searchQuery = val;
-                          });
-                        },
-                        style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                          fontSize: 13,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search...',
-                          hintStyle: TextStyle(
-                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white24 : Colors.black38,
-                            fontSize: 12,
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.black45,
-                            size: 16,
-                          ),
-                          suffixIcon: _searchQuery.isNotEmpty
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.clear,
-                                    color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.black45,
-                                    size: 14,
-                                  ),
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    setState(() {
-                                      _searchQuery = '';
-                                    });
-                                  },
-                                )
-                              : null,
-                          filled: true,
-                          fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF0F0F0F) : const Color(0xFFF5F5F5),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white10 : Colors.black12,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white24 : Colors.black26,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white10 : Colors.black12,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          _isGridView ? Icons.view_list_outlined : Icons.grid_view_outlined,
-                          size: 18,
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black87,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isGridView = !_isGridView;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Categories Row
-              SizedBox(
-                height: 40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: _categories.length,
-                  itemBuilder: (context, index) {
-                    final cat = _categories[index];
-                    final isSelected = _selectedCategory == cat;
-                    final isDark = Theme.of(context).brightness == Brightness.dark;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ChoiceChip(
-                        label: Text(
-                          cat.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          setState(() {
-                            _selectedCategory = cat;
-                          });
-                        },
-                        selectedColor: isDark ? Colors.white : Colors.black,
-                        backgroundColor: Colors.transparent,
-                        checkmarkColor: isDark ? Colors.black : Colors.white,
-                        labelStyle: TextStyle(
-                          color: isSelected
-                              ? (isDark ? Colors.black : Colors.white)
-                              : (isDark ? Colors.white60 : Colors.black54),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          side: BorderSide(
-                            color: isSelected
-                                ? Colors.transparent
-                                : (isDark ? Colors.white12 : Colors.black12),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Files List or Grid
-              Expanded(
-                child: filteredItems.isEmpty
-                    ? _buildEmptyState()
-                    : (_isGridView
-                        ? _buildFilesGrid(filteredItems)
-                        : _buildFilesList(filteredItems)),
-              ),
-            ],
-          ),
-
-          // Processing Overlay HUD
+          currentBody,
           if (_isProcessing)
             Container(
               color: Colors.black87,
@@ -969,26 +614,784 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-        foregroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
-        mini: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onPressed: _importFile,
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentTabIndex,
+        onTap: (index) {
+          setState(() {
+            _currentTabIndex = index;
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        selectedItemColor: primaryTxt,
+        unselectedItemColor: subTxt,
+        selectedFontSize: 9,
+        unselectedFontSize: 9,
+        elevation: 8,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shield_outlined),
+            activeIcon: Icon(Icons.shield),
+            label: 'VAULT',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.image_outlined),
+            activeIcon: Icon(Icons.image),
+            label: 'PHOTOS',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search_outlined),
+            activeIcon: Icon(Icons.search),
+            label: 'SEARCH',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cloud_upload_outlined),
+            activeIcon: Icon(Icons.cloud_upload),
+            label: 'UPLOADS',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            activeIcon: Icon(Icons.settings),
+            label: 'SECURITY',
+          ),
+        ],
+      ),
+      floatingActionButton: _currentTabIndex == 0
+          ? FloatingActionButton(
+              backgroundColor: primaryTxt,
+              foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+              mini: true,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              onPressed: _importFile,
+              child: const Icon(Icons.add),
+            )
+          : null,
+    );
+  }
+
+  // --- TAB BUILDERS ---
+
+  // TAB 0: VAULT
+  Widget _buildMainVaultTab(int totalBytes, Color subTxt, Color primaryTxt, bool isDark) {
+    final filteredItems = _vaultService.items.where((item) {
+      final matchesCategory = _selectedVaultCategory == 'All' || item.category == _selectedVaultCategory;
+      final matchesSearch = item.originalName.toLowerCase().contains(_vaultQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    }).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (_vaultService.items.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'STORAGE USED: ${VaultService.formatBytes(totalBytes)}',
+                  style: TextStyle(
+                    color: subTxt,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                Text(
+                  '${_vaultService.items.length} TOTAL FILES',
+                  style: TextStyle(
+                    color: subTxt,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        
+        // Search Filter
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: TextField(
+            controller: _vaultQueryController,
+            onChanged: (val) {
+              setState(() {
+                _vaultQuery = val;
+              });
+            },
+            style: TextStyle(fontSize: 13, color: primaryTxt),
+            decoration: InputDecoration(
+              hintText: 'Search secure files...',
+              prefixIcon: Icon(Icons.search, size: 16, color: subTxt),
+              suffixIcon: _vaultQuery.isNotEmpty
+                  ? IconButton(
+                      icon: Icon(Icons.clear, size: 14, color: subTxt),
+                      onPressed: () {
+                        _vaultQueryController.clear();
+                        setState(() {
+                          _vaultQuery = '';
+                        });
+                      },
+                    )
+                  : null,
+              filled: true,
+              fillColor: isDark ? const Color(0xFF151E2E) : const Color(0xFFF5F5F5),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+          ),
+        ),
+
+        // Categories selector
+        SizedBox(
+          height: 40,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: _categories.length,
+            itemBuilder: (context, index) {
+              final cat = _categories[index];
+              final isSelected = _selectedVaultCategory == cat;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ChoiceChip(
+                  label: Text(
+                    cat.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    setState(() {
+                      _selectedVaultCategory = cat;
+                    });
+                  },
+                  selectedColor: primaryTxt,
+                  backgroundColor: Colors.transparent,
+                  checkmarkColor: isDark ? Colors.black : Colors.white,
+                  labelStyle: TextStyle(
+                    color: isSelected
+                        ? (isDark ? Colors.black : Colors.white)
+                        : subTxt,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    side: BorderSide(
+                      color: isSelected ? Colors.transparent : (isDark ? Colors.white10 : Colors.black12),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Files Area
+        Expanded(
+          child: filteredItems.isEmpty
+              ? _buildEmptyState('NO FILES FOUND', 'Try adding files or clearing filters')
+              : (_isGridView
+                  ? _buildFilesGrid(filteredItems)
+                  : _buildFilesList(filteredItems)),
+        ),
+      ],
+    );
+  }
+
+  // TAB 1: PHOTOS
+  Widget _buildPhotosTab(bool isDark, Color primaryTxt, Color subTxt) {
+    final photoItems = _vaultService.items.where((item) {
+      final ext = item.fileExtension.toLowerCase();
+      final isImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'].contains(ext);
+      final isFavoriteMatch = _selectedGalleryFilter == 'All Photos' || _favoriteIds.contains(item.id);
+      return isImage && isFavoriteMatch;
+    }).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: ['All Photos', 'Favorites'].map((filter) {
+              final isSelected = _selectedGalleryFilter == filter;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: ChoiceChip(
+                  label: Text(
+                    filter.toUpperCase(),
+                    style: const TextStyle(fontSize: 10, letterSpacing: 1.0),
+                  ),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) {
+                      setState(() {
+                        _selectedGalleryFilter = filter;
+                      });
+                    }
+                  },
+                  selectedColor: primaryTxt,
+                  backgroundColor: Colors.transparent,
+                  checkmarkColor: isDark ? Colors.black : Colors.white,
+                  labelStyle: TextStyle(
+                    color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        Expanded(
+          child: photoItems.isEmpty
+              ? _buildEmptyState(
+                  _selectedGalleryFilter == 'Favorites' ? 'NO FAVORITES' : 'NO PHOTOS',
+                  _selectedGalleryFilter == 'Favorites' ? 'Star photos to add them here' : 'Import images to view them in the gallery')
+              : GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemCount: photoItems.length,
+                  itemBuilder: (context, index) {
+                    final item = photoItems[index];
+                    final isFav = _favoriteIds.contains(item.id);
+
+                    return Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () => _openFile(item),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isDark ? const Color(0xFF151E2E) : const Color(0xFFF5F5F5),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.image, size: 32, color: primaryTxt.withOpacity(0.5)),
+                                  const SizedBox(height: 6),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                    child: Text(
+                                      item.originalName,
+                                      style: TextStyle(fontSize: 9, color: primaryTxt),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (isFav) {
+                                  _favoriteIds.remove(item.id);
+                                } else {
+                                  _favoriteIds.add(item.id);
+                                }
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.black45,
+                              child: Icon(
+                                isFav ? Icons.star : Icons.star_border,
+                                size: 14,
+                                color: isFav ? Colors.amber : Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  // TAB 2: SEARCH
+  Widget _buildSearchTab(bool isDark, Color primaryTxt, Color subTxt) {
+    final searchResults = _vaultService.items.where((f) {
+      final nameMatch = _searchTabQuery.isEmpty || f.originalName.toLowerCase().contains(_searchTabQuery.toLowerCase());
+      final typeMatch = _searchTabCategory == 'All' || f.category == _searchTabCategory;
+      final securityMatch = _searchTabSecurity == 'all' || (_searchTabSecurity == 'encrypted');
+      return nameMatch && typeMatch && securityMatch;
+    }).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _searchTabQueryController,
+                onChanged: (val) {
+                  setState(() {
+                    _searchTabQuery = val;
+                  });
+                },
+                style: TextStyle(fontSize: 13, color: primaryTxt),
+                decoration: InputDecoration(
+                  hintText: 'Enter search text...',
+                  prefixIcon: Icon(Icons.search, size: 16, color: subTxt),
+                  filled: true,
+                  fillColor: isDark ? const Color(0xFF151E2E) : const Color(0xFFF5F5F5),
+                  border: InputBorder.none,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'FILTER BY CATEGORY',
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0, color: subTxt),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 38,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _categories.length,
+                  itemBuilder: (context, index) {
+                    final cat = _categories[index];
+                    final isSelected = _searchTabCategory == cat;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 6.0),
+                      child: ChoiceChip(
+                        label: Text(
+                          cat.toUpperCase(),
+                          style: const TextStyle(fontSize: 9),
+                        ),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() {
+                              _searchTabCategory = cat;
+                            });
+                          }
+                        },
+                        selectedColor: primaryTxt,
+                        backgroundColor: Colors.transparent,
+                        checkmarkColor: isDark ? Colors.black : Colors.white,
+                        labelStyle: TextStyle(
+                          color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'SECURITY STATE',
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0, color: subTxt),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: ['all', 'encrypted'].map((sec) {
+                  final isSelected = _searchTabSecurity == sec;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ChoiceChip(
+                      label: Text(
+                        sec.toUpperCase(),
+                        style: const TextStyle(fontSize: 9),
+                      ),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() {
+                            _searchTabSecurity = sec;
+                          });
+                        }
+                      },
+                      selectedColor: primaryTxt,
+                      backgroundColor: Colors.transparent,
+                      checkmarkColor: isDark ? Colors.black : Colors.white,
+                      labelStyle: TextStyle(
+                        color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+        Expanded(
+          child: searchResults.isEmpty
+              ? _buildEmptyState('NO RESULTS', 'Try adjusting your search criteria')
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    final item = searchResults[index];
+                    final dateStr = DateFormat('yyyy-MM-dd').format(item.addedDate);
+                    final sizeStr = VaultService.formatBytes(item.sizeBytes);
+
+                    return Card(
+                      color: isDark ? const Color(0xFF151E2E) : const Color(0xFFFBFBFB),
+                      elevation: 0,
+                      margin: const EdgeInsets.only(bottom: 8),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(_getIconForCategory(item.category), color: primaryTxt),
+                        ),
+                        title: Text(item.originalName, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                        subtitle: Text('$sizeStr  |  $dateStr', style: TextStyle(fontSize: 10, color: subTxt)),
+                        onTap: () => _openFile(item),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.download_outlined, size: 18),
+                          onPressed: () => _exportFile(item),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  // TAB 3: UPLOADS (UPLOAD CENTER)
+  Widget _buildUploadsTab(bool isDark, Color primaryTxt, Color subTxt, int totalBytes) {
+    const double limitBytes = 100 * 1024 * 1024; // 100 MB Limit
+    final percent = (totalBytes / limitBytes).clamp(0.0, 1.0);
+    final percentStr = (percent * 100).toStringAsFixed(1);
+    final historyList = List<VaultItem>.from(_vaultService.items)
+      ..sort((a, b) => b.addedDate.compareTo(a.addedDate));
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Storage Status Card
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF151E2E) : const Color(0xFFF9FAFD),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
+            ),
+            child: Row(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(
+                        value: percent,
+                        strokeWidth: 6,
+                        backgroundColor: isDark ? Colors.white12 : Colors.black12,
+                        valueColor: AlwaysStoppedAnimation<Color>(primaryTxt),
+                      ),
+                    ),
+                    Text(
+                      '$percentStr%',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: primaryTxt),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'STORAGE USAGE',
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: subTxt, letterSpacing: 1.0),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '${VaultService.formatBytes(totalBytes)} of 100 MB Used',
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: primaryTxt),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Offline safe storage limit',
+                        style: TextStyle(fontSize: 10, color: subTxt),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          
+          // Action Buttons
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _importFile,
+                  icon: const Icon(Icons.add_to_photos_outlined, size: 18),
+                  label: const Text('SECURE FILE'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryTxt,
+                    foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          
+          Text(
+            'UPLOAD HISTORY',
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: subTxt, letterSpacing: 1.0),
+          ),
+          const SizedBox(height: 12),
+          
+          Expanded(
+            child: historyList.isEmpty
+                ? Center(
+                    child: Text(
+                      'NO UPLOADS YET',
+                      style: TextStyle(fontSize: 11, color: subTxt, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: historyList.length,
+                    itemBuilder: (context, index) {
+                      final item = historyList[index];
+                      final sizeStr = VaultService.formatBytes(item.sizeBytes);
+                      final timeStr = DateFormat('MM/dd HH:mm').format(item.addedDate);
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: ListTile(
+                          dense: true,
+                          leading: const Icon(Icons.cloud_done_outlined, color: Colors.green, size: 16),
+                          title: Text(item.originalName, style: TextStyle(fontSize: 12, color: primaryTxt, fontWeight: FontWeight.bold)),
+                          subtitle: Text('$sizeStr  |  $timeStr', style: TextStyle(fontSize: 9, color: subTxt)),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.open_in_new, size: 14),
+                            onPressed: () => _openFile(item),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildEmptyState() {
-    final hasItemsAtAll = _vaultService.items.isNotEmpty;
+  // TAB 4: SECURITY SETTINGS
+  Widget _buildSettingsTab(bool isDark, Color primaryTxt, Color subTxt) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'THEME MODE',
+            style: TextStyle(color: subTxt, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ThemeMode.system,
+              ThemeMode.dark,
+              ThemeMode.light,
+            ].map((mode) {
+              final isSelected = MainApp.themeNotifier.value == mode;
+              String modeName = '';
+              if (mode == ThemeMode.system) modeName = 'SYSTEM';
+              if (mode == ThemeMode.dark) modeName = 'DARK';
+              if (mode == ThemeMode.light) modeName = 'LIGHT';
+
+              return ChoiceChip(
+                label: Text(
+                  modeName,
+                  style: const TextStyle(fontSize: 9, letterSpacing: 0.5),
+                ),
+                selected: isSelected,
+                selectedColor: primaryTxt,
+                backgroundColor: Colors.transparent,
+                checkmarkColor: isDark ? Colors.black : Colors.white,
+                labelStyle: TextStyle(
+                  color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  side: BorderSide(
+                    color: isSelected ? Colors.transparent : (isDark ? Colors.white12 : Colors.black12),
+                  ),
+                ),
+                onSelected: (selected) {
+                  if (selected) {
+                    setState(() {
+                      MainApp.themeNotifier.value = mode;
+                    });
+                  }
+                },
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          Divider(color: Theme.of(context).dividerColor),
+          
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text('Fingerprint Unlock', style: TextStyle(color: primaryTxt, fontSize: 14)),
+            subtitle: Text(
+              _biometricSupported ? 'Unlock your vault using biometrics' : 'Biometrics not supported on this device',
+              style: TextStyle(color: subTxt, fontSize: 11),
+            ),
+            trailing: _biometricSupported
+                ? Switch(
+                    value: _vaultService.isBiometricEnabled,
+                    activeColor: primaryTxt,
+                    onChanged: (val) async {
+                      final pin = await _promptForCurrentPin();
+                      if (pin != null) {
+                        await _vaultService.setBiometricEnabled(val, pin);
+                        setState(() {});
+                      }
+                    },
+                  )
+                : null,
+          ),
+          Divider(color: Theme.of(context).dividerColor),
+          
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text('Change Security PIN', style: TextStyle(color: primaryTxt, fontSize: 14)),
+            subtitle: Text('Modify your 4-digit vault passcode', style: TextStyle(color: subTxt, fontSize: 11)),
+            trailing: Icon(Icons.arrow_forward_ios, color: subTxt, size: 14),
+            onTap: _showChangePinDialog,
+          ),
+          Divider(color: Theme.of(context).dividerColor),
+          
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Reset & Wipe Vault', style: TextStyle(color: Colors.redAccent, fontSize: 14)),
+            subtitle: Text('Erase all encrypted documents and reset PIN', style: TextStyle(color: subTxt, fontSize: 11)),
+            trailing: const Icon(Icons.delete_forever, color: Colors.redAccent, size: 18),
+            onTap: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: isDark ? const Color(0xFF151E2E) : Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  title: Text('Reset Vault', style: TextStyle(color: primaryTxt, fontSize: 16, fontWeight: FontWeight.bold)),
+                  content: const Text(
+                    'Are you absolutely sure? This will permanently delete all secure documents and reset your login passcode. This cannot be undone.',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('CANCEL', style: TextStyle(color: subTxt, fontSize: 12)),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('RESET VAULT', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true) {
+                setState(() {
+                  _isProcessing = true;
+                  _processingMessage = 'Resetting...';
+                });
+                await _vaultService.wipeVault();
+                setState(() {
+                  _isProcessing = false;
+                });
+                widget.onLock();
+              }
+            },
+          ),
+          Divider(color: Theme.of(context).dividerColor),
+          const SizedBox(height: 24),
+          
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                _vaultService.lock();
+                widget.onLock();
+              },
+              icon: const Icon(Icons.lock_outline, size: 18),
+              label: const Text('LOCK VAULT NOW'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- SUB-WIDGET BUILDERS ---
+
+  Widget _buildEmptyState(String title, String subtitle) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            hasItemsAtAll ? 'NO MATCHES' : 'EMPTY VAULT',
+            title,
             style: TextStyle(
               color: isDark ? Colors.white30 : Colors.black38,
               fontSize: 12,
@@ -998,7 +1401,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            hasItemsAtAll ? 'Refine search terms' : 'Add documents to secure them',
+            subtitle,
             style: TextStyle(
               color: isDark ? Colors.white24 : Colors.black26,
               fontSize: 11,
@@ -1014,7 +1417,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final borderColor = isDark ? Colors.white12 : Colors.black12;
     final txtColor = isDark ? Colors.white : Colors.black;
-    final subColor = isDark ? Colors.white38 : Colors.black45;
+    final subColor = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -1037,7 +1440,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               item.originalName,
               style: TextStyle(
                 color: txtColor,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 fontSize: 13,
               ),
               maxLines: 1,
@@ -1059,7 +1462,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onPressed: () => _exportFile(item),
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete_outline, color: subColor, size: 18),
+                  icon: Icon(Icons.delete_outline, color: Colors.redAccent.withOpacity(0.7), size: 18),
                   tooltip: 'Delete',
                   onPressed: () => _deleteFile(item),
                 ),
@@ -1074,9 +1477,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildFilesGrid(List<VaultItem> itemsList) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final borderColor = isDark ? Colors.white10 : Colors.black12;
-    final cardColor = isDark ? const Color(0xFF0F0F0F) : const Color(0xFFF9F9F9);
+    final cardColor = isDark ? const Color(0xFF151E2E) : const Color(0xFFF9F9F9);
     final titleColor = isDark ? Colors.white : Colors.black;
-    final subColor = isDark ? Colors.white38 : Colors.black45;
+    final subColor = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
 
     return GridView.builder(
       padding: const EdgeInsets.all(16),
@@ -1116,7 +1519,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     style: TextStyle(
                       color: titleColor,
                       fontSize: 12,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,
@@ -1155,7 +1558,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 14),
+                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withOpacity(0.7), size: 14),
                           onPressed: () => _deleteFile(item),
                         ),
                       ),
