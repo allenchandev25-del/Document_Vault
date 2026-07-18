@@ -19,25 +19,26 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
     super.initState();
     final random = math.Random();
     
-    // Complementary neon cyan and purple blobs
+    // Minimalist, premium titanium/slate colors
     final colors = [
-      const Color(0xFF00E5FF), // Cyan
-      const Color(0xFFD946EF), // Magenta
-      const Color(0xFF6366F1), // Royal Indigo
+      const Color(0xFF3F3F46), // Gunmetal Grey
+      const Color(0xFF52525B), // Slate Grey
+      const Color(0xFF27272A), // Dark Graphite
+      const Color(0xFF475569), // Muted Slate Blue
     ];
 
     _particles = List.generate(8, (index) {
       return Particle(
         color: colors[random.nextInt(colors.length)],
         radius: random.nextDouble() * 200 + 150,
-        speedX: (random.nextDouble() - 0.5) * 0.0008,
-        speedY: (random.nextDouble() - 0.5) * 0.0008,
+        speedX: (random.nextDouble() - 0.5) * 0.0006, // Elegant, slow drift
+        speedY: (random.nextDouble() - 0.5) * 0.0006,
       );
     });
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 15),
+      duration: const Duration(seconds: 20),
     )..repeat();
   }
 
@@ -59,14 +60,14 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
         }
         return Stack(
           children: [
-            // 1. Bright, bold gradient (Electric Blue to Magenta)
+            // 1. Minimalist Space Grey / Titanium Gradient Background
             Positioned.fill(
               child: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xFF0044FF), // Electric Blue
-                      Color(0xFFCC00AA), // Bold Magenta
+                      Color(0xFF18181B), // Deep Carbon Black
+                      Color(0xFF2E2E33), // Space Grey / Matte Titanium
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -74,7 +75,7 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
                 ),
               ),
             ),
-            // 2. Floating shapes
+            // 2. Slow floating shapes
             Positioned.fill(
               child: CustomPaint(
                 painter: BokehPainter(
@@ -83,14 +84,14 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
                 ),
               ),
             ),
-            // 3. Backdrop filter overlay (Frosted Blur & Glass Tint)
+            // 3. Frosted Glass Blur Overlay
             Positioned.fill(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                 child: Container(
                   color: isDark
-                      ? const Color(0xFF090D12).withValues(alpha: 0.25) // 25% Dark glass fill
-                      : const Color(0xFFFFFFFF).withValues(alpha: 0.15), // 15% White glass fill
+                      ? const Color(0xFF000000).withValues(alpha: 0.15) // Deep contrast tint
+                      : const Color(0xFFFFFFFF).withValues(alpha: 0.10), // Clean light frost
                 ),
               ),
             ),
@@ -142,7 +143,7 @@ class BokehPainter extends CustomPainter {
       
       final gradient = RadialGradient(
         colors: [
-          p.color.withValues(alpha: isDark ? 0.15 : 0.10),
+          p.color.withValues(alpha: isDark ? 0.12 : 0.08),
           p.color.withValues(alpha: 0.0),
         ],
       );
