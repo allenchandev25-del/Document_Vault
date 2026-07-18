@@ -1291,7 +1291,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             trailing: _biometricSupported
                 ? Switch(
                     value: _vaultService.isBiometricEnabled,
-                    activeColor: primaryTxt,
+                    activeThumbColor: primaryTxt,
                     onChanged: (val) async {
                       final pin = await _promptForCurrentPin();
                       if (pin != null) {
@@ -1462,7 +1462,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onPressed: () => _exportFile(item),
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete_outline, color: Colors.redAccent.withOpacity(0.7), size: 18),
+                  icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 18),
                   tooltip: 'Delete',
                   onPressed: () => _deleteFile(item),
                 ),
@@ -1558,7 +1558,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withOpacity(0.7), size: 14),
+                          icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 14),
                           onPressed: () => _deleteFile(item),
                         ),
                       ),
