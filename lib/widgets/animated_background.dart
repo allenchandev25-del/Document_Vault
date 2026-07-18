@@ -18,26 +18,26 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
     super.initState();
     final random = math.Random();
     
-    // Curated premium palette: cool blue, indigo, violet, teal
+    // Curated premium vibrant palette: neon blue, indigo, magenta/pink, cyan
     final colors = [
-      const Color(0xFF3B82F6), // Blue
-      const Color(0xFF6366F1), // Indigo
-      const Color(0xFF8B5CF6), // Violet
-      const Color(0xFF14B8A6), // Teal
+      const Color(0xFF00D2FF), // Cyan
+      const Color(0xFF0066FF), // Neon Blue
+      const Color(0xFF9D00FF), // Violet/Indigo
+      const Color(0xFFFF007F), // Vibrant Pink/Magenta
     ];
 
-    _particles = List.generate(12, (index) {
+    _particles = List.generate(15, (index) {
       return Particle(
         color: colors[random.nextInt(colors.length)],
-        radius: random.nextDouble() * 120 + 80, // Large glowing blobs
-        speedX: (random.nextDouble() - 0.5) * 0.0008,
-        speedY: (random.nextDouble() - 0.5) * 0.0008,
+        radius: random.nextDouble() * 150 + 100, // Large glowing blobs
+        speedX: (random.nextDouble() - 0.5) * 0.002, // Increased speed for visibility
+        speedY: (random.nextDouble() - 0.5) * 0.002,
       );
     });
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 15),
+      duration: const Duration(seconds: 10),
     )..repeat();
   }
 
@@ -111,9 +111,11 @@ class BokehPainter extends CustomPainter {
       
       // Radial gradient for smooth glow / bokeh effect
       final rect = Rect.fromCircle(center: center, radius: p.radius);
+      
+      // Increased opacity values so they are clearly visible
       final gradient = RadialGradient(
         colors: [
-          p.color.withValues(alpha: isDark ? 0.08 : 0.04),
+          p.color.withValues(alpha: isDark ? 0.20 : 0.12),
           p.color.withValues(alpha: 0.0),
         ],
       );
