@@ -774,7 +774,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     });
                   },
                   selectedColor: primaryTxt,
-                  backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+                  backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
                   checkmarkColor: isDark ? Colors.black : Colors.white,
                   labelStyle: TextStyle(
                     color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
@@ -839,7 +839,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                   },
                   selectedColor: primaryTxt,
-                  backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+                  backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
                   checkmarkColor: isDark ? Colors.black : Colors.white,
                   labelStyle: TextStyle(
                     color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
@@ -1000,7 +1000,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           }
                         },
                         selectedColor: primaryTxt,
-                        backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+                        backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
                         checkmarkColor: isDark ? Colors.black : Colors.white,
                         labelStyle: TextStyle(
                           color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
@@ -1039,7 +1039,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
                       },
                       selectedColor: primaryTxt,
-                      backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+                      backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
                       checkmarkColor: isDark ? Colors.black : Colors.white,
                       labelStyle: TextStyle(
                         color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
@@ -1254,7 +1254,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   selected: isSelected,
                   selectedColor: primaryTxt,
-                  backgroundColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
+                  backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
                   checkmarkColor: isDark ? Colors.black : Colors.white,
                   labelStyle: TextStyle(
                     color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,

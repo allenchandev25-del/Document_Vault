@@ -21,10 +21,10 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
     
     // Monochromatic & minimalist slate/silver palette (iOS Glass Style)
     final colors = [
-      const Color(0xFF64748B), // Slate Grey
-      const Color(0xFF94A3B8), // Muted Silver/Grey
-      const Color(0xFFCBD5E1), // Light Slate
-      const Color(0xFF475569), // Dark Slate
+      const Color(0xFF6366F1), // Royal Indigo
+      const Color(0xFF8B5CF6), // Violet
+      const Color(0xFFEC4899), // Magenta/Pink
+      const Color(0xFF06B6D4), // Cyan
     ];
 
     _particles = List.generate(8, (index) {
