@@ -60,7 +60,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     'assets/logo.png',
                     width: 28,
                     height: 28,
-                    color: primaryTxt,
                   ),
                   const SizedBox(width: 8),
                   Text(
