@@ -37,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController _vaultQueryController = TextEditingController();
   String _vaultQuery = '';
   String _selectedVaultCategory = 'All';
-  bool _isGridView = false;
+  bool _isGridView = true;
 
   // Photo Gallery State
   String _selectedGalleryFilter = 'All Photos'; // 'All Photos' or 'Favorites'
