@@ -1,6 +1,0 @@
-rootAction:
-  key: nav_profile_and_storage_stdbutton3
-  action:
-    key: tik5qqay
-trigger:
-  triggerType: ON_TAP

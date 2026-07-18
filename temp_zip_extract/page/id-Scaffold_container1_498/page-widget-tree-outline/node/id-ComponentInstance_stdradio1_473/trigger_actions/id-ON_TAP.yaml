@@ -1,6 +1,0 @@
-rootAction:
-  key: search_and_filter::form.set_security_0
-  action:
-    key: mrc9tslr
-trigger:
-  triggerType: ON_TAP

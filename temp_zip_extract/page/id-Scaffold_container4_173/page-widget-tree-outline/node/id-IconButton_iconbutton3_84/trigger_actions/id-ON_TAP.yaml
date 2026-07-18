@@ -1,6 +1,0 @@
-rootAction:
-  key: nav_search_and_filter_iconbutton3
-  action:
-    key: set3j1oj
-trigger:
-  triggerType: ON_TAP

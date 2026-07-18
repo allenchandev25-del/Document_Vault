@@ -1,6 +1,0 @@
-rootAction:
-  key: nav_back_iconbutton1
-  action:
-    key: sz5or6mi
-trigger:
-  triggerType: ON_TAP

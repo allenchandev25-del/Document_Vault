@@ -1,7 +1,0 @@
-key: AspectRatio_container1_262
-type: AspectRatio
-props:
-  aspectRatio:
-    aspectRatioValue:
-      inputValue: 1
-name: AspectRatio

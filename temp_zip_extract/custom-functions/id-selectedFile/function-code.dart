@@ -1,2 +1,0 @@
-final f = files.where((f) => f.reference.id == fileId ?? "").firstOrNull?.snapshotData;
-return f == null ? {} : {"name": f.name, "upload_date": f.upload_date, "size_bytes": f.size_bytes, "is_encrypted": f.is_encrypted};

@@ -1,9 +1,0 @@
-key: Container_container5_27
-type: Container
-props:
-  container: {}
-  expanded:
-    expandedType: EXPANDED
-    flexValue:
-      inputValue: 1
-name: Container

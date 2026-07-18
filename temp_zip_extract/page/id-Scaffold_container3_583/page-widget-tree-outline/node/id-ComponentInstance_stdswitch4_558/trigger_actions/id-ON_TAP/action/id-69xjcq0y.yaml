@@ -1,9 +1,0 @@
-localStateUpdate:
-  updates:
-    - fieldIdentifier:
-        name: selfDestructEnabled
-        key: selfDestructEnabled
-      toggle: {}
-  updateType: APPLICATION
-  stateVariableType: APP_STATE
-key: 69xjcq0y

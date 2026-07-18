@@ -1,6 +1,0 @@
-rootAction:
-  key: nav_main_vault_ComponentInstance_stdbutton1_201
-  action:
-    key: 4mcsraph
-trigger:
-  triggerType: ON_TAP

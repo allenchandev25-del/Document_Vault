@@ -1,9 +1,0 @@
-key: Column_container5_212
-type: Column
-props:
-  column:
-    crossAxisAlignment: cross_axis_stretch
-    scrollable: false
-    minSizeValue:
-      inputValue: true
-name: Container Bordered Content

@@ -1,6 +1,0 @@
-rootAction:
-  key: nav_back_iconbutton1
-  action:
-    key: ebcu5qch
-trigger:
-  triggerType: ON_TAP
