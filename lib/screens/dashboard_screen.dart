@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import '../models/vault_item.dart';
 import '../services/vault_service.dart';
 import 'file_viewer_screen.dart';
@@ -194,27 +193,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       String message = '';
 
       if (Platform.isAndroid) {
-        final String downloadPath = p.join('/storage/emulated/0/Download', item.originalName);
-        try {
+        final String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
+          dialogTitle: 'Select Export Directory',
+        );
+        if (selectedDirectory != null) {
           if (mounted) {
             setState(() {
               _isProcessing = true;
               _processingMessage = 'Exporting...';
             });
           }
-          await _vaultService.decryptFile(item, downloadPath);
-          targetPath = downloadPath;
-          message = 'Saved to device Downloads folder';
-        } catch (e) {
-          final extDir = await getExternalStorageDirectory();
-          if (extDir != null) {
-            final String fallbackPath = p.join(extDir.path, item.originalName);
-            await _vaultService.decryptFile(item, fallbackPath);
-            targetPath = fallbackPath;
-            message = 'Saved to app external files folder';
-          } else {
-            rethrow;
-          }
+          targetPath = p.join(selectedDirectory, item.originalName);
+          await _vaultService.decryptFile(item, targetPath);
+          message = 'Saved to selected folder';
         }
       } else {
         targetPath = await FilePicker.platform.saveFile(
