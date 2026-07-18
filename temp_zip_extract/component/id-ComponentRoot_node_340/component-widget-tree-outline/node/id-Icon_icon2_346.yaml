@@ -1,0 +1,16 @@
+key: Icon_icon2_346
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 24
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    iconDataValue:
+      inputValue:
+        codePoint: 63035
+        family: MaterialIcons
+        matchTextDirection: false
+        name: chevron_right_rounded
+name: Icon

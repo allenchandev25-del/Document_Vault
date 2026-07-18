@@ -1,0 +1,24 @@
+node:
+  key: ComponentRoot_node_435
+  children:
+    - key: Container_root_449
+      children:
+        - key: Container_root_448
+          children:
+            - key: Container_root_447
+              children:
+                - key: Row_row_446
+                  children:
+                    - key: Container_box_438
+                      children:
+                        - key: Container_box_437
+                          children:
+                            - key: Icon_check_icon_436
+                    - key: Column_label_column_444
+                      children:
+                        - key: Text_label_text_439
+                        - key: Container_subtitle_wrap_442
+                          children:
+                            - key: Container_subtitle_text_441
+                              children:
+                                - key: Text_subtitle_text_440

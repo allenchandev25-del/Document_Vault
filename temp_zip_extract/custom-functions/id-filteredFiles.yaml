@@ -1,0 +1,47 @@
+identifier:
+  name: filteredFiles
+  key: filteredFiles
+arguments:
+  - identifier:
+      name: files
+      key: files
+    dataType:
+      listType:
+        scalarType: Document
+        nonNullable: true
+      nonNullable: true
+      subType:
+        collectionIdentifier:
+          name: files
+          key: files
+  - identifier:
+      name: searchQuery
+      key: searchQuery
+    dataType:
+      scalarType: String
+      nonNullable: true
+  - identifier:
+      name: securityFilter
+      key: securityFilter
+    dataType:
+      scalarType: String
+      nonNullable: true
+  - identifier:
+      name: typeFilter
+      key: typeFilter
+    dataType:
+      scalarType: String
+      nonNullable: true
+returnParameter:
+  identifier:
+    name: return
+    key: return
+  dataType:
+    listType:
+      scalarType: Document
+      nonNullable: true
+    nonNullable: true
+    subType:
+      collectionIdentifier:
+        name: files
+        key: files

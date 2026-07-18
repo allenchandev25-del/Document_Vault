@@ -1,0 +1,363 @@
+key: Container_custom_track_553
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        pixelsValue:
+          variable:
+            source: FUNCTION_CALL
+            defaultValue:
+              serializedValue: "56"
+            functionCall:
+              conditionalValue:
+                ifConditionalValues:
+                  - condition:
+                      source: FUNCTION_CALL
+                      functionCall:
+                        values:
+                          - variable:
+                              source: WIDGET_CLASS_PARAMETER
+                              defaultValue:
+                                serializedValue: iOS
+                              baseVariable:
+                                widgetClass:
+                                  paramIdentifier:
+                                    name: variant
+                                    key: design_system_std_switch_std_switchparam_variant
+                              nodeKeyRef:
+                                key: ComponentRoot_node_549
+                              uiBuilderValue:
+                                serializedValue: iOS
+                          - inputValue:
+                              serializedValue: iOS 26+
+                        condition:
+                          relation: EQUAL_TO
+                    value:
+                      inputValue:
+                        serializedValue: "64"
+                elseValue:
+                  inputValue:
+                    serializedValue: "56"
+                returnParameter:
+                  dataType:
+                    scalarType: Double
+            uiBuilderValue:
+              serializedValue: "56"
+          mostRecentInputValue: 56
+      height:
+        pixelsValue:
+          variable:
+            source: FUNCTION_CALL
+            defaultValue:
+              serializedValue: "32"
+            functionCall:
+              conditionalValue:
+                ifConditionalValues:
+                  - condition:
+                      source: FUNCTION_CALL
+                      functionCall:
+                        values:
+                          - variable:
+                              source: WIDGET_CLASS_PARAMETER
+                              defaultValue:
+                                serializedValue: iOS
+                              baseVariable:
+                                widgetClass:
+                                  paramIdentifier:
+                                    name: variant
+                                    key: design_system_std_switch_std_switchparam_variant
+                              nodeKeyRef:
+                                key: ComponentRoot_node_549
+                              uiBuilderValue:
+                                serializedValue: iOS
+                          - inputValue:
+                              serializedValue: iOS 26+
+                        condition:
+                          relation: EQUAL_TO
+                    value:
+                      inputValue:
+                        serializedValue: "28"
+                elseValue:
+                  inputValue:
+                    serializedValue: "32"
+                returnParameter:
+                  dataType:
+                    scalarType: Double
+            uiBuilderValue:
+              serializedValue: "32"
+          mostRecentInputValue: 32
+    boxDecoration:
+      borderRadius:
+        type: FF_BORDER_RADIUS_ONLY
+        topLeftValue:
+          variable:
+            source: FUNCTION_CALL
+            defaultValue:
+              serializedValue: "16"
+            functionCall:
+              conditionalValue:
+                ifConditionalValues:
+                  - condition:
+                      source: FUNCTION_CALL
+                      functionCall:
+                        values:
+                          - variable:
+                              source: WIDGET_CLASS_PARAMETER
+                              defaultValue:
+                                serializedValue: iOS
+                              baseVariable:
+                                widgetClass:
+                                  paramIdentifier:
+                                    name: variant
+                                    key: design_system_std_switch_std_switchparam_variant
+                              nodeKeyRef:
+                                key: ComponentRoot_node_549
+                              uiBuilderValue:
+                                serializedValue: iOS
+                          - inputValue:
+                              serializedValue: iOS 26+
+                        condition:
+                          relation: EQUAL_TO
+                    value:
+                      inputValue:
+                        serializedValue: "9999"
+                elseValue:
+                  inputValue:
+                    serializedValue: "16"
+                returnParameter:
+                  dataType:
+                    scalarType: Double
+            uiBuilderValue:
+              serializedValue: "16"
+          mostRecentInputValue: 16
+        topRightValue:
+          variable:
+            source: FUNCTION_CALL
+            defaultValue:
+              serializedValue: "16"
+            functionCall:
+              conditionalValue:
+                ifConditionalValues:
+                  - condition:
+                      source: FUNCTION_CALL
+                      functionCall:
+                        values:
+                          - variable:
+                              source: WIDGET_CLASS_PARAMETER
+                              defaultValue:
+                                serializedValue: iOS
+                              baseVariable:
+                                widgetClass:
+                                  paramIdentifier:
+                                    name: variant
+                                    key: design_system_std_switch_std_switchparam_variant
+                              nodeKeyRef:
+                                key: ComponentRoot_node_549
+                              uiBuilderValue:
+                                serializedValue: iOS
+                          - inputValue:
+                              serializedValue: iOS 26+
+                        condition:
+                          relation: EQUAL_TO
+                    value:
+                      inputValue:
+                        serializedValue: "9999"
+                elseValue:
+                  inputValue:
+                    serializedValue: "16"
+                returnParameter:
+                  dataType:
+                    scalarType: Double
+            uiBuilderValue:
+              serializedValue: "16"
+          mostRecentInputValue: 16
+        bottomLeftValue:
+          variable:
+            source: FUNCTION_CALL
+            defaultValue:
+              serializedValue: "16"
+            functionCall:
+              conditionalValue:
+                ifConditionalValues:
+                  - condition:
+                      source: FUNCTION_CALL
+                      functionCall:
+                        values:
+                          - variable:
+                              source: WIDGET_CLASS_PARAMETER
+                              defaultValue:
+                                serializedValue: iOS
+                              baseVariable:
+                                widgetClass:
+                                  paramIdentifier:
+                                    name: variant
+                                    key: design_system_std_switch_std_switchparam_variant
+                              nodeKeyRef:
+                                key: ComponentRoot_node_549
+                              uiBuilderValue:
+                                serializedValue: iOS
+                          - inputValue:
+                              serializedValue: iOS 26+
+                        condition:
+                          relation: EQUAL_TO
+                    value:
+                      inputValue:
+                        serializedValue: "9999"
+                elseValue:
+                  inputValue:
+                    serializedValue: "16"
+                returnParameter:
+                  dataType:
+                    scalarType: Double
+            uiBuilderValue:
+              serializedValue: "16"
+          mostRecentInputValue: 16
+        bottomRightValue:
+          variable:
+            source: FUNCTION_CALL
+            defaultValue:
+              serializedValue: "16"
+            functionCall:
+              conditionalValue:
+                ifConditionalValues:
+                  - condition:
+                      source: FUNCTION_CALL
+                      functionCall:
+                        values:
+                          - variable:
+                              source: WIDGET_CLASS_PARAMETER
+                              defaultValue:
+                                serializedValue: iOS
+                              baseVariable:
+                                widgetClass:
+                                  paramIdentifier:
+                                    name: variant
+                                    key: design_system_std_switch_std_switchparam_variant
+                              nodeKeyRef:
+                                key: ComponentRoot_node_549
+                              uiBuilderValue:
+                                serializedValue: iOS
+                          - inputValue:
+                              serializedValue: iOS 26+
+                        condition:
+                          relation: EQUAL_TO
+                    value:
+                      inputValue:
+                        serializedValue: "9999"
+                elseValue:
+                  inputValue:
+                    serializedValue: "16"
+                returnParameter:
+                  dataType:
+                    scalarType: Double
+            uiBuilderValue:
+              serializedValue: "16"
+          mostRecentInputValue: 16
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+      colorValue:
+        variable:
+          source: FUNCTION_CALL
+          defaultValue:
+            color:
+              themeColor: ALTERNATE
+          functionCall:
+            conditionalValue:
+              ifConditionalValues:
+                - condition:
+                    source: WIDGET_CLASS_PARAMETER
+                    defaultValue:
+                      serializedValue: "false"
+                    baseVariable:
+                      widgetClass:
+                        paramIdentifier:
+                          name: active
+                          key: design_system_std_switch_std_switchparam_active
+                    nodeKeyRef:
+                      key: ComponentRoot_node_549
+                    uiBuilderValue:
+                      serializedValue: "false"
+                  value:
+                    inputValue:
+                      color:
+                        themeColor: PRIMARY
+              elseValue:
+                inputValue:
+                  color:
+                    themeColor: ALTERNATE
+              returnParameter:
+                dataType:
+                  scalarType: Color
+          uiBuilderValue:
+            color:
+              themeColor: ALTERNATE
+        mostRecentInputValue:
+          themeColor: ALTERNATE
+  visibility:
+    legacyVisible: false
+    visibleValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "false"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: FUNCTION_CALL
+                  functionCall:
+                    values:
+                      - variable:
+                          source: WIDGET_CLASS_PARAMETER
+                          defaultValue:
+                            serializedValue: iOS
+                          baseVariable:
+                            widgetClass:
+                              paramIdentifier:
+                                name: variant
+                                key: design_system_std_switch_std_switchparam_variant
+                          nodeKeyRef:
+                            key: ComponentRoot_node_549
+                          uiBuilderValue:
+                            serializedValue: iOS
+                      - inputValue:
+                          serializedValue: iOS
+                    condition:
+                      relation: EQUAL_TO
+                value:
+                  inputValue:
+                    serializedValue: "false"
+              - condition:
+                  source: FUNCTION_CALL
+                  functionCall:
+                    values:
+                      - variable:
+                          source: WIDGET_CLASS_PARAMETER
+                          defaultValue:
+                            serializedValue: iOS
+                          baseVariable:
+                            widgetClass:
+                              paramIdentifier:
+                                name: variant
+                                key: design_system_std_switch_std_switchparam_variant
+                          nodeKeyRef:
+                            key: ComponentRoot_node_549
+                          uiBuilderValue:
+                            serializedValue: iOS
+                      - inputValue:
+                          serializedValue: iOS 26+
+                    condition:
+                      relation: EQUAL_TO
+                value:
+                  inputValue:
+                    serializedValue: "true"
+            elseValue:
+              inputValue:
+                serializedValue: "false"
+            returnParameter:
+              dataType:
+                scalarType: Boolean
+        uiBuilderValue:
+          serializedValue: "false"
+      mostRecentInputValue: true
+name: Container

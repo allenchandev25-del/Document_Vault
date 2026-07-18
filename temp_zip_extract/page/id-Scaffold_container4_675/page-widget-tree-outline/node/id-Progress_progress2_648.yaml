@@ -1,0 +1,80 @@
+key: Progress_progress2_648
+type: ProgressBar
+props:
+  progressBar:
+    shape: Linear
+    size:
+      height:
+        pixelsValue:
+          inputValue: 6
+    percentValue:
+      variable:
+        defaultValue:
+          serializedValue: "${storage_usage_percent * 100}"
+      mostRecentInputValue: 0
+    progressColorValue:
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: FUNCTION_CALL
+                  functionCall:
+                    values:
+                      - variable:
+                          source: FUNCTION_CALL
+                          functionCall:
+                            values:
+                              - variable:
+                                  source: FIRESTORE_REQUEST
+                                  baseVariable:
+                                    firestore: {}
+                                  nodeKeyRef:
+                                    key: Progress_progress2_648
+                            customFunction:
+                              name: storageUsagePercent
+                              key: storageUsagePercent
+                      - inputValue:
+                          serializedValue: "0.9"
+                    condition:
+                      relation: GREATER_THAN
+                value:
+                  inputValue:
+                    serializedValue: error
+            elseValue:
+              inputValue:
+                serializedValue: primary
+            returnParameter:
+              identifier:
+                name: return
+                key: return
+              dataType:
+                scalarType: String
+      mostRecentInputValue:
+        themeColor: PRIMARY
+    backgroundColorValue:
+      inputValue:
+        themeColor: ALTERNATE
+    animationValue:
+      inputValue: true
+    barRadiusValue:
+      inputValue: 3
+name: Progress
+databaseRequest:
+  returnParameter:
+    identifier:
+      name: user_profile
+      key: user_profile
+    dataType:
+      listType:
+        scalarType: Document
+      subType:
+        collectionIdentifier:
+          name: user_profile
+          key: user_profile
+  firestore:
+    collectionIdentifier:
+      name: user_profile
+      key: user_profile
+    singleTimeQuery: false

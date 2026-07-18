@@ -1,0 +1,58 @@
+key: ComponentInstance_photocard1_263
+type: Container
+props:
+  container: {}
+name: PhotoCard
+parameterValues:
+  parameterPasses:
+    local_photo_card_5ada964cparam_file_id:
+      paramIdentifier:
+        name: fileId
+        key: local_photo_card_5ada964cparam_file_id
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              documentProperty: REFERENCE
+          - documentReferenceId: {}
+        nodeKeyRef:
+          key: Listview_grid1_254
+    local_photo_card_5ada964cparam_image_desc:
+      paramIdentifier:
+        name: imageDesc
+        key: local_photo_card_5ada964cparam_image_desc
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              fieldIdentifier:
+                name: name
+                key: name
+          - typeCastOperation:
+              originalType: String
+              destinationType: ImagePath
+        nodeKeyRef:
+          key: Listview_grid1_254
+    local_photo_card_5ada964cparam_date:
+      paramIdentifier:
+        name: date
+        key: local_photo_card_5ada964cparam_date
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              fieldIdentifier:
+                name: uploadDate
+                key: uploadDate
+        nodeKeyRef:
+          key: Listview_grid1_254
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_255
+componentClassKeyRef:
+  key: ComponentRoot_node_255

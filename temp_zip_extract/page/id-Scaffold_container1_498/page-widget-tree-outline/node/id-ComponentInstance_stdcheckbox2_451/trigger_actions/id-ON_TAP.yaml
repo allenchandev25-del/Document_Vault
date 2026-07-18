@@ -1,0 +1,18 @@
+rootAction:
+  key: search_and_filter::form.toggle_type_0
+  conditionActions:
+    falseAction:
+      key: search_and_filter::form.toggle_type_2
+      action:
+        key: 72cmhuj3
+    trueActions:
+      - condition:
+          variable:
+            defaultValue:
+              serializedValue: form.selected_types.contains(Images)
+        trueAction:
+          key: search_and_filter::form.toggle_type_1
+          action:
+            key: 6sps3byu
+trigger:
+  triggerType: ON_TAP

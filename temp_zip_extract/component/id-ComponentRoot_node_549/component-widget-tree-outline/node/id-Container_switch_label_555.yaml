@@ -1,0 +1,32 @@
+key: Container_switch_label_555
+type: Container
+props:
+  container: {}
+  padding:
+    type: FF_PADDING_ONLY
+    leftValue:
+      inputValue: 8
+    topValue:
+      inputValue: 0
+    rightValue:
+      inputValue: 0
+    bottomValue:
+      inputValue: 0
+  visibility:
+    legacyVisible: true
+    visibleValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: "true"
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: labelPresent
+              key: design_system_std_switch_std_switchparam_label_present
+        nodeKeyRef:
+          key: ComponentRoot_node_549
+        uiBuilderValue:
+          serializedValue: "true"
+      mostRecentInputValue: true
+name: Text

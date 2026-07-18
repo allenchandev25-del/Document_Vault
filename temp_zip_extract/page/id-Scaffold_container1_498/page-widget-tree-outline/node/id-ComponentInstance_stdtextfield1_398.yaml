@@ -1,0 +1,129 @@
+key: ComponentInstance_stdtextfield1_398
+type: Container
+props:
+  container: {}
+  expanded:
+    expandedType: EXPANDED
+    flexValue:
+      inputValue: 1
+name: TextField
+parameterValues:
+  parameterPasses:
+    design_system_std_textfield_std_textfieldparam_label:
+      paramIdentifier:
+        name: label
+        key: design_system_std_textfield_std_textfieldparam_label
+      inputValue:
+        serializedValue: ""
+    design_system_std_textfield_std_textfieldparam_label_present:
+      paramIdentifier:
+        name: labelPresent
+        key: design_system_std_textfield_std_textfieldparam_label_present
+      inputValue:
+        serializedValue: "false"
+    design_system_std_textfield_std_textfieldparam_helper:
+      paramIdentifier:
+        name: helper
+        key: design_system_std_textfield_std_textfieldparam_helper
+      inputValue:
+        serializedValue: ""
+    design_system_std_textfield_std_textfieldparam_helper_present:
+      paramIdentifier:
+        name: helperPresent
+        key: design_system_std_textfield_std_textfieldparam_helper_present
+      inputValue:
+        serializedValue: "false"
+    design_system_std_textfield_std_textfieldparam_leading_icon:
+      paramIdentifier:
+        name: leadingIcon
+        key: design_system_std_textfield_std_textfieldparam_leading_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 983357
+              family: MaterialIcons
+              matchTextDirection: false
+              name: search_rounded
+    design_system_std_textfield_std_textfieldparam_leading_icon_present:
+      paramIdentifier:
+        name: leadingIconPresent
+        key: design_system_std_textfield_std_textfieldparam_leading_icon_present
+      inputValue:
+        serializedValue: "true"
+    design_system_std_textfield_std_textfieldparam_trailing_icon:
+      paramIdentifier:
+        name: trailingIcon
+        key: design_system_std_textfield_std_textfieldparam_trailing_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 63677
+              family: MaterialIcons
+              matchTextDirection: false
+              name: mic_rounded
+    design_system_std_textfield_std_textfieldparam_trailing_icon_present:
+      paramIdentifier:
+        name: trailingIconPresent
+        key: design_system_std_textfield_std_textfieldparam_trailing_icon_present
+      inputValue:
+        serializedValue: "true"
+    design_system_std_textfield_std_textfieldparam_hint:
+      paramIdentifier:
+        name: hint
+        key: design_system_std_textfield_std_textfieldparam_hint
+      inputValue:
+        serializedValue: "Search documents, photos, tags..."
+    design_system_std_textfield_std_textfieldparam_value:
+      paramIdentifier:
+        name: value
+        key: design_system_std_textfield_std_textfieldparam_value
+      variable:
+        source: LOCAL_STATE
+        baseVariable:
+          localState:
+            fieldIdentifier:
+              name: tempQuery
+              key: tempQuery
+            stateVariableType: WIDGET_CLASS_STATE
+        nodeKeyRef:
+          key: Scaffold_container1_498
+    design_system_std_textfield_std_textfieldparam_on_change:
+      paramIdentifier:
+        name: onChange
+        key: design_system_std_textfield_std_textfieldparam_on_change
+      inputValue:
+        serializedValue: ""
+    design_system_std_textfield_std_textfieldparam_on_submit:
+      paramIdentifier:
+        name: onSubmit
+        key: design_system_std_textfield_std_textfieldparam_on_submit
+      inputValue:
+        serializedValue: ""
+    design_system_std_textfield_std_textfieldparam_variant:
+      paramIdentifier:
+        name: variant
+        key: design_system_std_textfield_std_textfieldparam_variant
+      inputValue:
+        serializedValue: filled
+    design_system_std_textfield_std_textfieldparam_error:
+      paramIdentifier:
+        name: error
+        key: design_system_std_textfield_std_textfieldparam_error
+      inputValue:
+        serializedValue: "false"
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_386
+componentClassKeyRef:
+  key: ComponentRoot_node_386

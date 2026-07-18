@@ -1,0 +1,15 @@
+key: Container_container5_590
+type: Container
+props:
+  container: {}
+  padding:
+    type: FF_PADDING_ONLY
+    leftValue:
+      inputValue: 32
+    topValue:
+      inputValue: 24
+    rightValue:
+      inputValue: 32
+    bottomValue:
+      inputValue: 16
+name: Container Padding

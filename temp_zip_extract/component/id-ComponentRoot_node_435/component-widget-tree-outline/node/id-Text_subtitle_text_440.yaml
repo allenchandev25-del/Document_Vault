@@ -1,0 +1,30 @@
+key: Text_subtitle_text_440
+type: Text
+props:
+  text:
+    themeStyle: BODY_SMALL
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: Receive weekly updates
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: subtitle
+              key: design_system_std_checkbox_std_checkboxparam_subtitle
+        nodeKeyRef:
+          key: ComponentRoot_node_435
+        uiBuilderValue:
+          serializedValue: Receive weekly updates
+      mostRecentInputValue: Receive weekly updates
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.5
+    maxLinesValue:
+      inputValue: 3
+    overflowReplacement: ELLIPSIS
+name: Text

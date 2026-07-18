@@ -1,0 +1,46 @@
+key: ComponentInstance_settingrow6_543
+type: Container
+props:
+  container: {}
+name: SettingRow
+parameterValues:
+  parameterPasses:
+    local_setting_row_a6a8a7aa_child_a97c0bfcparam_icon:
+      paramIdentifier:
+        name: icon
+        key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 20
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 63126
+              family: MaterialIcons
+              matchTextDirection: false
+              name: delete_outline_rounded
+    local_setting_row_a6a8a7aa_child_a97c0bfcparam_title:
+      paramIdentifier:
+        name: title
+        key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_title
+      inputValue:
+        serializedValue: Clear Local Cache
+    local_setting_row_a6a8a7aa_child_a97c0bfcparam_subtitle:
+      paramIdentifier:
+        name: subtitle
+        key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_subtitle
+      inputValue:
+        serializedValue: Wipe temporary file previews
+    __orphan_on_tap:
+      paramIdentifier:
+        name: onTap
+        key: __orphan_on_tap
+      inputValue:
+        serializedValue: toast('Cache cleared')
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_518
+componentClassKeyRef:
+  key: ComponentRoot_node_518

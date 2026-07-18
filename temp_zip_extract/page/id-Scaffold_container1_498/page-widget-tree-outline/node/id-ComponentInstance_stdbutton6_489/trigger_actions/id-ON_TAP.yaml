@@ -1,0 +1,6 @@
+rootAction:
+  key: search_and_filter::form.apply_and_close_0
+  action:
+    key: n76rahht
+trigger:
+  triggerType: ON_TAP

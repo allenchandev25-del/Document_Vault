@@ -1,0 +1,48 @@
+key: ComponentInstance_stdcheckbox3_452
+type: Container
+props:
+  container: {}
+name: Checkbox
+parameterValues:
+  parameterPasses:
+    design_system_std_checkbox_std_checkboxparam_label:
+      paramIdentifier:
+        name: label
+        key: design_system_std_checkbox_std_checkboxparam_label
+      inputValue:
+        serializedValue: Spreadsheets
+    design_system_std_checkbox_std_checkboxparam_subtitle:
+      paramIdentifier:
+        name: subtitle
+        key: design_system_std_checkbox_std_checkboxparam_subtitle
+      inputValue:
+        serializedValue: Receive weekly updates
+    design_system_std_checkbox_std_checkboxparam_color:
+      paramIdentifier:
+        name: color
+        key: design_system_std_checkbox_std_checkboxparam_color
+      inputValue:
+        color:
+          themeColor: PRIMARY
+    design_system_std_checkbox_std_checkboxparam_is_checked:
+      paramIdentifier:
+        name: isChecked
+        key: design_system_std_checkbox_std_checkboxparam_is_checked
+      inputValue:
+        serializedValue: "false"
+    design_system_std_checkbox_std_checkboxparam_has_subtitle:
+      paramIdentifier:
+        name: hasSubtitle
+        key: design_system_std_checkbox_std_checkboxparam_has_subtitle
+      inputValue:
+        serializedValue: "true"
+    design_system_std_checkbox_std_checkboxparam_disabled:
+      paramIdentifier:
+        name: disabled
+        key: design_system_std_checkbox_std_checkboxparam_disabled
+      inputValue:
+        serializedValue: "false"
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_435
+componentClassKeyRef:
+  key: ComponentRoot_node_435

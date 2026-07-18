@@ -1,0 +1,13 @@
+node:
+  key: ComponentRoot_node_57
+  children:
+    - key: Container_root_65
+      children:
+        - key: Stack_content_stack_64
+          children:
+            - key: Row_content_62
+              children:
+                - key: Icon_icon_start_58
+                - key: Text_label_59
+                - key: Icon_icon_end_60
+            - key: Progress_loader_63

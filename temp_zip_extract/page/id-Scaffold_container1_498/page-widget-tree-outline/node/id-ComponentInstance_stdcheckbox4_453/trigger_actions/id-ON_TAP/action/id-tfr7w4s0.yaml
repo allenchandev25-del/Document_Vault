@@ -1,0 +1,11 @@
+localStateUpdate:
+  updates:
+    - fieldIdentifier:
+        name: selectedTypes
+        key: selectedTypes
+      setValue:
+        inputValue:
+          serializedValue: form.selected_types.where((t) => t != Videos).toList()
+  updateType: WIDGET
+  stateVariableType: WIDGET_CLASS_STATE
+key: tfr7w4s0

@@ -1,0 +1,15 @@
+key: AppBar_86eivzse
+type: AppBar
+props:
+  appBar:
+    templateType: BACK_BUTTON_LEFT_TITLE
+    titleInFlexibleSpaceBar: false
+    defaultBackButtonValue:
+      inputValue: false
+    backgroundColorValue:
+      inputValue:
+        themeColor: PRIMARY
+    elevationValue:
+      inputValue: 2
+    centerTitleValue:
+      inputValue: false

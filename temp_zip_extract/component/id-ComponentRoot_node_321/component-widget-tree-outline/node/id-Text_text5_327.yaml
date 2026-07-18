@@ -1,0 +1,34 @@
+key: Text_text5_327
+type: Text
+props:
+  text:
+    themeStyle: LABEL_SMALL
+    selectable: false
+    textValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: 52%
+        functionCall:
+          stringInterpolation: {}
+          values:
+            - variable:
+                source: WIDGET_CLASS_PARAMETER
+                baseVariable:
+                  widgetClass:
+                    paramIdentifier:
+                      name: percent
+                      key: local_storage_metric_2249a332param_percent
+                nodeKeyRef:
+                  key: ComponentRoot_node_321
+            - inputValue:
+                serializedValue: "%"
+        uiBuilderValue:
+          serializedValue: 52%
+      mostRecentInputValue: 52%
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.2
+name: Text

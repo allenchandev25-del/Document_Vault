@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_onboarding_ComponentInstance_stdbutton9_362
+  action:
+    key: 87ug8se3
+trigger:
+  triggerType: ON_TAP

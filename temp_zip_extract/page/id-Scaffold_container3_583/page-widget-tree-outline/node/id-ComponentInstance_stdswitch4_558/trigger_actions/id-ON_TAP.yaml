@@ -1,0 +1,6 @@
+rootAction:
+  key: app.toggle_self_destruct_0
+  action:
+    key: 69xjcq0y
+trigger:
+  triggerType: ON_TAP

@@ -1,0 +1,10 @@
+key: Container_container3_179
+type: Container
+props:
+  container:
+    dimensions:
+      height:
+        pixelsValue:
+          inputValue: 400
+    clipContent: true
+name: Container

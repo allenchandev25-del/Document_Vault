@@ -1,0 +1,27 @@
+key: IconButton_dd44orx5
+type: IconButton
+props:
+  iconButton:
+    buttonSize:
+      pixelsValue:
+        inputValue: 60
+    borderRadiusValue:
+      inputValue: 30
+    borderColorValue:
+      inputValue:
+        value: "0"
+    borderWidthValue:
+      inputValue: 1
+    iconValue:
+      inputValue:
+        sizeValue:
+          inputValue: 30
+        colorValue:
+          inputValue:
+            value: "4294967295"
+        iconDataValue:
+          inputValue:
+            codePoint: 62834
+            family: MaterialIcons
+            matchTextDirection: true
+            name: arrow_back_rounded

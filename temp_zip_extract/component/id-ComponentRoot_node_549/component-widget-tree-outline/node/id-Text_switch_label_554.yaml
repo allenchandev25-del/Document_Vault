@@ -1,0 +1,27 @@
+key: Text_switch_label_554
+type: Text
+props:
+  text:
+    themeStyle: BODY_MEDIUM
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: Enable Self-Destruct
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: label
+              key: design_system_std_switch_std_switchparam_label
+        nodeKeyRef:
+          key: ComponentRoot_node_549
+        uiBuilderValue:
+          serializedValue: Enable Self-Destruct
+      mostRecentInputValue: Enable Self-Destruct
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.6
+name: Text

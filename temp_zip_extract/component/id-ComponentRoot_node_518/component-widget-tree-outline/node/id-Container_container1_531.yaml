@@ -1,0 +1,14 @@
+key: Container_container1_531
+type: Container
+props:
+  container:
+    boxDecoration:
+      border:
+        bottom:
+          sizeValue:
+            inputValue: 1
+          colorValue:
+            inputValue:
+              themeColor: ALTERNATE
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+name: Container

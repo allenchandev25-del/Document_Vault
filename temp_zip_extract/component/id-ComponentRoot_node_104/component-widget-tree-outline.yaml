@@ -1,0 +1,9 @@
+node:
+  key: ComponentRoot_node_104
+  children:
+    - key: Container_container1_109
+      children:
+        - key: Row_row1_108
+          children:
+            - key: Icon_icon1_105
+            - key: Text_text1_106

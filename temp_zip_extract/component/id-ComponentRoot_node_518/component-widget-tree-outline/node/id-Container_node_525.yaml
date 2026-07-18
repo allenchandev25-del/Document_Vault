@@ -1,0 +1,12 @@
+key: Container_node_525
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        pixelsValue:
+          inputValue: 0
+      height:
+        pixelsValue:
+          inputValue: 0
+name: Container

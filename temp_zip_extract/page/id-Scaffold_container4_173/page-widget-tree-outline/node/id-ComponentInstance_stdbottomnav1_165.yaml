@@ -1,0 +1,10 @@
+key: ComponentInstance_stdbottomnav1_165
+type: Container
+props:
+  container: {}
+name: BottomNav
+parameterValues:
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_149
+componentClassKeyRef:
+  key: ComponentRoot_node_149

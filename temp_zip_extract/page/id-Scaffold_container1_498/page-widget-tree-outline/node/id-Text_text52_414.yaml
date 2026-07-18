@@ -1,0 +1,14 @@
+key: Text_text52_414
+type: Text
+props:
+  text:
+    themeStyle: LABEL_LARGE
+    selectable: false
+    textValue:
+      inputValue: Recent Searches
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.3
+name: Text

@@ -1,0 +1,75 @@
+node:
+  key: Scaffold_container3_77
+  appBar:
+    key: AppBar_86eivzse
+    leading:
+      key: IconButton_dd44orx5
+    title:
+      key: Text_rvzc4yqt
+  body:
+    key: Container_container3_76
+    children:
+      - key: Column_container3_75
+        children:
+          - key: Container_node_0
+          - key: Container_node_1
+          - key: Container_node_2
+          - key: Scaffold_scaffold1_3
+            children:
+              - key: Column_column3_74
+                children:
+                  - key: Container_container4_15
+                    children:
+                      - key: Column_container4_14
+                        children:
+                          - key: Container_container4_12
+                            children:
+                              - key: Row_row2_11
+                                children:
+                                  - key: IconButton_iconbutton1_4
+                                  - key: Column_column4_8
+                                    children:
+                                      - key: Text_text4_5
+                                      - key: Text_text5_6
+                                  - key: IconButton_iconbutton2_9
+                          - key: Container_container4_13
+                  - key: Container_container5_27
+                    children:
+                      - key: Container_container5_26
+                        children:
+                          - key: Container_container6_25
+                            children:
+                              - key: Column_column5_24
+                                children:
+                                  - key: Image_image1_16
+                                  - key: Container_container7_22
+                                    children:
+                                      - key: Container_container7_21
+                                        children:
+                                          - key: Row_row3_20
+                                            children:
+                                              - key: Icon_icon3_17
+                                              - key: Text_text6_18
+                  - key: Container_container8_72
+                    children:
+                      - key: Column_container8_71
+                        children:
+                          - key: Container_container8_70
+                          - key: Container_container8_69
+                            children:
+                              - key: Column_column6_68
+                                children:
+                                  - key: Row_row4_40
+                                    children:
+                                      - key: ComponentInstance_metadataitem1_37
+                                      - key: ComponentInstance_metadataitem2_38
+                                  - key: Divider_divider1_41
+                                  - key: Column_column7_56
+                                    children:
+                                      - key: Text_text7_42
+                                      - key: Row_row5_54
+                                        children:
+                                          - key: ComponentInstance_actiontile1_50
+                                          - key: ComponentInstance_actiontile2_51
+                                          - key: ComponentInstance_actiontile3_52
+                                  - key: ComponentInstance_stdbutton1_66

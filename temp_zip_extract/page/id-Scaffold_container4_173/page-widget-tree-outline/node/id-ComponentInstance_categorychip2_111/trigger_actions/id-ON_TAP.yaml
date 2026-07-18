@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_photo_gallery_categorychip2
+  action:
+    key: yzi8edxs
+trigger:
+  triggerType: ON_TAP

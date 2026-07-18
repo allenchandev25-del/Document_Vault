@@ -1,0 +1,8 @@
+rootAction:
+  key: nav_document_viewer_container2
+  action:
+    key: qtwiz2y1
+  annotations:
+    documentation: "ff_lite_route_params:file_id:\"${file_id}\""
+trigger:
+  triggerType: ON_TAP

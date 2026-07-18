@@ -1,0 +1,43 @@
+key: Listview_grid1_254
+type: ListView
+props:
+  listView:
+    axis: FF_AXIS_VERTICAL
+    primary: false
+    listSpacing:
+      spacingValue:
+        inputValue: 8
+    shrinkWrapValue:
+      inputValue: true
+    reverseValue:
+      inputValue: false
+name: ListView
+databaseRequest:
+  returnParameter:
+    identifier:
+      name: files
+      key: files
+    dataType:
+      listType:
+        scalarType: Document
+      subType:
+        collectionIdentifier:
+          name: files
+          key: files
+  firestore:
+    collectionIdentifier:
+      name: files
+      key: files
+    singleTimeQuery: false
+generatorVariable:
+  identifier:
+    name: item
+    key: item
+  variable:
+    source: FIRESTORE_REQUEST
+    baseVariable:
+      firestore: {}
+    nodeKeyRef:
+      key: Listview_grid1_254
+annotations:
+  documentation: "ff_lite_listview_data:${gallery_files}"

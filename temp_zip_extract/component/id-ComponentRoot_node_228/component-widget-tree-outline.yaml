@@ -1,0 +1,8 @@
+node:
+  key: ComponentRoot_node_228
+  children:
+    - key: Container_chip1_231
+      children:
+        - key: ChipRow_chip1_230
+          children:
+            - key: Text_chip1_229

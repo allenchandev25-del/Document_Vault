@@ -1,0 +1,29 @@
+key: Text_chip1_229
+type: Text
+props:
+  text:
+    themeStyle: LABEL_MEDIUM
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: All Photos
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: label
+              key: local_album_chip_63f9e8a0param_label
+        nodeKeyRef:
+          key: ComponentRoot_node_228
+        uiBuilderValue:
+          serializedValue: All Photos
+      mostRecentInputValue: All Photos
+    fontSizeValue:
+      inputValue: 14
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.3
+name: Chip Label

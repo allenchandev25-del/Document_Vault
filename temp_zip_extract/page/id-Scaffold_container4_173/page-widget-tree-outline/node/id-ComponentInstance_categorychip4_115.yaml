@@ -1,0 +1,41 @@
+key: ComponentInstance_categorychip4_115
+type: Container
+props:
+  container: {}
+name: CategoryChip
+parameterValues:
+  parameterPasses:
+    local_category_chip_32de6ee0param_tone:
+      paramIdentifier:
+        name: tone
+        key: local_category_chip_32de6ee0param_tone
+      inputValue:
+        color:
+          value: "4290018428"
+    local_category_chip_32de6ee0param_icon:
+      paramIdentifier:
+        name: icon
+        key: local_category_chip_32de6ee0param_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 20
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 63664
+              family: MaterialIcons
+              matchTextDirection: false
+              name: medical_services_rounded
+    local_category_chip_32de6ee0param_label:
+      paramIdentifier:
+        name: label
+        key: local_category_chip_32de6ee0param_label
+      inputValue:
+        serializedValue: Health
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_104
+componentClassKeyRef:
+  key: ComponentRoot_node_104

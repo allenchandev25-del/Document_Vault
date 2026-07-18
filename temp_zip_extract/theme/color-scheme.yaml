@@ -1,0 +1,163 @@
+primary:
+  value: "4279900698"
+  darkModeColor:
+    value: "4294309365"
+secondary:
+  value: "4286356660"
+  darkModeColor:
+    value: "4286356660"
+tertiary:
+  value: "4291068778"
+  darkModeColor:
+    value: "4291068778"
+customPaletteColors:
+  - value: "4294967295"
+    paletteColorName: on_primary
+    darkModeColor:
+      value: "4278190080"
+  - value: "437918234"
+    paletteColorName: primary_container
+    darkModeColor:
+      value: "620099061"
+  - value: "4279900698"
+    paletteColorName: on_primary_container
+    darkModeColor:
+      value: "4294309365"
+  - value: "4294967295"
+    paletteColorName: on_secondary
+    darkModeColor:
+      value: "4294967295"
+  - value: "444374196"
+    paletteColorName: secondary_container
+    darkModeColor:
+      value: "612146356"
+  - value: "4279900698"
+    paletteColorName: on_secondary_container
+    darkModeColor:
+      value: "4294309365"
+  - value: "4294967295"
+    paletteColorName: on_accent
+    darkModeColor:
+      value: "4294967295"
+  - value: "449086314"
+    paletteColorName: accent_container
+    darkModeColor:
+      value: "616858474"
+  - value: "4279900698"
+    paletteColorName: on_accent_container
+    darkModeColor:
+      value: "4294309365"
+  - value: "4279900698"
+    paletteColorName: on_background
+    darkModeColor:
+      value: "4294309365"
+  - value: "4279900698"
+    paletteColorName: on_surface
+    darkModeColor:
+      value: "4294309365"
+  - value: "4293651435"
+    paletteColorName: surface_variant
+    darkModeColor:
+      value: "4281084972"
+  - value: "4284900966"
+    paletteColorName: on_surface_variant
+    darkModeColor:
+      value: "4288716960"
+  - value: "4294967295"
+    paletteColorName: on_success
+    darkModeColor:
+      value: "4294967295"
+  - value: "4294967295"
+    paletteColorName: on_warning
+    darkModeColor:
+      value: "4278190080"
+  - value: "4294967295"
+    paletteColorName: on_error
+    darkModeColor:
+      value: "4294967295"
+  - value: "4294967295"
+    paletteColorName: on_info
+    darkModeColor:
+      value: "4294967295"
+  - value: "0"
+    paletteColorName: transparent
+    darkModeColor:
+      value: "0"
+  - value: "4278190080"
+    paletteColorName: full_contrast
+    darkModeColor:
+      value: "4294967295"
+  - value: "441083713"
+    paletteColorName: success_10
+    darkModeColor:
+      value: "442401362"
+  - value: "872415231"
+    paletteColorName: on-primary_20
+    darkModeColor:
+      value: "855638016"
+  - value: "3439329279"
+    paletteColorName: on-primary_80
+    darkModeColor:
+      value: "3422552064"
+  - value: "251658240"
+    paletteColorName: full-contrast_6
+    darkModeColor:
+      value: "268435455"
+  - value: "437918234"
+    paletteColorName: primary_10
+    darkModeColor:
+      value: "452326901"
+  - value: "650412906"
+    paletteColorName: accent_15
+    darkModeColor:
+      value: "650412906"
+  - value: "229657419"
+    paletteColorName: error_5
+    darkModeColor:
+      value: "231695974"
+  - value: "867191627"
+    paletteColorName: error_20
+    darkModeColor:
+      value: "869230182"
+darkModeEnabled: true
+alternate:
+  value: "4293848814"
+  darkModeColor:
+    value: "4280690214"
+primaryBackground:
+  value: "4294967295"
+  darkModeColor:
+    value: "4279374354"
+secondaryBackground:
+  value: "4294967295"
+  darkModeColor:
+    value: "4280163870"
+primaryText:
+  value: "4279900698"
+  darkModeColor:
+    value: "4294309365"
+secondaryText:
+  value: "4284900966"
+  darkModeColor:
+    value: "4288716960"
+displayDarkMode: false
+accent3:
+  value: "4288256409"
+  darkModeColor:
+    value: "4284900966"
+success:
+  value: "4283066177"
+  darkModeColor:
+    value: "4284383826"
+warning:
+  value: "4292454218"
+  darkModeColor:
+    value: "4293640301"
+error:
+  value: "4289743691"
+  darkModeColor:
+    value: "4291782246"
+info:
+  value: "4286356660"
+  darkModeColor:
+    value: "4287541449"

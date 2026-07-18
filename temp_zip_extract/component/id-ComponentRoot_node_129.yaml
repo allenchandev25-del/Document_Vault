@@ -1,0 +1,58 @@
+name: DocumentItem
+description: ""
+params:
+  local_document_item_1fcecff5param_file_id:
+    identifier:
+      name: fileId
+      key: local_document_item_1fcecff5param_file_id
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  local_document_item_1fcecff5param_icon:
+    identifier:
+      name: icon
+      key: local_document_item_1fcecff5param_icon
+    defaultValue:
+      icon:
+        sizeValue:
+          inputValue: 0
+        colorValue:
+          inputValue:
+            value: "0"
+        iconDataValue:
+          inputValue:
+            codePoint: 57415
+            family: MaterialIcons
+            matchTextDirection: false
+            name: add
+    dataType:
+      scalarType: WidgetProperty
+      subType:
+        widgetPropertyType: ICON
+    namedParameter:
+      isOptional: true
+  local_document_item_1fcecff5param_title:
+    identifier:
+      name: title
+      key: local_document_item_1fcecff5param_title
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  local_document_item_1fcecff5param_meta:
+    identifier:
+      name: meta
+      key: local_document_item_1fcecff5param_meta
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+node:
+  key: ComponentRoot_node_129

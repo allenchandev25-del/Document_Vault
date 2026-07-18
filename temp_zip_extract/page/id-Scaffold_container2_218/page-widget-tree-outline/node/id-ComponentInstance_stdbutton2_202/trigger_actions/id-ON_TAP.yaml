@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_main_vault_ComponentInstance_stdbutton2_202
+  action:
+    key: 4gm2nj78
+trigger:
+  triggerType: ON_TAP

@@ -1,0 +1,16 @@
+key: Icon_icon3_17
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 14
+    colorValue:
+      inputValue:
+        themeColor: SUCCESS
+    iconDataValue:
+      inputValue:
+        codePoint: 983663
+        family: MaterialIcons
+        matchTextDirection: false
+        name: verified_user_rounded
+name: Icon

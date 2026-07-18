@@ -1,0 +1,35 @@
+name: ActiveUpload
+description: ""
+params:
+  local_active_upload_24d17458param_name:
+    identifier:
+      name: name
+      key: local_active_upload_24d17458param_name
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  local_active_upload_24d17458param_size:
+    identifier:
+      name: size
+      key: local_active_upload_24d17458param_size
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  local_active_upload_24d17458param_progress:
+    identifier:
+      name: progress
+      key: local_active_upload_24d17458param_progress
+    defaultValue:
+      serializedValue: "0"
+    dataType:
+      scalarType: Double
+    namedParameter:
+      isOptional: true
+node:
+  key: ComponentRoot_node_625

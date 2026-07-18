@@ -1,0 +1,139 @@
+key: Container_box_438
+type: Container
+props:
+  container: {}
+  padding:
+    type: FF_PADDING_ONLY
+    leftValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "0"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: hasSubtitle
+                        key: design_system_std_checkbox_std_checkboxparam_has_subtitle
+                  nodeKeyRef:
+                    key: ComponentRoot_node_435
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "0"
+            elseValue:
+              inputValue:
+                serializedValue: "0"
+            returnParameter:
+              dataType:
+                scalarType: Double
+        uiBuilderValue:
+          serializedValue: "0"
+      mostRecentInputValue: 0
+    topValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "3"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: hasSubtitle
+                        key: design_system_std_checkbox_std_checkboxparam_has_subtitle
+                  nodeKeyRef:
+                    key: ComponentRoot_node_435
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "3"
+            elseValue:
+              inputValue:
+                serializedValue: "0"
+            returnParameter:
+              dataType:
+                scalarType: Double
+        uiBuilderValue:
+          serializedValue: "3"
+      mostRecentInputValue: 3
+    rightValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "0"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: hasSubtitle
+                        key: design_system_std_checkbox_std_checkboxparam_has_subtitle
+                  nodeKeyRef:
+                    key: ComponentRoot_node_435
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "0"
+            elseValue:
+              inputValue:
+                serializedValue: "0"
+            returnParameter:
+              dataType:
+                scalarType: Double
+        uiBuilderValue:
+          serializedValue: "0"
+      mostRecentInputValue: 0
+    bottomValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "0"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: hasSubtitle
+                        key: design_system_std_checkbox_std_checkboxparam_has_subtitle
+                  nodeKeyRef:
+                    key: ComponentRoot_node_435
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "0"
+            elseValue:
+              inputValue:
+                serializedValue: "0"
+            returnParameter:
+              dataType:
+                scalarType: Double
+        uiBuilderValue:
+          serializedValue: "0"
+      mostRecentInputValue: 0
+name: Margin

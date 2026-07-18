@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_main_vault_container6
+  action:
+    key: v4mhmrgd
+trigger:
+  triggerType: ON_TAP

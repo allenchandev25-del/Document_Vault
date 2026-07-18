@@ -1,0 +1,40 @@
+key: ComponentInstance_uploadoption3_610
+type: Container
+props:
+  container: {}
+name: UploadOption
+parameterValues:
+  parameterPasses:
+    local_upload_option_158aa120param_icon:
+      paramIdentifier:
+        name: icon
+        key: local_upload_option_158aa120param_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY
+          iconDataValue:
+            inputValue:
+              codePoint: 983181
+              family: MaterialIcons
+              matchTextDirection: false
+              name: photo_camera_rounded
+    local_upload_option_158aa120param_title:
+      paramIdentifier:
+        name: title
+        key: local_upload_option_158aa120param_title
+      inputValue:
+        serializedValue: Take Photo
+    local_upload_option_158aa120param_subtitle:
+      paramIdentifier:
+        name: subtitle
+        key: local_upload_option_158aa120param_subtitle
+      inputValue:
+        serializedValue: Snap a picture directly to vault
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_594
+componentClassKeyRef:
+  key: ComponentRoot_node_594

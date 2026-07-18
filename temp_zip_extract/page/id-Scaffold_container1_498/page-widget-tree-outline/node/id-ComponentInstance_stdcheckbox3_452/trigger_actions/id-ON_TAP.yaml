@@ -1,0 +1,18 @@
+rootAction:
+  key: search_and_filter::form.toggle_type_0
+  conditionActions:
+    falseAction:
+      key: search_and_filter::form.toggle_type_2
+      action:
+        key: jkos6py7
+    trueActions:
+      - condition:
+          variable:
+            defaultValue:
+              serializedValue: form.selected_types.contains(Spreadsheets)
+        trueAction:
+          key: search_and_filter::form.toggle_type_1
+          action:
+            key: z51m3x5q
+trigger:
+  triggerType: ON_TAP

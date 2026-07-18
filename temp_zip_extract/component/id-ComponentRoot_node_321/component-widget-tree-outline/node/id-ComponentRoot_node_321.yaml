@@ -1,0 +1,6 @@
+key: ComponentRoot_node_321
+type: Container
+props:
+  container: {}
+name: StorageMetric
+isDummyRoot: true

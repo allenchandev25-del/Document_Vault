@@ -1,0 +1,69 @@
+node:
+  key: Scaffold_container3_583
+  body:
+    key: Container_container3_582
+    children:
+      - key: Column_container3_581
+        children:
+          - key: Container_node_499
+          - key: Scaffold_scaffold1_500
+            children:
+              - key: Column_column2_580
+                children:
+                  - key: Container_container4_514
+                    children:
+                      - key: Column_container4_513
+                        children:
+                          - key: Container_container4_511
+                            children:
+                              - key: Row_row2_510
+                                children:
+                                  - key: Row_row3_507
+                                    children:
+                                      - key: IconButton_iconbutton1_501
+                                      - key: Column_column3_505
+                                        children:
+                                          - key: Text_text3_502
+                                          - key: Text_text4_503
+                                  - key: IconButton_iconbutton2_508
+                          - key: Container_container4_512
+                  - key: Column_column4_565
+                    children:
+                      - key: Container_container5_517
+                        children:
+                          - key: Container_container5_516
+                            children:
+                              - key: Text_text5_515
+                      - key: ComponentInstance_settingrow1_532
+                      - key: ComponentInstance_settingrow2_533
+                      - key: Container_container6_536
+                        children:
+                          - key: Container_container6_535
+                            children:
+                              - key: Text_text6_534
+                      - key: ComponentInstance_settingrow3_537
+                      - key: ComponentInstance_settingrow4_538
+                      - key: Container_container7_541
+                        children:
+                          - key: Container_container7_540
+                            children:
+                              - key: Text_text7_539
+                      - key: ComponentInstance_settingrow5_542
+                      - key: ComponentInstance_settingrow6_543
+                      - key: Container_container8_563
+                        children:
+                          - key: Container_container8_562
+                            children:
+                              - key: Container_container8_561
+                                children:
+                                  - key: Column_column5_560
+                                    children:
+                                      - key: Row_row4_547
+                                        children:
+                                          - key: Icon_icon4_544
+                                          - key: Text_text8_545
+                                      - key: Text_text9_548
+                                      - key: ComponentInstance_stdswitch4_558
+                  - key: Container_container9_578
+                    children:
+                      - key: ComponentInstance_stdbottomnav1_577

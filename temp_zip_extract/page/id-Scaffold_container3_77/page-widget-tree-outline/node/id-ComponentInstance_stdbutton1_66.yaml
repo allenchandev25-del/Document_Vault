@@ -1,0 +1,82 @@
+key: ComponentInstance_stdbutton1_66
+type: Container
+props:
+  container: {}
+name: Button
+parameterValues:
+  parameterPasses:
+    design_system_std_button_std_buttonparam_icon:
+      paramIdentifier:
+        name: icon
+        key: design_system_std_button_std_buttonparam_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 983092
+              family: MaterialIcons
+              matchTextDirection: false
+              name: open_in_new_rounded
+    design_system_std_button_std_buttonparam_icon_present:
+      paramIdentifier:
+        name: iconPresent
+        key: design_system_std_button_std_buttonparam_icon_present
+      inputValue:
+        serializedValue: "true"
+    design_system_std_button_std_buttonparam_icon_end_present:
+      paramIdentifier:
+        name: iconEndPresent
+        key: design_system_std_button_std_buttonparam_icon_end_present
+      inputValue:
+        serializedValue: "false"
+    design_system_std_button_std_buttonparam_content:
+      paramIdentifier:
+        name: content
+        key: design_system_std_button_std_buttonparam_content
+      inputValue:
+        serializedValue: Open in External Editor
+    design_system_std_button_std_buttonparam_variant:
+      paramIdentifier:
+        name: variant
+        key: design_system_std_button_std_buttonparam_variant
+      inputValue:
+        serializedValue: outline
+    design_system_std_button_std_buttonparam_size:
+      paramIdentifier:
+        name: size
+        key: design_system_std_button_std_buttonparam_size
+      inputValue:
+        serializedValue: medium
+    design_system_std_button_std_buttonparam_full_width:
+      paramIdentifier:
+        name: fullWidth
+        key: design_system_std_button_std_buttonparam_full_width
+      inputValue:
+        serializedValue: "true"
+    design_system_std_button_std_buttonparam_loading:
+      paramIdentifier:
+        name: loading
+        key: design_system_std_button_std_buttonparam_loading
+      inputValue:
+        serializedValue: "false"
+    design_system_std_button_std_buttonparam_disabled:
+      paramIdentifier:
+        name: disabled
+        key: design_system_std_button_std_buttonparam_disabled
+      inputValue:
+        serializedValue: "false"
+    __orphan_on_tap:
+      paramIdentifier:
+        name: onTap
+        key: __orphan_on_tap
+      inputValue:
+        serializedValue: toast('Opening in external editor...')
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_57
+componentClassKeyRef:
+  key: ComponentRoot_node_57

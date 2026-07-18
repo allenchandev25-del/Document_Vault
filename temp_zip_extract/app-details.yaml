@@ -1,0 +1,9 @@
+name: DocVault
+appSettings:
+  advancedSettings:
+    webBuildSettings: {}
+routingSettings:
+  enableRouting: true
+  pagesAreSubroutesOfRoot: false
+initialPageKeyRef:
+  key: Scaffold_container2_218

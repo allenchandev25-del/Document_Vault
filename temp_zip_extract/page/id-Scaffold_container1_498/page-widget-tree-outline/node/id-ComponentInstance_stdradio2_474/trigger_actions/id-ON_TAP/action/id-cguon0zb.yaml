@@ -1,0 +1,11 @@
+localStateUpdate:
+  updates:
+    - fieldIdentifier:
+        name: securityMode
+        key: securityMode
+      setValue:
+        inputValue:
+          serializedValue: all
+  updateType: WIDGET
+  stateVariableType: WIDGET_CLASS_STATE
+key: cguon0zb

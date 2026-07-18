@@ -1,0 +1,22 @@
+key: Text_text65_302
+type: Text
+props:
+  text:
+    themeStyle: HEADLINE_SMALL
+    selectable: false
+    textValue:
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          stringInterpolation: {}
+          values:
+            - inputValue:
+                serializedValue: Alex Rivera
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.3
+    fontWeightValue:
+      inputValue: w700
+name: Text

@@ -1,0 +1,10 @@
+key: Container_container32_125
+type: Container
+props:
+  container:
+    childAlignment:
+      xValue:
+        inputValue: 0
+      yValue:
+        inputValue: 0
+name: Container Child Alignment

@@ -1,0 +1,12 @@
+node:
+  key: ComponentRoot_node_185
+  children:
+    - key: Row_row1_193
+      children:
+        - key: Container_container1_187
+          children:
+            - key: Icon_icon1_186
+        - key: Column_column1_191
+          children:
+            - key: Text_text1_188
+            - key: Text_text2_189

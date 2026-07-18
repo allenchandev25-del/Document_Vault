@@ -1,0 +1,14 @@
+key: Text_text41_246
+type: Text
+props:
+  text:
+    themeStyle: TITLE_MEDIUM
+    selectable: false
+    textValue:
+      inputValue: No photos yet
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.4
+name: Text

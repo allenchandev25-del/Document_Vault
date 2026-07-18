@@ -1,0 +1,40 @@
+key: ComponentInstance_uploadoption2_608
+type: Container
+props:
+  container: {}
+name: UploadOption
+parameterValues:
+  parameterPasses:
+    local_upload_option_158aa120param_icon:
+      paramIdentifier:
+        name: icon
+        key: local_upload_option_158aa120param_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY
+          iconDataValue:
+            inputValue:
+              codePoint: 63182
+              family: MaterialIcons
+              matchTextDirection: false
+              name: document_scanner_rounded
+    local_upload_option_158aa120param_title:
+      paramIdentifier:
+        name: title
+        key: local_upload_option_158aa120param_title
+      inputValue:
+        serializedValue: Scan Document
+    local_upload_option_158aa120param_subtitle:
+      paramIdentifier:
+        name: subtitle
+        key: local_upload_option_158aa120param_subtitle
+      inputValue:
+        serializedValue: Use camera to create a PDF
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_594
+componentClassKeyRef:
+  key: ComponentRoot_node_594

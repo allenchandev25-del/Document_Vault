@@ -1,0 +1,15 @@
+node:
+  key: ComponentRoot_node_658
+  children:
+    - key: Container_root_668
+      children:
+        - key: Container_root_667
+          children:
+            - key: Row_items_666
+              children:
+                - key: Column_node_664
+                  children:
+                    - key: ComponentInstance_stdnavitem1_659
+                    - key: ComponentInstance_stdnavitem2_660
+                    - key: ComponentInstance_stdnavitem3_661
+                    - key: ComponentInstance_stdnavitem4_662

@@ -1,0 +1,90 @@
+key: ComponentInstance_documentitem1_141
+type: Container
+props:
+  container: {}
+name: DocumentItem
+parameterValues:
+  parameterPasses:
+    local_document_item_1fcecff5param_file_id:
+      paramIdentifier:
+        name: fileId
+        key: local_document_item_1fcecff5param_file_id
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              documentProperty: REFERENCE
+          - documentReferenceId: {}
+        nodeKeyRef:
+          key: Listview_listview1_128
+    local_document_item_1fcecff5param_icon:
+      paramIdentifier:
+        name: icon
+        key: local_document_item_1fcecff5param_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 20
+          colorValue:
+            inputValue:
+              themeColor: SECONDARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 58121
+              family: MaterialIcons
+              matchTextDirection: false
+              name: help
+    local_document_item_1fcecff5param_title:
+      paramIdentifier:
+        name: title
+        key: local_document_item_1fcecff5param_title
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              fieldIdentifier:
+                name: name
+                key: name
+        nodeKeyRef:
+          key: Listview_listview1_128
+    local_document_item_1fcecff5param_meta:
+      paramIdentifier:
+        name: meta
+        key: local_document_item_1fcecff5param_meta
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          stringInterpolation: {}
+          values:
+            - variable:
+                source: GENERATOR_VARIABLE
+                baseVariable:
+                  generatorVariable: {}
+                operations:
+                  - accessDocumentField:
+                      fieldIdentifier:
+                        name: type
+                        key: type
+                nodeKeyRef:
+                  key: Listview_listview1_128
+            - inputValue:
+                serializedValue: " • "
+            - variable:
+                source: GENERATOR_VARIABLE
+                baseVariable:
+                  generatorVariable: {}
+                operations:
+                  - accessDocumentField:
+                      fieldIdentifier:
+                        name: uploadDate
+                        key: uploadDate
+                nodeKeyRef:
+                  key: Listview_listview1_128
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_129
+componentClassKeyRef:
+  key: ComponentRoot_node_129

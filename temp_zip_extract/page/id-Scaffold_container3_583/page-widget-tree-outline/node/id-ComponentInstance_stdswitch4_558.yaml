@@ -1,0 +1,41 @@
+key: ComponentInstance_stdswitch4_558
+type: Container
+props:
+  container: {}
+name: Switch
+parameterValues:
+  parameterPasses:
+    design_system_std_switch_std_switchparam_label:
+      paramIdentifier:
+        name: label
+        key: design_system_std_switch_std_switchparam_label
+      inputValue:
+        serializedValue: Enable Self-Destruct
+    design_system_std_switch_std_switchparam_label_present:
+      paramIdentifier:
+        name: labelPresent
+        key: design_system_std_switch_std_switchparam_label_present
+      inputValue:
+        serializedValue: "true"
+    design_system_std_switch_std_switchparam_variant:
+      paramIdentifier:
+        name: variant
+        key: design_system_std_switch_std_switchparam_variant
+      inputValue:
+        serializedValue: iOS
+    design_system_std_switch_std_switchparam_active:
+      paramIdentifier:
+        name: active
+        key: design_system_std_switch_std_switchparam_active
+      variable:
+        source: LOCAL_STATE
+        baseVariable:
+          localState:
+            fieldIdentifier:
+              name: selfDestructEnabled
+              key: selfDestructEnabled
+            stateVariableType: APP_STATE
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_549
+componentClassKeyRef:
+  key: ComponentRoot_node_549

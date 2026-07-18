@@ -1,0 +1,62 @@
+fields:
+  - parameter:
+      identifier:
+        name: searchQuery
+        key: searchQuery
+      dataType:
+        scalarType: String
+    persisted: false
+  - parameter:
+      identifier:
+        name: biometricEnabled
+        key: biometricEnabled
+      dataType:
+        scalarType: Boolean
+    persisted: false
+    serializedDefaultValue:
+      - "true"
+  - parameter:
+      identifier:
+        name: cloudSyncEnabled
+        key: cloudSyncEnabled
+      dataType:
+        scalarType: Boolean
+    persisted: false
+    serializedDefaultValue:
+      - "true"
+  - parameter:
+      identifier:
+        name: selfDestructEnabled
+        key: selfDestructEnabled
+      dataType:
+        scalarType: Boolean
+    persisted: false
+    serializedDefaultValue:
+      - "false"
+  - parameter:
+      identifier:
+        name: galleryFilter
+        key: galleryFilter
+      dataType:
+        scalarType: String
+    persisted: false
+    serializedDefaultValue:
+      - All
+  - parameter:
+      identifier:
+        name: typeFilter
+        key: typeFilter
+      dataType:
+        scalarType: String
+    persisted: false
+    serializedDefaultValue:
+      - All
+  - parameter:
+      identifier:
+        name: securityFilter
+        key: securityFilter
+      dataType:
+        scalarType: String
+    persisted: false
+    serializedDefaultValue:
+      - all

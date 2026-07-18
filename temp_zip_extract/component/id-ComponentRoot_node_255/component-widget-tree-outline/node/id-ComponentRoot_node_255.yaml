@@ -1,0 +1,6 @@
+key: ComponentRoot_node_255
+type: Container
+props:
+  container: {}
+name: PhotoCard
+isDummyRoot: true

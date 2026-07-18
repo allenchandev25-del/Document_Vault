@@ -1,0 +1,109 @@
+key: ComponentInstance_metadataitem2_38
+type: Container
+props:
+  container: {}
+  expanded:
+    expandedType: EXPANDED
+    flexValue:
+      inputValue: 1
+name: MetadataItem
+databaseRequest:
+  returnParameter:
+    identifier:
+      name: files
+      key: files
+    dataType:
+      listType:
+        scalarType: Document
+      subType:
+        collectionIdentifier:
+          name: files
+          key: files
+  firestore:
+    collectionIdentifier:
+      name: files
+      key: files
+    singleTimeQuery: false
+parameterValues:
+  parameterPasses:
+    local_metadata_item_bc77d734param_icon:
+      paramIdentifier:
+        name: icon
+        key: local_metadata_item_bc77d734param_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 18
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 61847
+              family: MaterialIcons
+              matchTextDirection: false
+              name: lock_outlined
+    local_metadata_item_bc77d734param_label:
+      paramIdentifier:
+        name: label
+        key: local_metadata_item_bc77d734param_label
+      inputValue:
+        serializedValue: Security
+    local_metadata_item_bc77d734param_value:
+      paramIdentifier:
+        name: value
+        key: local_metadata_item_bc77d734param_value
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: FUNCTION_CALL
+                  functionCall:
+                    values:
+                      - variable:
+                          source: FUNCTION_CALL
+                          operations:
+                            - jsonPathOperation:
+                                jsonPath: $.is_encrypted
+                          functionCall:
+                            values:
+                              - variable:
+                                  source: FIRESTORE_REQUEST
+                                  baseVariable:
+                                    firestore: {}
+                                  nodeKeyRef:
+                                    key: ComponentInstance_metadataitem2_38
+                              - variable:
+                                  source: WIDGET_CLASS_PARAMETER
+                                  baseVariable:
+                                    widgetClass:
+                                      paramIdentifier:
+                                        name: fileId
+                                        key: fileId
+                                  nodeKeyRef:
+                                    key: Scaffold_container3_77
+                            customFunction:
+                              name: selectedFile
+                              key: selectedFile
+                      - inputValue:
+                          serializedValue: "true"
+                    condition:
+                      relation: EQUAL_TO
+                value:
+                  inputValue:
+                    serializedValue: Encrypted
+            elseValue:
+              inputValue:
+                serializedValue: Standard
+            returnParameter:
+              identifier:
+                name: return
+                key: return
+              dataType:
+                scalarType: String
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_28
+componentClassKeyRef:
+  key: ComponentRoot_node_28

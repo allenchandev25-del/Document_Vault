@@ -1,0 +1,16 @@
+key: ChipSelectedIcon_chip5_305
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 16
+    colorValue:
+      inputValue:
+        themeColor: TERTIARY
+    iconDataValue:
+      inputValue:
+        codePoint: 63030
+        family: MaterialIcons
+        matchTextDirection: false
+        name: check_rounded
+name: Chip Selected Icon

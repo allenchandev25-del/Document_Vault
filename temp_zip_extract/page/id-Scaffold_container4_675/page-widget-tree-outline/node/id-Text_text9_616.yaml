@@ -1,0 +1,14 @@
+key: Text_text9_616
+type: Text
+props:
+  text:
+    themeStyle: LABEL_LARGE
+    selectable: false
+    textValue:
+      inputValue: Active Uploads
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.3
+name: Text

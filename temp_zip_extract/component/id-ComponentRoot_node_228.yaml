@@ -1,0 +1,25 @@
+name: AlbumChip
+description: ""
+params:
+  local_album_chip_63f9e8a0param_label:
+    identifier:
+      name: label
+      key: local_album_chip_63f9e8a0param_label
+    defaultValue:
+      serializedValue: All Photos
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  local_album_chip_63f9e8a0param_selected:
+    identifier:
+      name: selected
+      key: local_album_chip_63f9e8a0param_selected
+    defaultValue:
+      serializedValue: "false"
+    dataType:
+      scalarType: Boolean
+    namedParameter:
+      isOptional: true
+node:
+  key: ComponentRoot_node_228

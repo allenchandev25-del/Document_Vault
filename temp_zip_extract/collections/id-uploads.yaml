@@ -1,0 +1,28 @@
+identifier:
+  name: uploads
+  key: uploads
+fields:
+  name:
+    identifier:
+      name: name
+      key: name
+    dataType:
+      scalarType: String
+  progress:
+    identifier:
+      name: progress
+      key: progress
+    dataType:
+      scalarType: Double
+  size:
+    identifier:
+      name: size
+      key: size
+    dataType:
+      scalarType: String
+  status:
+    identifier:
+      name: status
+      key: status
+    dataType:
+      scalarType: String

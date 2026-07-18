@@ -1,0 +1,66 @@
+key: Icon_icon1_105
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 20
+    colorValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          color:
+            themeColor: SUCCESS
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: tone
+              key: local_category_chip_32de6ee0param_tone
+        nodeKeyRef:
+          key: ComponentRoot_node_104
+        uiBuilderValue:
+          color:
+            themeColor: SUCCESS
+      mostRecentInputValue:
+        themeColor: SUCCESS
+    iconDataValue:
+      inputValue:
+        codePoint: 63131
+        family: MaterialIcons
+        matchTextDirection: false
+        name: description_rounded
+    variable:
+      source: WIDGET_CLASS_PARAMETER
+      defaultValue:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 63131
+              family: MaterialIcons
+              matchTextDirection: false
+              name: description_rounded
+      baseVariable:
+        widgetClass:
+          paramIdentifier:
+            name: icon
+            key: local_category_chip_32de6ee0param_icon
+      nodeKeyRef:
+        key: ComponentRoot_node_104
+      uiBuilderValue:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 63131
+              family: MaterialIcons
+              matchTextDirection: false
+              name: description_rounded
+name: Icon

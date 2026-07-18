@@ -1,0 +1,12 @@
+database:
+  deleteDocument:
+    reference:
+      source: FIRESTORE_REQUEST
+      baseVariable:
+        firestore: {}
+      operations:
+        - accessDocumentField:
+            documentProperty: REFERENCE
+      nodeKeyRef:
+        key: Scaffold_container3_77
+key: ydxxxwzo

@@ -1,0 +1,51 @@
+key: Icon_icon1_519
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 20
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    iconDataValue:
+      inputValue:
+        codePoint: 58121
+        family: MaterialIcons
+        matchTextDirection: false
+        name: help
+    variable:
+      source: WIDGET_CLASS_PARAMETER
+      defaultValue:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 58121
+              family: MaterialIcons
+              matchTextDirection: false
+              name: help
+      baseVariable:
+        widgetClass:
+          paramIdentifier:
+            name: icon
+            key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_icon
+      nodeKeyRef:
+        key: ComponentRoot_node_518
+      uiBuilderValue:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 58121
+              family: MaterialIcons
+              matchTextDirection: false
+              name: help
+name: Icon

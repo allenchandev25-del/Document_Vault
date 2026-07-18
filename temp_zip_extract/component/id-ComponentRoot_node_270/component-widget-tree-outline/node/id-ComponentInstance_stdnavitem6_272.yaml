@@ -1,0 +1,46 @@
+key: ComponentInstance_stdnavitem6_272
+type: Container
+props:
+  container: {}
+name: NavItem
+parameterValues:
+  parameterPasses:
+    design_system_std_nav_item_std_nav_itemparam_label:
+      paramIdentifier:
+        name: label
+        key: design_system_std_nav_item_std_nav_itemparam_label
+      inputValue:
+        serializedValue: Photos
+    design_system_std_nav_item_std_nav_itemparam_icon:
+      paramIdentifier:
+        name: icon
+        key: design_system_std_nav_item_std_nav_itemparam_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 983183
+              family: MaterialIcons
+              matchTextDirection: false
+              name: photo_library_rounded
+    design_system_std_nav_item_std_nav_itemparam_target:
+      paramIdentifier:
+        name: target
+        key: design_system_std_nav_item_std_nav_itemparam_target
+      inputValue:
+        serializedValue: PhotoGallery
+    design_system_std_nav_item_std_nav_itemparam_selected:
+      paramIdentifier:
+        name: selected
+        key: design_system_std_nav_item_std_nav_itemparam_selected
+      inputValue:
+        serializedValue: "true"
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_150
+componentClassKeyRef:
+  key: ComponentRoot_node_150

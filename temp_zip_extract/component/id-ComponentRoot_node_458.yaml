@@ -1,0 +1,64 @@
+name: Radio
+description: ""
+params:
+  design_system_std_radio_std_radioparam_label:
+    identifier:
+      name: label
+      key: design_system_std_radio_std_radioparam_label
+    defaultValue:
+      serializedValue: Encrypted Only
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  design_system_std_radio_std_radioparam_subtitle:
+    identifier:
+      name: subtitle
+      key: design_system_std_radio_std_radioparam_subtitle
+    defaultValue:
+      serializedValue: Highest protection level
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  design_system_std_radio_std_radioparam_color:
+    identifier:
+      name: color
+      key: design_system_std_radio_std_radioparam_color
+    defaultValue: {}
+    dataType:
+      scalarType: Color
+    namedParameter:
+      isOptional: true
+  design_system_std_radio_std_radioparam_is_selected:
+    identifier:
+      name: isSelected
+      key: design_system_std_radio_std_radioparam_is_selected
+    defaultValue:
+      serializedValue: "true"
+    dataType:
+      scalarType: Boolean
+    namedParameter:
+      isOptional: true
+  design_system_std_radio_std_radioparam_has_subtitle:
+    identifier:
+      name: hasSubtitle
+      key: design_system_std_radio_std_radioparam_has_subtitle
+    defaultValue:
+      serializedValue: "true"
+    dataType:
+      scalarType: Boolean
+    namedParameter:
+      isOptional: true
+  design_system_std_radio_std_radioparam_disabled:
+    identifier:
+      name: disabled
+      key: design_system_std_radio_std_radioparam_disabled
+    defaultValue:
+      serializedValue: "false"
+    dataType:
+      scalarType: Boolean
+    namedParameter:
+      isOptional: true
+node:
+  key: ComponentRoot_node_458

@@ -1,0 +1,9 @@
+key: Container_subtitle_text_441
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        percentOfContainingWidgetValue:
+          inputValue: 100
+name: Dimensions

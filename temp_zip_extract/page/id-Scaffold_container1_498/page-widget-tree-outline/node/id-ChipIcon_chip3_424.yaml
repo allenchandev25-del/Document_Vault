@@ -1,0 +1,16 @@
+key: ChipIcon_chip3_424
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 18
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    iconDataValue:
+      inputValue:
+        codePoint: 63471
+        family: MaterialIcons
+        matchTextDirection: false
+        name: history_rounded
+name: Chip Icon

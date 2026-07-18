@@ -1,0 +1,54 @@
+key: Icon_check_icon_436
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 16
+    colorValue:
+      inputValue:
+        value: "4294967295"
+        paletteColorName: on_primary
+        darkModeColor:
+          value: "4278190080"
+    iconDataValue:
+      inputValue:
+        codePoint: 63030
+        family: MaterialIcons
+        matchTextDirection: false
+        name: check_rounded
+  visibility:
+    legacyVisible: true
+    visibleValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "true"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: isChecked
+                        key: design_system_std_checkbox_std_checkboxparam_is_checked
+                  nodeKeyRef:
+                    key: ComponentRoot_node_435
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "true"
+            elseValue:
+              inputValue:
+                serializedValue: "false"
+            returnParameter:
+              dataType:
+                scalarType: Boolean
+        uiBuilderValue:
+          serializedValue: "true"
+      mostRecentInputValue: true
+name: Icon

@@ -1,0 +1,41 @@
+key: Progress_progress2_93
+type: ProgressBar
+props:
+  progressBar:
+    shape: Linear
+    size:
+      height:
+        pixelsValue:
+          inputValue: 8
+    percentValue:
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          values:
+            - variable:
+                source: FIRESTORE_REQUEST
+                baseVariable:
+                  firestore: {}
+                nodeKeyRef:
+                  key: Container_container31_100
+          customFunction:
+            name: storageUsagePercent
+            key: storageUsagePercent
+      mostRecentInputValue: 0
+    progressColorValue:
+      inputValue:
+        value: "4294967295"
+        paletteColorName: on_primary
+        darkModeColor:
+          value: "4278190080"
+    backgroundColorValue:
+      inputValue:
+        value: "872415231"
+        paletteColorName: on-primary_20
+        darkModeColor:
+          value: "855638016"
+    animationValue:
+      inputValue: true
+    barRadiusValue:
+      inputValue: 4
+name: Progress

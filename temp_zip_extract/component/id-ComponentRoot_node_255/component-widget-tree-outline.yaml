@@ -1,0 +1,15 @@
+node:
+  key: ComponentRoot_node_255
+  children:
+    - key: AspectRatio_container1_262
+      children:
+        - key: Container_container1_261
+          children:
+            - key: Stack_stack1_260
+              children:
+                - key: Image_image1_256
+                - key: Container_container2_259
+                  children:
+                    - key: Container_container2_258
+                      children:
+                        - key: Text_text1_257

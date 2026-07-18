@@ -1,0 +1,16 @@
+key: Text_text6_18
+type: Text
+props:
+  text:
+    themeStyle: LABEL_SMALL
+    selectable: false
+    textValue:
+      inputValue: Encrypted & Secure
+    colorValue:
+      inputValue:
+        themeColor: SUCCESS
+    heightValue:
+      inputValue: 1.2
+    fontWeightValue:
+      inputValue: w600
+name: Text

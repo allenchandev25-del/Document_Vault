@@ -1,0 +1,90 @@
+key: Container_box_437
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        pixelsValue:
+          inputValue: 20
+      height:
+        pixelsValue:
+          inputValue: 20
+    boxDecoration:
+      borderRadius:
+        type: FF_BORDER_RADIUS_ALL
+        allValue:
+          inputValue: 8
+      border:
+        top:
+          sizeValue:
+            inputValue: 0
+          colorValue:
+            inputValue:
+              value: "0"
+        right:
+          sizeValue:
+            inputValue: 0
+          colorValue:
+            inputValue:
+              value: "0"
+        bottom:
+          sizeValue:
+            inputValue: 0
+          colorValue:
+            inputValue:
+              value: "0"
+        left:
+          sizeValue:
+            inputValue: 0
+          colorValue:
+            inputValue:
+              value: "0"
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+      colorValue:
+        variable:
+          source: FUNCTION_CALL
+          defaultValue:
+            color:
+              themeColor: PRIMARY
+          functionCall:
+            conditionalValue:
+              ifConditionalValues:
+                - condition:
+                    source: WIDGET_CLASS_PARAMETER
+                    defaultValue:
+                      serializedValue: "true"
+                    baseVariable:
+                      widgetClass:
+                        paramIdentifier:
+                          name: isChecked
+                          key: design_system_std_checkbox_std_checkboxparam_is_checked
+                    nodeKeyRef:
+                      key: ComponentRoot_node_435
+                    uiBuilderValue:
+                      serializedValue: "true"
+                  value:
+                    inputValue:
+                      serializedValue: SlotValue($color)
+              elseValue:
+                inputValue:
+                  color:
+                    value: "0"
+              returnParameter:
+                dataType:
+                  scalarType: Color
+          uiBuilderValue:
+            color:
+              themeColor: PRIMARY
+        mostRecentInputValue:
+          themeColor: PRIMARY
+      borderColorValue:
+        inputValue:
+          value: "0"
+      borderWidthValue:
+        inputValue: 0
+    childAlignment:
+      xValue:
+        inputValue: 0
+      yValue:
+        inputValue: 0
+name: Container

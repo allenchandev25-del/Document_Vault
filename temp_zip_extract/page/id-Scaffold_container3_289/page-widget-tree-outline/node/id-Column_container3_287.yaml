@@ -1,0 +1,6 @@
+key: Column_container3_287
+type: Column
+props:
+  column:
+    primary: true
+name: Container Content

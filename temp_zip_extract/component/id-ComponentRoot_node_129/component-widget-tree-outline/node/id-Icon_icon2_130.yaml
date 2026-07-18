@@ -1,0 +1,51 @@
+key: Icon_icon2_130
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 20
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    iconDataValue:
+      inputValue:
+        codePoint: 62775
+        family: MaterialIcons
+        matchTextDirection: false
+        name: add_rounded
+    variable:
+      source: WIDGET_CLASS_PARAMETER
+      defaultValue:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 62775
+              family: MaterialIcons
+              matchTextDirection: false
+              name: add_rounded
+      baseVariable:
+        widgetClass:
+          paramIdentifier:
+            name: icon
+            key: local_document_item_1fcecff5param_icon
+      nodeKeyRef:
+        key: ComponentRoot_node_129
+      uiBuilderValue:
+        icon:
+          sizeValue:
+            inputValue: 24
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 62775
+              family: MaterialIcons
+              matchTextDirection: false
+              name: add_rounded
+name: Icon

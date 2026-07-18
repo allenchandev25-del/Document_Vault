@@ -1,0 +1,64 @@
+key: ComponentInstance_stdradio1_473
+type: Container
+props:
+  container: {}
+name: Radio
+parameterValues:
+  parameterPasses:
+    design_system_std_radio_std_radioparam_label:
+      paramIdentifier:
+        name: label
+        key: design_system_std_radio_std_radioparam_label
+      inputValue:
+        serializedValue: Encrypted Only
+    design_system_std_radio_std_radioparam_subtitle:
+      paramIdentifier:
+        name: subtitle
+        key: design_system_std_radio_std_radioparam_subtitle
+      inputValue:
+        serializedValue: Highest protection level
+    design_system_std_radio_std_radioparam_color:
+      paramIdentifier:
+        name: color
+        key: design_system_std_radio_std_radioparam_color
+      inputValue:
+        color:
+          themeColor: PRIMARY
+    design_system_std_radio_std_radioparam_is_selected:
+      paramIdentifier:
+        name: isSelected
+        key: design_system_std_radio_std_radioparam_is_selected
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          values:
+            - variable:
+                source: LOCAL_STATE
+                baseVariable:
+                  localState:
+                    fieldIdentifier:
+                      name: securityMode
+                      key: securityMode
+                    stateVariableType: WIDGET_CLASS_STATE
+                nodeKeyRef:
+                  key: Scaffold_container1_498
+            - inputValue:
+                serializedValue: encrypted
+          condition:
+            relation: EQUAL_TO
+    design_system_std_radio_std_radioparam_has_subtitle:
+      paramIdentifier:
+        name: hasSubtitle
+        key: design_system_std_radio_std_radioparam_has_subtitle
+      inputValue:
+        serializedValue: "true"
+    design_system_std_radio_std_radioparam_disabled:
+      paramIdentifier:
+        name: disabled
+        key: design_system_std_radio_std_radioparam_disabled
+      inputValue:
+        serializedValue: "false"
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_458
+componentClassKeyRef:
+  key: ComponentRoot_node_458

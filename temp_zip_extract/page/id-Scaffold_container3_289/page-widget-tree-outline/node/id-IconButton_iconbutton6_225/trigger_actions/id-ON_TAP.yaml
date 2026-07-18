@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_search_and_filter_iconbutton6
+  action:
+    key: m811q37p
+trigger:
+  triggerType: ON_TAP

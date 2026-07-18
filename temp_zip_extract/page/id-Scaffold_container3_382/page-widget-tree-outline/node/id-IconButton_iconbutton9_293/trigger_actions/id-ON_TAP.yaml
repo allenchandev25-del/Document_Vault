@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_security_settings_iconbutton9
+  action:
+    key: ezjfdt8v
+trigger:
+  triggerType: ON_TAP

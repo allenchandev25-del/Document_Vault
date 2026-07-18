@@ -1,0 +1,30 @@
+key: Text_subtitle_text_463
+type: Text
+props:
+  text:
+    themeStyle: BODY_SMALL
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: Highest protection level
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: subtitle
+              key: design_system_std_radio_std_radioparam_subtitle
+        nodeKeyRef:
+          key: ComponentRoot_node_458
+        uiBuilderValue:
+          serializedValue: Highest protection level
+      mostRecentInputValue: Highest protection level
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.5
+    maxLinesValue:
+      inputValue: 3
+    overflowReplacement: ELLIPSIS
+name: Text

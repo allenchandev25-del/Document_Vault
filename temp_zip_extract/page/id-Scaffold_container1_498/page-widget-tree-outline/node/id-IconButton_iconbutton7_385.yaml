@@ -1,0 +1,28 @@
+key: IconButton_iconbutton7_385
+type: IconButton
+props:
+  iconButton:
+    disabled:
+      disabledValue:
+        inputValue: false
+    buttonSize:
+      pixelsValue:
+        inputValue: 40
+    fillColorValue:
+      inputValue:
+        value: "0"
+    borderRadiusValue:
+      inputValue: 8
+    showLoadingIndicatorValue:
+      inputValue: false
+    iconValue:
+      inputValue:
+        sizeValue:
+          inputValue: 24
+        iconDataValue:
+          inputValue:
+            codePoint: 62834
+            family: MaterialIcons
+            matchTextDirection: false
+            name: arrow_back_rounded
+name: IconButton

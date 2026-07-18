@@ -1,0 +1,44 @@
+key: Container_subtitle_wrap_465
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        percentOfContainingWidgetValue:
+          inputValue: 100
+  visibility:
+    legacyVisible: true
+    visibleValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "true"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: hasSubtitle
+                        key: design_system_std_radio_std_radioparam_has_subtitle
+                  nodeKeyRef:
+                    key: ComponentRoot_node_458
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "true"
+            elseValue:
+              inputValue:
+                serializedValue: "false"
+            returnParameter:
+              dataType:
+                scalarType: Boolean
+        uiBuilderValue:
+          serializedValue: "true"
+      mostRecentInputValue: true
+name: Container

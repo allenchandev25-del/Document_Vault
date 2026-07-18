@@ -1,0 +1,45 @@
+key: ComponentInstance_actiontile3_52
+type: Container
+props:
+  container: {}
+  expanded:
+    expandedType: EXPANDED
+    flexValue:
+      inputValue: 1
+name: ActionTile
+parameterValues:
+  parameterPasses:
+    local_action_tile_444817feparam_icon:
+      paramIdentifier:
+        name: icon
+        key: local_action_tile_444817feparam_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 22
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 63126
+              family: MaterialIcons
+              matchTextDirection: false
+              name: delete_outline_rounded
+    local_action_tile_444817feparam_tone:
+      paramIdentifier:
+        name: tone
+        key: local_action_tile_444817feparam_tone
+      inputValue:
+        color:
+          themeColor: ERROR
+    local_action_tile_444817feparam_label:
+      paramIdentifier:
+        name: label
+        key: local_action_tile_444817feparam_label
+      inputValue:
+        serializedValue: Delete
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_43
+componentClassKeyRef:
+  key: ComponentRoot_node_43

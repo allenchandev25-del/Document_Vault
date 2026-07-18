@@ -1,0 +1,35 @@
+name: PhotoCard
+description: ""
+params:
+  local_photo_card_5ada964cparam_file_id:
+    identifier:
+      name: fileId
+      key: local_photo_card_5ada964cparam_file_id
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+  local_photo_card_5ada964cparam_image_desc:
+    identifier:
+      name: imageDesc
+      key: local_photo_card_5ada964cparam_image_desc
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: ImagePath
+    namedParameter:
+      isOptional: true
+  local_photo_card_5ada964cparam_date:
+    identifier:
+      name: date
+      key: local_photo_card_5ada964cparam_date
+    defaultValue:
+      serializedValue: ""
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+node:
+  key: ComponentRoot_node_255

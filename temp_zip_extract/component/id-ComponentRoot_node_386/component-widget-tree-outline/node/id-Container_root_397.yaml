@@ -1,0 +1,9 @@
+key: Container_root_397
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        percentOfContainingWidgetValue:
+          inputValue: 100
+name: Container

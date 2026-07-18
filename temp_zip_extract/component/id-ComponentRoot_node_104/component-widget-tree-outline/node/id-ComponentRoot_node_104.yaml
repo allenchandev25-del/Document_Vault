@@ -1,0 +1,6 @@
+key: ComponentRoot_node_104
+type: Container
+props:
+  container: {}
+name: CategoryChip
+isDummyRoot: true

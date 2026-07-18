@@ -1,0 +1,16 @@
+key: Icon_icon4_544
+type: Icon
+props:
+  icon:
+    sizeValue:
+      inputValue: 20
+    colorValue:
+      inputValue:
+        themeColor: ERROR
+    iconDataValue:
+      inputValue:
+        codePoint: 983712
+        family: MaterialIcons
+        matchTextDirection: false
+        name: warning_amber_rounded
+name: Icon

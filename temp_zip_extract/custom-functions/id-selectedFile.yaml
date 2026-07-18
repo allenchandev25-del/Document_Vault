@@ -1,0 +1,29 @@
+identifier:
+  name: selectedFile
+  key: selectedFile
+arguments:
+  - identifier:
+      name: files
+      key: files
+    dataType:
+      listType:
+        scalarType: Document
+        nonNullable: true
+      nonNullable: true
+      subType:
+        collectionIdentifier:
+          name: files
+          key: files
+  - identifier:
+      name: fileId
+      key: fileId
+    dataType:
+      scalarType: String
+      nonNullable: true
+returnParameter:
+  identifier:
+    name: return
+    key: return
+  dataType:
+    scalarType: JSON
+    nonNullable: true

@@ -1,0 +1,33 @@
+key: Text_text70_357
+type: Text
+props:
+  text:
+    themeStyle: BODY_SMALL
+    selectable: false
+    textValue:
+      variable:
+        source: FUNCTION_CALL
+        functionCall:
+          stringInterpolation: {}
+          values:
+            - inputValue:
+                serializedValue: "Your "
+            - variable:
+                source: FUNCTION_CALL
+                functionCall:
+                  stringInterpolation: {}
+                  values:
+                    - inputValue:
+                        serializedValue: Pro
+            - inputValue:
+                serializedValue: " Plan renews on Oct 12, 2024. View billing history in the web portal."
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.5
+  expanded:
+    expandedType: EXPANDED
+    flexValue:
+      inputValue: 1
+name: Text

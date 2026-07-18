@@ -1,0 +1,12 @@
+key: Container_container1_261
+type: Container
+props:
+  container:
+    boxDecoration:
+      borderRadius:
+        type: FF_BORDER_RADIUS_ALL
+        allValue:
+          inputValue: 10
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+    clipContent: true
+name: Container

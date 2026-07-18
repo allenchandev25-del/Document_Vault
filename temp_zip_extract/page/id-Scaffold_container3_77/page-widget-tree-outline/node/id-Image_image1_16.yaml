@@ -1,0 +1,22 @@
+key: Image_image1_16
+type: Image
+props:
+  image:
+    type: FF_IMAGE_TYPE_NETWORK
+    fit: FF_BOX_FIT_CONTAIN
+    dimensions:
+      width:
+        pixelsValue:
+          inputValue: 300
+      height:
+        pixelsValue:
+          inputValue: 400
+    cached: true
+    imageAlignment:
+      xValue:
+        inputValue: 0
+      yValue:
+        inputValue: 0
+    pathValue:
+      inputValue: https://dimg.dreamflow.cloud/v1/image/preview%20of%20a%20formal%20document%20with%20text%20blocks
+name: Image

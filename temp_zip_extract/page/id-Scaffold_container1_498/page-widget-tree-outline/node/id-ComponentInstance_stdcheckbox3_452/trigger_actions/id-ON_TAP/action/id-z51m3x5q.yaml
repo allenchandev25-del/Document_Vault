@@ -1,0 +1,11 @@
+localStateUpdate:
+  updates:
+    - fieldIdentifier:
+        name: selectedTypes
+        key: selectedTypes
+      setValue:
+        inputValue:
+          serializedValue: form.selected_types.where((t) => t != Spreadsheets).toList()
+  updateType: WIDGET
+  stateVariableType: WIDGET_CLASS_STATE
+key: z51m3x5q

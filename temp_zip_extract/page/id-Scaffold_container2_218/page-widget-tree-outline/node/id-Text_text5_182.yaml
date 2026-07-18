@@ -1,0 +1,14 @@
+key: Text_text5_182
+type: Text
+props:
+  text:
+    themeStyle: BODY_LARGE
+    selectable: false
+    textValue:
+      inputValue: The most secure way to store your important documents and private photos with zero-knowledge encryption.
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.6
+name: Text

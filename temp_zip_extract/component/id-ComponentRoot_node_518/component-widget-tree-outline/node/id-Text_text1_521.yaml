@@ -1,0 +1,29 @@
+key: Text_text1_521
+type: Text
+props:
+  text:
+    themeStyle: BODY_LARGE
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: Biometric Lock
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: title
+              key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_title
+        nodeKeyRef:
+          key: ComponentRoot_node_518
+        uiBuilderValue:
+          serializedValue: Biometric Lock
+      mostRecentInputValue: Biometric Lock
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.6
+    fontWeightValue:
+      inputValue: w600
+name: Text

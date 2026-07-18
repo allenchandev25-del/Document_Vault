@@ -1,0 +1,15 @@
+key: Container_container39_284
+type: Container
+props:
+  container:
+    boxDecoration:
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+      colorValue:
+        inputValue:
+          themeColor: SECONDARY_BACKGROUND
+  alignment:
+    xValue:
+      inputValue: 0
+    yValue:
+      inputValue: 1
+name: Container

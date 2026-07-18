@@ -1,0 +1,6 @@
+key: ComponentRoot_node_435
+type: Container
+props:
+  container: {}
+name: Checkbox
+isDummyRoot: true

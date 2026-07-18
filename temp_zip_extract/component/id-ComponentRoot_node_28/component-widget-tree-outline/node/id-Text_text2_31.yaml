@@ -1,0 +1,27 @@
+key: Text_text2_31
+type: Text
+props:
+  text:
+    themeStyle: LABEL_SMALL
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: File Size
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: label
+              key: local_metadata_item_bc77d734param_label
+        nodeKeyRef:
+          key: ComponentRoot_node_28
+        uiBuilderValue:
+          serializedValue: File Size
+      mostRecentInputValue: File Size
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.2
+name: Text

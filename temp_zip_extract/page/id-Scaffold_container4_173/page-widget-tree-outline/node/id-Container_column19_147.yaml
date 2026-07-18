@@ -1,0 +1,32 @@
+key: Container_column19_147
+type: Container
+props:
+  container: {}
+  padding:
+    type: FF_PADDING_ONLY
+    leftValue:
+      inputValue: 0
+    topValue:
+      inputValue: 0
+    rightValue:
+      inputValue: 0
+    bottomValue:
+      inputValue: 24
+name: Column Padding
+databaseRequest:
+  returnParameter:
+    identifier:
+      name: files
+      key: files
+    dataType:
+      listType:
+        scalarType: Document
+      subType:
+        collectionIdentifier:
+          name: files
+          key: files
+  firestore:
+    collectionIdentifier:
+      name: files
+      key: files
+    singleTimeQuery: false

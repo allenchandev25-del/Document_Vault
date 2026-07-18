@@ -1,0 +1,11 @@
+localStateUpdate:
+  updates:
+    - fieldIdentifier:
+        name: selectedTypes
+        key: selectedTypes
+      addToList:
+        inputValue:
+          serializedValue: Images
+  updateType: WIDGET
+  stateVariableType: WIDGET_CLASS_STATE
+key: 72cmhuj3

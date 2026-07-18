@@ -1,0 +1,56 @@
+key: ComponentInstance_activeupload1_641
+type: Container
+props:
+  container: {}
+name: ActiveUpload
+parameterValues:
+  parameterPasses:
+    local_active_upload_24d17458param_name:
+      paramIdentifier:
+        name: name
+        key: local_active_upload_24d17458param_name
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              fieldIdentifier:
+                name: name
+                key: name
+        nodeKeyRef:
+          key: Listview_listview1_624
+    local_active_upload_24d17458param_size:
+      paramIdentifier:
+        name: size
+        key: local_active_upload_24d17458param_size
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              fieldIdentifier:
+                name: size
+                key: size
+        nodeKeyRef:
+          key: Listview_listview1_624
+    local_active_upload_24d17458param_progress:
+      paramIdentifier:
+        name: progress
+        key: local_active_upload_24d17458param_progress
+      variable:
+        source: GENERATOR_VARIABLE
+        baseVariable:
+          generatorVariable: {}
+        operations:
+          - accessDocumentField:
+              fieldIdentifier:
+                name: progress
+                key: progress
+        nodeKeyRef:
+          key: Listview_listview1_624
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_625
+componentClassKeyRef:
+  key: ComponentRoot_node_625

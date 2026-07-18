@@ -1,0 +1,22 @@
+key: Container_container56_317
+type: Container
+props:
+  container:
+    dimensions:
+      height:
+        pixelsValue:
+          inputValue: 12
+    boxDecoration:
+      borderRadius:
+        type: FF_BORDER_RADIUS_ALL
+        allValue:
+          inputValue: 0
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+      colorValue:
+        inputValue:
+          themeColor: SUCCESS
+  expanded:
+    expandedType: EXPANDED
+    flexValue:
+      inputValue: 1
+name: Container

@@ -1,0 +1,11 @@
+localStateUpdate:
+  updates:
+    - fieldIdentifier:
+        name: selectedTypes
+        key: selectedTypes
+      setValue:
+        inputValue:
+          serializedValue: form.selected_types.where((t) => t != Images).toList()
+  updateType: WIDGET
+  stateVariableType: WIDGET_CLASS_STATE
+key: 6sps3byu

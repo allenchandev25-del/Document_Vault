@@ -1,0 +1,6 @@
+rootAction:
+  key: nav_back_iconbutton7
+  action:
+    key: 7j6jymxv
+trigger:
+  triggerType: ON_TAP

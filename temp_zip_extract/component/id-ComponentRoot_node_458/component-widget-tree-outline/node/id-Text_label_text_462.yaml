@@ -1,0 +1,30 @@
+key: Text_label_text_462
+type: Text
+props:
+  text:
+    themeStyle: BODY_MEDIUM
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: Encrypted Only
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: label
+              key: design_system_std_radio_std_radioparam_label
+        nodeKeyRef:
+          key: ComponentRoot_node_458
+        uiBuilderValue:
+          serializedValue: Encrypted Only
+      mostRecentInputValue: Encrypted Only
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.6
+    maxLinesValue:
+      inputValue: 1
+    overflowReplacement: ELLIPSIS
+name: Text

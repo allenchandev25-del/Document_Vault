@@ -1,0 +1,21 @@
+navigate:
+  passedParameters:
+    parameterPasses:
+      fileId:
+        paramIdentifier:
+          name: fileId
+          key: fileId
+        variable:
+          source: WIDGET_CLASS_PARAMETER
+          baseVariable:
+            widgetClass:
+              paramIdentifier:
+                name: fileId
+                key: local_document_item_1fcecff5param_file_id
+          nodeKeyRef:
+            key: ComponentRoot_node_129
+    widgetClassNodeKeyRef:
+      key: Scaffold_container3_77
+  pageNodeKeyRef:
+    key: Scaffold_container3_77
+key: qtwiz2y1

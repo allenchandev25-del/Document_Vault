@@ -1,0 +1,39 @@
+key: ComponentInstance_storagemetric2_331
+type: Container
+props:
+  container: {}
+  expanded:
+    expandedType: EXPANDED
+    flexValue:
+      inputValue: 1
+name: StorageMetric
+parameterValues:
+  parameterPasses:
+    local_storage_metric_2249a332param_label:
+      paramIdentifier:
+        name: label
+        key: local_storage_metric_2249a332param_label
+      inputValue:
+        serializedValue: Photos
+    local_storage_metric_2249a332param_tone:
+      paramIdentifier:
+        name: tone
+        key: local_storage_metric_2249a332param_tone
+      inputValue:
+        serializedValue: success
+    local_storage_metric_2249a332param_value:
+      paramIdentifier:
+        name: value
+        key: local_storage_metric_2249a332param_value
+      inputValue:
+        serializedValue: 4.8 GB
+    local_storage_metric_2249a332param_percent:
+      paramIdentifier:
+        name: percent
+        key: local_storage_metric_2249a332param_percent
+      inputValue:
+        serializedValue: "20"
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_321
+componentClassKeyRef:
+  key: ComponentRoot_node_321

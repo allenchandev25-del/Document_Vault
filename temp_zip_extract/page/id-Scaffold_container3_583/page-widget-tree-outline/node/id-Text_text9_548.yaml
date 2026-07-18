@@ -1,0 +1,14 @@
+key: Text_text9_548
+type: Text
+props:
+  text:
+    themeStyle: BODY_SMALL
+    selectable: false
+    textValue:
+      inputValue: Wipe all local and cloud data after 10 failed passcode attempts.
+    colorValue:
+      inputValue:
+        themeColor: SECONDARY_TEXT
+    heightValue:
+      inputValue: 1.5
+name: Text

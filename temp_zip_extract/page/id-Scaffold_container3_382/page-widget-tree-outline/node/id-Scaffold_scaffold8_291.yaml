@@ -1,0 +1,9 @@
+key: Scaffold_scaffold8_291
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        percentOfContainingWidgetValue:
+          inputValue: 100
+name: Section

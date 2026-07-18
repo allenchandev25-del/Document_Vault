@@ -1,0 +1,47 @@
+name: CategoryChip
+description: ""
+params:
+  local_category_chip_32de6ee0param_tone:
+    identifier:
+      name: tone
+      key: local_category_chip_32de6ee0param_tone
+    defaultValue: {}
+    dataType:
+      scalarType: Color
+    namedParameter:
+      isOptional: true
+  local_category_chip_32de6ee0param_icon:
+    identifier:
+      name: icon
+      key: local_category_chip_32de6ee0param_icon
+    defaultValue:
+      icon:
+        sizeValue:
+          inputValue: 20
+        colorValue:
+          inputValue:
+            themeColor: PRIMARY_TEXT
+        iconDataValue:
+          inputValue:
+            codePoint: 63131
+            family: MaterialIcons
+            matchTextDirection: false
+            name: description_rounded
+    dataType:
+      scalarType: WidgetProperty
+      subType:
+        widgetPropertyType: ICON
+    namedParameter:
+      isOptional: true
+  local_category_chip_32de6ee0param_label:
+    identifier:
+      name: label
+      key: local_category_chip_32de6ee0param_label
+    defaultValue:
+      serializedValue: Documents
+    dataType:
+      scalarType: String
+    namedParameter:
+      isOptional: true
+node:
+  key: ComponentRoot_node_104

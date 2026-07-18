@@ -1,0 +1,18 @@
+rootAction:
+  key: search_and_filter::form.toggle_type_0
+  conditionActions:
+    falseAction:
+      key: search_and_filter::form.toggle_type_2
+      action:
+        key: tn2m5ldy
+    trueActions:
+      - condition:
+          variable:
+            defaultValue:
+              serializedValue: form.selected_types.contains(Videos)
+        trueAction:
+          key: search_and_filter::form.toggle_type_1
+          action:
+            key: tfr7w4s0
+trigger:
+  triggerType: ON_TAP

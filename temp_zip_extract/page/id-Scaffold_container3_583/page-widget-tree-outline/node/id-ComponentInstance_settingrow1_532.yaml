@@ -1,0 +1,40 @@
+key: ComponentInstance_settingrow1_532
+type: Container
+props:
+  container: {}
+name: SettingRow
+parameterValues:
+  parameterPasses:
+    local_setting_row_a6a8a7aa_child_a97c0bfcparam_icon:
+      paramIdentifier:
+        name: icon
+        key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_icon
+      widgetProperty:
+        icon:
+          sizeValue:
+            inputValue: 20
+          colorValue:
+            inputValue:
+              themeColor: PRIMARY_TEXT
+          iconDataValue:
+            inputValue:
+              codePoint: 58121
+              family: MaterialIcons
+              matchTextDirection: false
+              name: help
+    local_setting_row_a6a8a7aa_child_a97c0bfcparam_title:
+      paramIdentifier:
+        name: title
+        key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_title
+      inputValue:
+        serializedValue: Biometric Lock
+    local_setting_row_a6a8a7aa_child_a97c0bfcparam_subtitle:
+      paramIdentifier:
+        name: subtitle
+        key: local_setting_row_a6a8a7aa_child_a97c0bfcparam_subtitle
+      inputValue:
+        serializedValue: Use FaceID or Fingerprint
+  widgetClassNodeKeyRef:
+    key: ComponentRoot_node_518
+componentClassKeyRef:
+  key: ComponentRoot_node_518

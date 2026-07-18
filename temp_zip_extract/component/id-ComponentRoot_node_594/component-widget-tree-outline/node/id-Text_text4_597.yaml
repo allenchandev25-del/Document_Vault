@@ -1,0 +1,29 @@
+key: Text_text4_597
+type: Text
+props:
+  text:
+    themeStyle: TITLE_MEDIUM
+    selectable: false
+    textValue:
+      variable:
+        source: WIDGET_CLASS_PARAMETER
+        defaultValue:
+          serializedValue: Select Files
+        baseVariable:
+          widgetClass:
+            paramIdentifier:
+              name: title
+              key: local_upload_option_158aa120param_title
+        nodeKeyRef:
+          key: ComponentRoot_node_594
+        uiBuilderValue:
+          serializedValue: Select Files
+      mostRecentInputValue: Select Files
+    colorValue:
+      inputValue:
+        themeColor: PRIMARY_TEXT
+    heightValue:
+      inputValue: 1.4
+    fontWeightValue:
+      inputValue: w600
+name: Text

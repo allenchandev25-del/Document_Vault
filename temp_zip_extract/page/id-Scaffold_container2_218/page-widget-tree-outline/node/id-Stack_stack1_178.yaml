@@ -1,0 +1,10 @@
+key: Stack_stack1_178
+type: Stack
+props:
+  stack:
+    childAlignment:
+      xValue:
+        inputValue: -1
+      yValue:
+        inputValue: -1
+name: Stack

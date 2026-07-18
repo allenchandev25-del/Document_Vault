@@ -1,0 +1,59 @@
+key: Container_dot_459
+type: Container
+props:
+  container:
+    dimensions:
+      width:
+        pixelsValue:
+          inputValue: 8
+      height:
+        pixelsValue:
+          inputValue: 8
+    boxDecoration:
+      borderRadius:
+        type: FF_BORDER_RADIUS_ALL
+        allValue:
+          inputValue: 999
+      boxShape: FF_BOX_SHAPE_RECTANGLE
+      colorValue:
+        inputValue:
+          value: "4294967295"
+          paletteColorName: on_primary
+          darkModeColor:
+            value: "4278190080"
+  visibility:
+    legacyVisible: true
+    visibleValue:
+      variable:
+        source: FUNCTION_CALL
+        defaultValue:
+          serializedValue: "true"
+        functionCall:
+          conditionalValue:
+            ifConditionalValues:
+              - condition:
+                  source: WIDGET_CLASS_PARAMETER
+                  defaultValue:
+                    serializedValue: "true"
+                  baseVariable:
+                    widgetClass:
+                      paramIdentifier:
+                        name: isSelected
+                        key: design_system_std_radio_std_radioparam_is_selected
+                  nodeKeyRef:
+                    key: ComponentRoot_node_458
+                  uiBuilderValue:
+                    serializedValue: "true"
+                value:
+                  inputValue:
+                    serializedValue: "true"
+            elseValue:
+              inputValue:
+                serializedValue: "false"
+            returnParameter:
+              dataType:
+                scalarType: Boolean
+        uiBuilderValue:
+          serializedValue: "true"
+      mostRecentInputValue: true
+name: Container
