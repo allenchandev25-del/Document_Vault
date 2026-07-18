@@ -19,26 +19,25 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
     super.initState();
     final random = math.Random();
     
-    // Monochromatic & minimalist slate/silver palette (iOS Glass Style)
+    // Complementary neon cyan and purple blobs
     final colors = [
+      const Color(0xFF00E5FF), // Cyan
+      const Color(0xFFD946EF), // Magenta
       const Color(0xFF6366F1), // Royal Indigo
-      const Color(0xFF8B5CF6), // Violet
-      const Color(0xFFEC4899), // Magenta/Pink
-      const Color(0xFF06B6D4), // Cyan
     ];
 
     _particles = List.generate(8, (index) {
       return Particle(
         color: colors[random.nextInt(colors.length)],
-        radius: random.nextDouble() * 200 + 150, // Large blobs for smooth gradients
-        speedX: (random.nextDouble() - 0.5) * 0.0006, // Slow, elegant drift
-        speedY: (random.nextDouble() - 0.5) * 0.0006,
+        radius: random.nextDouble() * 200 + 150,
+        speedX: (random.nextDouble() - 0.5) * 0.0008,
+        speedY: (random.nextDouble() - 0.5) * 0.0008,
       );
     });
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 15),
     )..repeat();
   }
 
@@ -60,7 +59,22 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
         }
         return Stack(
           children: [
-            // 1. Drifting shapes
+            // 1. Bright, bold gradient (Electric Blue to Magenta)
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF0044FF), // Electric Blue
+                      Color(0xFFCC00AA), // Bold Magenta
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ),
+            // 2. Floating shapes
             Positioned.fill(
               child: CustomPaint(
                 painter: BokehPainter(
@@ -69,14 +83,14 @@ class _MinimalAnimatedBackgroundState extends State<MinimalAnimatedBackground>
                 ),
               ),
             ),
-            // 2. iOS Frosted Glass blur overlay
+            // 3. Backdrop filter overlay (Frosted Blur & Glass Tint)
             Positioned.fill(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                 child: Container(
                   color: isDark
-                      ? const Color(0xFF090D12).withValues(alpha: 0.45) // Subtle dark frost
-                      : const Color(0xFFFFFFFF).withValues(alpha: 0.35), // Clean light frost
+                      ? const Color(0xFF090D12).withValues(alpha: 0.25) // 25% Dark glass fill
+                      : const Color(0xFFFFFFFF).withValues(alpha: 0.15), // 15% White glass fill
                 ),
               ),
             ),
@@ -107,7 +121,6 @@ class Particle {
     x += speedX;
     y += speedY;
 
-    // Soft boundary reset to keep them floating in bounds
     if (x < -0.3) x = 1.3;
     if (x > 1.3) x = -0.3;
     if (y < -0.3) y = 1.3;
