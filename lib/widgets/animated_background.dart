@@ -5,15 +5,22 @@ class MinimalAnimatedBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Pure, clean, minimalist Space Grey / Titanium Gradient Background
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Dynamically adjust background gradient based on theme
     return Positioned.fill(
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF18181B), // Deep Carbon Black
-              Color(0xFF27272A), // Space Grey / Matte Titanium
-            ],
+            colors: isDark
+                ? const [
+                    Color(0xFF18181B), // Deep Carbon Black
+                    Color(0xFF27272A), // Space Grey / Matte Titanium
+                  ]
+                : const [
+                    Color(0xFFF1F5F9), // Light Slate Silver
+                    Color(0xFFE2E8F0), // Soft Slate
+                  ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
