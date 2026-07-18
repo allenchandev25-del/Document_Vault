@@ -6,6 +6,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:local_auth/local_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:flutter/foundation.dart';
 import '../models/vault_item.dart';
 
 class VaultService {
