@@ -234,7 +234,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 _canCheckBiometrics
-                                    ? _buildIconButton(Icons.fingerprint, _triggerBiometrics, color: Colors.blueAccent)
+                                    ? _buildIconButton(Icons.fingerprint, _triggerBiometrics, color: primaryTxt)
                                     : _buildIconButton(Icons.clear, _onClear),
                                 _buildKey('0'),
                                 _buildIconButton(Icons.backspace_outlined, _onBackspace),
