@@ -1434,70 +1434,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final formattedDate = DateFormat('yyyy-MM-dd').format(item.addedDate);
         final sizeStr = VaultService.formatBytes(item.sizeBytes);
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            border: Border.all(color: borderColor, width: 1),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-            onTap: () => _openFile(item),
-            leading: item.category == 'Images'
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: SizedBox(
+        return Column(
+          children: [
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              onTap: () => _openFile(item),
+              leading: item.category == 'Images'
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: VaultImagePreview(item: item),
+                      ),
+                    )
+                  : Container(
                       width: 40,
                       height: 40,
-                      child: VaultImagePreview(item: item),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white10 : Colors.black12,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Icon(
+                        _getIconForCategory(item.category),
+                        color: _getColorForCategory(item.category),
+                        size: 20,
+                      ),
                     ),
-                  )
-                : Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.white10 : Colors.black12,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Icon(
-                      _getIconForCategory(item.category),
-                      color: _getColorForCategory(item.category),
-                      size: 20,
-                    ),
+              title: Text(
+                item.originalName,
+                style: TextStyle(
+                  color: txtColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
+                style: TextStyle(
+                  color: subColor,
+                  fontSize: 10,
+                ),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.download_outlined, color: subColor, size: 18),
+                    tooltip: 'Export',
+                    onPressed: () => _exportFile(item),
                   ),
-            title: Text(
-              item.originalName,
-              style: TextStyle(
-                color: txtColor,
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Text(
-              '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
-              style: TextStyle(
-                color: subColor,
-                fontSize: 10,
+                  IconButton(
+                    icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 18),
+                    tooltip: 'Delete',
+                    onPressed: () => _deleteFile(item),
+                  ),
+                ],
               ),
             ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.download_outlined, color: subColor, size: 18),
-                  tooltip: 'Export',
-                  onPressed: () => _exportFile(item),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete_outline, color: Colors.redAccent.withValues(alpha: 0.7), size: 18),
-                  tooltip: 'Delete',
-                  onPressed: () => _deleteFile(item),
-                ),
-              ],
+            Divider(
+              color: borderColor,
+              height: 1,
+              indent: 56,
             ),
-          ),
+          ],
         );
       },
     );
