@@ -464,16 +464,7 @@ List<int> _encryptBytesIsolate(_EncryptParams params) {
   combinedBytes.setRange(0, iv.bytes.length, iv.bytes);
   combinedBytes.setRange(iv.bytes.length, combinedBytes.length, encrypted.bytes);
 
-  return combinedBytes;
-}
-
-List<int> _decryptBytesIsolate(_DecryptParams params) {
-  final ivBytes = params.combinedBytes.sublist(0, 16);
-  final payloadBytes = params.combinedBytes.sublist(16);
-
-  final key = enc.Key(Uint8List.fromList(params.keyBytes));
-  final iv = enc.IV(Uint8List.fromList(ivBytes));
-  final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+  return combinedByter(enc.AES(key, mode: enc.AESMode.cbc));
 
   return encrypter.decryptBytes(enc.Encrypted(Uint8List.fromList(payloadBytes)), iv: iv);
 }
