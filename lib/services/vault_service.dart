@@ -29,6 +29,7 @@ class VaultService {
   late File _biometricFile;
 
   List<VaultItem> _items = [];
+  final Map<String, Uint8List> _decryptedCache = {};
 
   bool get isInitialized => _isInitialized;
   bool get hasPasscode => _hasPasscode;
@@ -185,6 +186,7 @@ class VaultService {
   void lock() {
     _sessionKey = null;
     _items.clear();
+    _decryptedCache.clear();
   }
 
   Future<void> _loadDatabase() async {
@@ -222,18 +224,14 @@ class VaultService {
     // Read bytes
     final fileBytes = await sourceFile.readAsBytes();
 
-    // Generate random IV
-    final iv = enc.IV.fromSecureRandom(16);
-    final encrypter = enc.Encrypter(enc.AES(_sessionKey!, mode: enc.AESMode.cbc));
+    // Use background isolate to encrypt
+    final combinedBytesList = await compute(
+      _encryptBytesIsolate,
+      _EncryptParams(fileBytes, _sessionKey!.bytes),
+    );
+    final combinedBytes = Uint8List.fromList(combinedBytesList);
 
-    final encrypted = encrypter.encryptBytes(fileBytes, iv: iv);
-
-    // We store the 16 bytes of IV followed by the encrypted payload
     final File encryptedFile = File(encryptedFilePath);
-    final combinedBytes = Uint8List(iv.bytes.length + encrypted.bytes.length);
-    combinedBytes.setRange(0, iv.bytes.length, iv.bytes);
-    combinedBytes.setRange(iv.bytes.length, combinedBytes.length, encrypted.bytes);
-
     await encryptedFile.writeAsBytes(combinedBytes);
 
     final category = getCategoryForExtension(ext);
@@ -261,18 +259,14 @@ class VaultService {
     final encryptedFileName = '$id.enc';
     final encryptedFilePath = p.join(_vaultDir.path, encryptedFileName);
 
-    // Generate random IV
-    final iv = enc.IV.fromSecureRandom(16);
-    final encrypter = enc.Encrypter(enc.AES(_sessionKey!, mode: enc.AESMode.cbc));
+    // Use background isolate to encrypt
+    final combinedBytesList = await compute(
+      _encryptBytesIsolate,
+      _EncryptParams(fileBytes, _sessionKey!.bytes),
+    );
+    final combinedBytes = Uint8List.fromList(combinedBytesList);
 
-    final encrypted = encrypter.encryptBytes(fileBytes, iv: iv);
-
-    // We store the 16 bytes of IV followed by the encrypted payload
     final File encryptedFile = File(encryptedFilePath);
-    final combinedBytes = Uint8List(iv.bytes.length + encrypted.bytes.length);
-    combinedBytes.setRange(0, iv.bytes.length, iv.bytes);
-    combinedBytes.setRange(iv.bytes.length, combinedBytes.length, encrypted.bytes);
-
     await encryptedFile.writeAsBytes(combinedBytes);
 
     final category = getCategoryForExtension(ext);
@@ -308,6 +302,7 @@ class VaultService {
 
     // Clear session state
     _items.clear();
+    _decryptedCache.clear();
     _sessionKey = null;
     _passcodeHash = null;
     _hasPasscode = false;
@@ -328,14 +323,12 @@ class VaultService {
       throw Exception('Encrypted file is corrupted');
     }
 
-    // Extract IV (first 16 bytes) and payload (rest)
-    final ivBytes = combinedBytes.sublist(0, 16);
-    final payloadBytes = combinedBytes.sublist(16);
-
-    final iv = enc.IV(ivBytes);
-    final encrypter = enc.Encrypter(enc.AES(_sessionKey!, mode: enc.AESMode.cbc));
-
-    final decryptedBytes = encrypter.decryptBytes(enc.Encrypted(payloadBytes), iv: iv);
+    // Use background isolate to decrypt
+    final decryptedBytesList = await compute(
+      _decryptBytesIsolate,
+      _DecryptParams(combinedBytes, _sessionKey!.bytes),
+    );
+    final decryptedBytes = Uint8List.fromList(decryptedBytesList);
 
     final targetFile = File(targetPath);
     await targetFile.writeAsBytes(decryptedBytes);
@@ -352,6 +345,11 @@ class VaultService {
   Future<Uint8List> decryptToBytes(VaultItem item) async {
     if (_sessionKey == null) throw Exception('Vault is locked');
 
+    // Use cached version if available
+    if (_decryptedCache.containsKey(item.id)) {
+      return _decryptedCache[item.id]!;
+    }
+
     final encryptedFilePath = p.join(_vaultDir.path, item.encryptedFileName);
     final encryptedFile = File(encryptedFilePath);
     if (!await encryptedFile.exists()) {
@@ -363,14 +361,15 @@ class VaultService {
       throw Exception('Encrypted file is corrupted');
     }
 
-    final ivBytes = combinedBytes.sublist(0, 16);
-    final payloadBytes = combinedBytes.sublist(16);
-
-    final iv = enc.IV(ivBytes);
-    final encrypter = enc.Encrypter(enc.AES(_sessionKey!, mode: enc.AESMode.cbc));
-
-    final decryptedBytes = encrypter.decryptBytes(enc.Encrypted(payloadBytes), iv: iv);
-    return Uint8List.fromList(decryptedBytes);
+    // Use background isolate to decrypt
+    final decryptedBytesList = await compute(
+      _decryptBytesIsolate,
+      _DecryptParams(combinedBytes, _sessionKey!.bytes),
+    );
+    final decryptedBytes = Uint8List.fromList(decryptedBytesList);
+    
+    _decryptedCache[item.id] = decryptedBytes;
+    return decryptedBytes;
   }
 
   Future<void> cleanTempFolder() async {
@@ -387,6 +386,7 @@ class VaultService {
       await encryptedFile.delete();
     }
 
+    _decryptedCache.remove(item.id);
     _items.removeWhere((i) => i.id == item.id);
     await _saveDatabase();
   }
@@ -438,4 +438,42 @@ class VaultService {
     }
     return '${size.toStringAsFixed(1)} ${suffixes[i]}';
   }
+}
+
+// Background Isolate Cryptography Params & Functions
+class _EncryptParams {
+  final List<int> fileBytes;
+  final List<int> keyBytes;
+  _EncryptParams(this.fileBytes, this.keyBytes);
+}
+
+class _DecryptParams {
+  final List<int> combinedBytes;
+  final List<int> keyBytes;
+  _DecryptParams(this.combinedBytes, this.keyBytes);
+}
+
+List<int> _encryptBytesIsolate(_EncryptParams params) {
+  final key = enc.Key(Uint8List.fromList(params.keyBytes));
+  final iv = enc.IV.fromSecureRandom(16);
+  final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+
+  final encrypted = encrypter.encryptBytes(params.fileBytes, iv: iv);
+
+  final combinedBytes = Uint8List(iv.bytes.length + encrypted.bytes.length);
+  combinedBytes.setRange(0, iv.bytes.length, iv.bytes);
+  combinedBytes.setRange(iv.bytes.length, combinedBytes.length, encrypted.bytes);
+
+  return combinedBytes;
+}
+
+List<int> _decryptBytesIsolate(_DecryptParams params) {
+  final ivBytes = params.combinedBytes.sublist(0, 16);
+  final payloadBytes = params.combinedBytes.sublist(16);
+
+  final key = enc.Key(Uint8List.fromList(params.keyBytes));
+  final iv = enc.IV(Uint8List.fromList(ivBytes));
+  final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+
+  return encrypter.decryptBytes(enc.Encrypted(Uint8List.fromList(payloadBytes)), iv: iv);
 }
