@@ -1253,8 +1253,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final nameMatch = _searchTabQuery.isEmpty || f.originalName.toLowerCase().contains(_searchTabQuery.toLowerCase());
       final typeMatch = _searchTabCategory == 'All' || f.category == _searchTabCategory;
       final securityMatch = _searchTabSecurity == 'all' || (_searchTabSecurity == 'encrypted');
-      return nameMatch && typeMatch && securityMatch;
+      final tagMatch = _searchTabTag == 'All' || f.tags.contains(_searchTabTag);
+      return nameMatch && typeMatch && securityMatch && tagMatch;
     }).toList();
+
+    final allTags = _vaultService.items
+        .expand((item) => item.tags)
+        .toSet()
+        .toList();
 
     return Column(
       children: [
@@ -1325,6 +1331,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   },
                 ),
               ),
+              if (allTags.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'FILTER BY TAG',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0, color: subTxt),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 38,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: allTags.length + 1,
+                    itemBuilder: (context, index) {
+                      final tag = index == 0 ? 'All' : allTags[index - 1];
+                      final isSelected = _searchTabTag == tag;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 6.0),
+                        child: ChoiceChip(
+                          label: Text(
+                            tag.toUpperCase(),
+                            style: const TextStyle(fontSize: 9),
+                          ),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() {
+                                _searchTabTag = tag;
+                              });
+                            }
+                          },
+                          selectedColor: primaryTxt,
+                          backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
+                          checkmarkColor: isDark ? Colors.black : Colors.white,
+                          labelStyle: TextStyle(
+                            color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(color: isDark ? Colors.white10 : Colors.black12),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               Text(
                 'SECURITY STATE',
