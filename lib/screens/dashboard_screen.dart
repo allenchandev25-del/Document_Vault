@@ -1825,16 +1825,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: Text(
-              '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
-              style: TextStyle(
-                color: subColor,
-                fontSize: 10,
-              ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '$sizeStr  |  $formattedDate  |  ${item.category.toUpperCase()}',
+                  style: TextStyle(
+                    color: subColor,
+                    fontSize: 10,
+                  ),
+                ),
+                if (item.tags.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Wrap(
+                    spacing: 4,
+                    runSpacing: 2,
+                    children: item.tags.map((tag) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.white10 : Colors.black12,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isDark ? Colors.white12 : Colors.black12,
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Text(
+                          tag,
+                          style: TextStyle(
+                            fontSize: 8,
+                            color: subColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ],
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                IconButton(
+                  icon: Icon(Icons.local_offer_outlined, color: subColor, size: 18),
+                  tooltip: 'Tags',
+                  onPressed: () => _showManageTagsDialog(item),
+                ),
                 IconButton(
                   icon: Icon(Icons.download_outlined, color: subColor, size: 18),
                   tooltip: 'Export',
@@ -1863,7 +1902,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 0.88,
+        childAspectRatio: 0.76,
       ),
       itemCount: itemsList.length,
       itemBuilder: (context, index) {
@@ -1916,6 +1955,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 2),
+                if (item.tags.isNotEmpty) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      item.tags.join(', '),
+                      style: TextStyle(
+                        color: subColor,
+                        fontSize: 9,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                ],
                 Text(
                   sizeStr,
                   style: TextStyle(
@@ -1931,6 +1987,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: 36,
                   child: Row(
                     children: [
+                      Expanded(
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(Icons.local_offer_outlined, color: subColor, size: 16),
+                          tooltip: 'Manage Tags',
+                          onPressed: () => _showManageTagsDialog(item),
+                        ),
+                      ),
+                      const VerticalDivider(width: 1),
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
