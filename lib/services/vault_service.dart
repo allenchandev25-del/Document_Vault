@@ -212,6 +212,58 @@ class VaultService {
     await _dbFile.writeAsString(jsonEncode(jsonList));
   }
 
+  Future<void> updateItemTags(String itemId, List<String> newTags) async {
+    final index = _items.indexWhere((item) => item.id == itemId);
+    if (index != -1) {
+      final oldItem = _items[index];
+      _items[index] = VaultItem(
+        id: oldItem.id,
+        originalName: oldItem.originalName,
+        fileExtension: oldItem.fileExtension,
+        sizeBytes: oldItem.sizeBytes,
+        addedDate: oldItem.addedDate,
+        category: oldItem.category,
+        encryptedFileName: oldItem.encryptedFileName,
+        tags: newTags,
+      );
+      await _saveDatabase();
+    }
+  }
+
+  Future<void> updateTextFileContent(VaultItem item, String newContent) async {
+    if (_sessionKey == null) throw Exception('Vault is locked');
+    final newBytes = Uint8List.fromList(utf8.encode(newContent));
+    
+    final combinedBytesList = await compute(
+      _encryptBytesIsolate,
+      _EncryptParams(newBytes, _sessionKey!.bytes),
+    );
+    final combinedBytes = Uint8List.fromList(combinedBytesList);
+
+    final encryptedFilePath = p.join(_vaultDir.path, item.encryptedFileName);
+    final File encryptedFile = File(encryptedFilePath);
+    await encryptedFile.writeAsBytes(combinedBytes);
+
+    _decryptedCache[item.id] = newBytes;
+
+    final index = _items.indexWhere((i) => i.id == item.id);
+    if (index != -1) {
+      final oldItem = _items[index];
+      _items[index] = VaultItem(
+        id: oldItem.id,
+        originalName: oldItem.originalName,
+        fileExtension: oldItem.fileExtension,
+        sizeBytes: newBytes.length,
+        addedDate: oldItem.addedDate,
+        category: oldItem.category,
+        encryptedFileName: oldItem.encryptedFileName,
+        tags: oldItem.tags,
+      );
+      await _saveDatabase();
+    }
+  }
+
+
   Future<VaultItem> encryptAndAddFile(File sourceFile) async {
     if (_sessionKey == null) throw Exception('Vault is locked');
 
