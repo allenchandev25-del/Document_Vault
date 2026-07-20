@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
@@ -31,11 +32,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String _searchTabQuery = '';
   String _searchTabCategory = 'All';
   String _searchTabSecurity = 'all';
+  String _searchTabTag = 'All';
 
   // Vault Tab State
   final TextEditingController _vaultQueryController = TextEditingController();
   String _vaultQuery = '';
   String _selectedVaultCategory = 'All';
+  String _selectedVaultTag = 'All';
   bool _isGridView = true; // Curvy grid view as default matches mockup
 
   // Photo Gallery State
@@ -160,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             MaterialPageRoute(
               builder: (context) => FileViewerScreen(
                 filePath: tempPath,
-                itemName: item.originalName,
+                item: item,
                 isImage: !isText,
               ),
             ),
@@ -654,10 +657,262 @@ class _DashboardScreenState extends State<DashboardScreen> {
               foregroundColor: Theme.of(context).scaffoldBackgroundColor,
               mini: true,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              onPressed: _importFile,
+              onPressed: () => _showAddOptions(context),
               child: const Icon(Icons.add),
             )
           : null,
+    );
+  }
+
+  void _showAddOptions(BuildContext context) {
+    final primaryTxt = Theme.of(context).primaryColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.white24 : Colors.black26,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: Icon(Icons.file_open_outlined, color: primaryTxt),
+                title: const Text('Import Files', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                subtitle: const Text('Secure documents or media from device', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  _importFile();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.note_add_outlined, color: primaryTxt),
+                title: const Text('Create Secure Note', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                subtitle: const Text('Write and encrypt text notes directly', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showCreateNoteDialog();
+                },
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showCreateNoteDialog() {
+    String title = '';
+    String content = '';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTxt = Theme.of(context).primaryColor;
+    final subTxt = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF151E2E) : Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+        ),
+        title: const Text('Create Secure Note', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        content: SizedBox(
+          width: 400,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                  hintText: 'e.g. Banking Info',
+                  border: OutlineInputBorder(),
+                ),
+                style: const TextStyle(fontSize: 13),
+                onChanged: (val) => title = val,
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Note Content',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 6,
+                style: const TextStyle(fontSize: 13, fontFamily: 'monospace'),
+                onChanged: (val) => content = val,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('CANCEL', style: TextStyle(color: subTxt, fontSize: 12)),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (title.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Title cannot be empty'), backgroundColor: Colors.redAccent),
+                );
+                return;
+              }
+              final navigator = Navigator.of(context);
+              setState(() {
+                _isProcessing = true;
+                _processingMessage = 'Securing Note...';
+              });
+              try {
+                final bytes = Uint8List.fromList(utf8.encode(content));
+                final fileName = title.endsWith('.txt') ? title.trim() : '${title.trim()}.txt';
+                await _vaultService.encryptAndAddBytes(bytes, fileName);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Secure note "$fileName" created'),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to create note: $e'), backgroundColor: Colors.redAccent),
+                  );
+                }
+              } finally {
+                setState(() {
+                  _isProcessing = false;
+                });
+                navigator.pop();
+              }
+            },
+            child: Text('SAVE', style: TextStyle(color: primaryTxt, fontSize: 12, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showManageTagsDialog(VaultItem item) {
+    final List<String> currentTags = List.from(item.tags);
+    final textController = TextEditingController();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTxt = Theme.of(context).primaryColor;
+    final subTxt = isDark ? const Color(0xFF969CB0) : const Color(0xFF5C6276);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: isDark ? const Color(0xFF151E2E) : Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(24)),
+              ),
+              title: Text('Manage Tags: ${item.originalName}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              content: SizedBox(
+                width: 350,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (currentTags.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text('No tags added yet.', style: TextStyle(color: subTxt, fontSize: 12)),
+                      )
+                    else
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: currentTags.map((tag) {
+                          return Chip(
+                            label: Text(tag, style: const TextStyle(fontSize: 11)),
+                            deleteIcon: const Icon(Icons.close, size: 12),
+                            onDeleted: () {
+                              setDialogState(() {
+                                currentTags.remove(tag);
+                              });
+                            },
+                            visualDensity: VisualDensity.compact,
+                            padding: EdgeInsets.zero,
+                          );
+                        }).toList(),
+                      ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: textController,
+                            decoration: const InputDecoration(
+                              hintText: 'New tag name',
+                              hintStyle: TextStyle(fontSize: 12),
+                              isDense: true,
+                            ),
+                            style: const TextStyle(fontSize: 13),
+                            onSubmitted: (val) {
+                              if (val.trim().isNotEmpty && !currentTags.contains(val.trim())) {
+                                setDialogState(() {
+                                  currentTags.add(val.trim());
+                                  textController.clear();
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            final val = textController.text;
+                            if (val.trim().isNotEmpty && !currentTags.contains(val.trim())) {
+                              setDialogState(() {
+                                currentTags.add(val.trim());
+                                textController.clear();
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('CANCEL', style: TextStyle(color: subTxt, fontSize: 12)),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final navigator = Navigator.of(context);
+                    await _vaultService.updateItemTags(item.id, currentTags);
+                    setState(() {});
+                    navigator.pop();
+                  },
+                  child: Text('SAVE', style: TextStyle(color: primaryTxt, fontSize: 12, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -668,8 +923,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final filteredItems = _vaultService.items.where((item) {
       final matchesCategory = _selectedVaultCategory == 'All' || item.category == _selectedVaultCategory;
       final matchesSearch = item.originalName.toLowerCase().contains(_vaultQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+      final matchesTag = _selectedVaultTag == 'All' || item.tags.contains(_selectedVaultTag);
+      return matchesCategory && matchesSearch && matchesTag;
     }).toList();
+
+    final allTags = _vaultService.items
+        .expand((item) => item.tags)
+        .toSet()
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -781,6 +1042,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
         ),
+
+        // Tags selector chips
+        if (allTags.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 4.0),
+            child: Text(
+              'FILTER BY TAG',
+              style: TextStyle(
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+                color: subTxt,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 44,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              itemCount: allTags.length + 1,
+              itemBuilder: (context, index) {
+                final tag = index == 0 ? 'All' : allTags[index - 1];
+                final isSelected = _selectedVaultTag == tag;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ChoiceChip(
+                    label: Text(
+                      tag.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedVaultTag = tag;
+                      });
+                    },
+                    selectedColor: primaryTxt,
+                    backgroundColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
+                    checkmarkColor: isDark ? Colors.black : Colors.white,
+                    labelStyle: TextStyle(
+                      color: isSelected ? (isDark ? Colors.black : Colors.white) : subTxt,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                        color: isSelected ? Colors.transparent : (isDark ? Colors.white10 : Colors.black12),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
 
         const SizedBox(height: 12),
 
