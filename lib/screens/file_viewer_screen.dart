@@ -23,6 +23,8 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
   bool _isEditing = false;
   final TextEditingController _textController = TextEditingController();
   bool _isLoading = false;
+  bool _isTextLoading = true;
+  String? _textError;
 
   @override
   void initState() {
@@ -41,9 +43,16 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
   Future<void> _loadText() async {
     try {
       final content = await File(widget.filePath).readAsString();
-      _textController.text = content;
+      setState(() {
+        _textController.text = content;
+        _isTextLoading = false;
+      });
     } catch (e) {
       debugPrint('Error loading text: $e');
+      setState(() {
+        _textError = e.toString();
+        _isTextLoading = false;
+      });
     }
   }
 
@@ -98,7 +107,7 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
-          if (!widget.isImage) ...[
+          if (!widget.isImage && !_isTextLoading && _textError == null) ...[
             if (_isEditing)
               IconButton(
                 tooltip: 'Save',
@@ -146,57 +155,50 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
                   },
                 ),
               )
-            : _isEditing
-                ? Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: TextField(
-                      controller: _textController,
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'monospace',
-                        fontSize: 14,
-                        height: 1.5,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: 'Type your secure note here...',
-                        hintStyle: TextStyle(color: Colors.white30),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  )
-                : FutureBuilder<String>(
-                    future: File(widget.filePath).readAsString(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            'Error reading text: ${snapshot.error}',
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
-                        );
-                      }
-                      return SingleChildScrollView(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: SelectableText(
-                            snapshot.data ?? '',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontFamily: 'monospace',
-                              fontSize: 14,
-                              height: 1.5,
+            : _isTextLoading
+                ? const CircularProgressIndicator()
+                : _textError != null
+                    ? Center(
+                        child: Text(
+                          'Error reading text: $_textError',
+                          style: const TextStyle(color: Colors.redAccent),
+                        ),
+                      )
+                    : _isEditing
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: TextField(
+                              controller: _textController,
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'monospace',
+                                fontSize: 14,
+                                height: 1.5,
+                              ),
+                              decoration: const InputDecoration(
+                                hintText: 'Type your secure note here...',
+                                hintStyle: TextStyle(color: Colors.white30),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          )
+                        : SingleChildScrollView(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: SelectableText(
+                                _textController.text,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontFamily: 'monospace',
+                                  fontSize: 14,
+                                  height: 1.5,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
       ),
     );
   }
