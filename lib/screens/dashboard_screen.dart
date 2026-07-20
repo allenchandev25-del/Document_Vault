@@ -2131,6 +2131,18 @@ class _VaultImagePreviewState extends State<VaultImagePreview> {
     _loadPreview();
   }
 
+  @override
+  void didUpdateWidget(covariant VaultImagePreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.item.id != widget.item.id) {
+      setState(() {
+        _decryptedBytes = null;
+        _error = false;
+      });
+      _loadPreview();
+    }
+  }
+
   Future<void> _loadPreview() async {
     try {
       final decrypted = await _vaultService.decryptToBytes(widget.item);
