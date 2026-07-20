@@ -772,7 +772,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               }
               final navigator = Navigator.of(context);
               final scaffoldMessenger = ScaffoldMessenger.of(context);
-              final navigator = Navigator.of(context);
               setState(() {
                 _isProcessing = true;
                 _processingMessage = 'Securing Note...';
