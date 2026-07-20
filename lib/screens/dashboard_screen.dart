@@ -771,6 +771,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 return;
               }
               final navigator = Navigator.of(context);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final navigator = Navigator.of(context);
               setState(() {
                 _isProcessing = true;
                 _processingMessage = 'Securing Note...';
@@ -780,7 +782,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 final fileName = title.endsWith('.txt') ? title.trim() : '${title.trim()}.txt';
                 await _vaultService.encryptAndAddBytes(bytes, fileName);
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     SnackBar(
                       content: Text('Secure note "$fileName" created'),
                       backgroundColor: Colors.green,
@@ -790,7 +792,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 }
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text('Failed to create note: $e'), backgroundColor: Colors.redAccent),
                   );
                 }
