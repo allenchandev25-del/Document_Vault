@@ -192,11 +192,7 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
                                 _textController.text,
                                 style: const TextStyle(
                                   color: Colors.white70,
-                                  fontFamily: 'monospace',
-                                  fontSize: 14,
-                                  height: 1.5,
-                                ),
-                              ),
+                       ),
                             ),
                           ),
       ),
